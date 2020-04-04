@@ -28,6 +28,8 @@
                               new RolesSeeder(),
                               new SettingsSeeder(),
                               new UsersSeeder(),
+                              new LanguagesSeeder(),
+                              new GenresSeeder(),
                           };
 
             foreach (var seeder in seeders)
