@@ -15,6 +15,7 @@
             this.Reviews = new HashSet<Review>();
             this.Genres = new HashSet<MovieGenre>();
             this.UsersWatchlists = new HashSet<UserMovie>();
+            this.MovieImages = new HashSet<MovieImage>();
         }
 
         [Required]
@@ -40,7 +41,7 @@
         public DateTime ReleaseDate { get; set; }
 
         [Required]
-        public string LanguageId { get; set; }
+        public int LanguageId { get; set; }
 
         public Language Language { get; set; }
 
@@ -56,5 +57,7 @@
         public virtual IEnumerable<Review> Reviews { get; set; }
 
         public virtual IEnumerable<UserMovie> UsersWatchlists { get; set; }
+
+        public virtual IEnumerable<MovieImage> MovieImages { get; set; }
     }
 }

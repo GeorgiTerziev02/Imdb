@@ -3,14 +3,18 @@
     using System.Diagnostics;
 
     using Imdb.Web.ViewModels;
-
+    using Imdb.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
     {
         public IActionResult Index()
         {
-            return this.View();
+            IndexViewModel topMovie = new IndexViewModel
+            {
+                Name = "TopMovie",
+            };
+            return this.View(topMovie);
         }
 
         public IActionResult Privacy()

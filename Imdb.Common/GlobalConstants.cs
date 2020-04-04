@@ -9,5 +9,7 @@
         public const string UserRoleName = "User";
 
         public const string BaseDeliveryUrl = @"http://res.cloudinary.com/dlgtvkmfb";
+
+        public const string DefaulProfilePicture = @"/image/upload/v1585137274/default-profile_grl2kr.png";
     }
 }

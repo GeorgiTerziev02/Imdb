@@ -52,6 +52,10 @@
 
         public DbSet<UserTvShow> UserTvShows { get; set; }
 
+        public DbSet<MovieImage> MovieImages { get; set; }
+
+        public DbSet<TvShowImage> TvShowImages { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

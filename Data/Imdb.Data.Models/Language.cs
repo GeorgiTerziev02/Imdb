@@ -5,14 +5,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Imdb.Data.Models
 {
-    public class Language : BaseModel<string>
+    public class Language
     {
         public Language()
         {
-            this.Id = Guid.NewGuid().ToString();
             this.Movies = new HashSet<Movie>();
             this.TvShows = new HashSet<TvShow>();
         }
+
+        [Key]
+        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }
