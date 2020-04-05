@@ -1,27 +1,55 @@
 ﻿namespace Imdb.Web.Areas.Administration.Controllers
 {
     using Imdb.Common;
+    using Imdb.Services.Data.Contracts;
     using Imdb.Web.Controllers;
     using Imdb.Web.ViewModels.Admin.Administration;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using System.Threading.Tasks;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     [Area("Admin")]
     public class AdministrationController : BaseController
     {
-        public AdministrationController()
+        private readonly IDirectorsService directorsService;
+        private readonly IActorsService actorsService;
+        private readonly ICloudinaryService cloudinaryService;
+
+        public AdministrationController(IDirectorsService directorsService, IActorsService actorsService, ICloudinaryService cloudinaryService)
         {
+            this.directorsService = directorsService;
+            this.actorsService = actorsService;
+            this.cloudinaryService = cloudinaryService;
         }
 
+        public IActionResult Index()
+        {
+            return this.View();
+        }
+
+        // TODO: Try to do with one code
         public IActionResult AddDirector()
         {
-            return this.Ok();
+            return this.View();
         }
 
         [HttpPost]
-        public IActionResult AddDirector(AddDirectorInputViewModel input)
+        public async Task<IActionResult> AddDirector(AddDirectorInputViewModel input)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(input);
+            }
+
+            var imageUrl = await this.cloudinaryService.UploudImageAsync(input.Image);
+            if (imageUrl == null)
+            {
+                imageUrl = GlobalConstants.DefaulProfilePicture;
+            }
+
+            await this.directorsService.AddAsync(input.FirstName, input.MiddleName, input.LastName, input.Gender, input.Born, imageUrl, input.Description);
+
             return this.Redirect("/Home/Index");
         }
 
@@ -31,8 +59,21 @@
         }
 
         [HttpPost]
-        public IActionResult AddActor(AddActorInputViewModel input)
+        public async Task<IActionResult> AddActor(AddActorInputViewModel input)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(input);
+            }
+
+            var imageUrl = await this.cloudinaryService.UploudImageAsync(input.Image);
+            if (imageUrl == null)
+            {
+                imageUrl = GlobalConstants.DefaulProfilePicture;
+            }
+
+            await this.actorsService.AddAsync(input.FirstName, input.MiddleName, input.LastName, input.Gender, input.Born, imageUrl, input.Description);
+
             return this.Redirect("/Home/Index");
         }
 

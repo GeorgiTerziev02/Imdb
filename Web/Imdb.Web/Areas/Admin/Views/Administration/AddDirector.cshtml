@@ -1,0 +1,49 @@
+﻿@model Imdb.Web.ViewModels.Admin.Administration.AddDirectorInputViewModel
+@using Imdb.Data.Models.Enumerations
+@{
+    ViewData["Title"] = "Add Director";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="@Model.FirstName"></label>
+        <input asp-for="@Model.FirstName" class="form-control" />
+        <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.MiddleName"></label>
+        <input asp-for="@Model.MiddleName" class="form-control" />
+        <span asp-validation-for="@Model.MiddleName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.LastName"></label>
+        <input asp-for="@Model.LastName" class="form-control" />
+        <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Gender"></label>
+        <select asp-for="@Model.Gender" class="form-control" asp-items="@(Html.GetEnumSelectList<Gender>())"> </select>
+        <span asp-validation-for="@Model.Gender" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Born"></label>
+        <input asp-for="@Model.Born" class="form-control" />
+        <span asp-validation-for="@Model.Born" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Description"></label>
+        <input asp-for="@Model.Description" class="form-control" />
+        <span asp-validation-for="@Model.Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.Image"></label>
+        <input type="file" asp-for="@Model.Image" />
+        <span asp-validation-for="@Model.Image" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+

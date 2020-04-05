@@ -27,6 +27,8 @@ namespace Imdb.Data.Models
 
         public DateTime? Born { get; set; }
 
+        public string ImageUrl { get; set; }
+
         [MaxLength(500)]
         public string Description { get; set; }
 

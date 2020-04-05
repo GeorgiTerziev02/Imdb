@@ -48,4 +48,8 @@
     <ProjectReference Include="..\Imdb.Web.Infrastructure\Imdb.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\Imdb.Web.ViewModels\Imdb.Web.ViewModels.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Views\Dashboard\" />
+  </ItemGroup>
 </Project>

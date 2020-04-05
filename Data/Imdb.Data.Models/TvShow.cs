@@ -16,6 +16,7 @@
             this.Genres = new HashSet<TvShowGenre>();
             this.UsersWatchlists = new HashSet<UserTvShow>();
             this.Images = new HashSet<TvShowImage>();
+            this.Votes = new HashSet<Vote>();
         }
 
         [Required]
@@ -32,10 +33,6 @@
         [Required]
         public decimal Budget { get; set; }
 
-        [Required]
-        [Range(0, 10)]
-        public decimal Rating { get; set; }
-
         public DateTime ReleaseDate { get; set; }
 
         [Required]
@@ -48,6 +45,8 @@
 
         public Director Director { get; set; }
 
+        public string GeneralImageUrl { get; set; }
+
         public virtual IEnumerable<TvShowGenre> Genres { get; set; }
 
         public virtual IEnumerable<TvShowActor> Actors { get; set; }
@@ -57,5 +56,7 @@
         public virtual IEnumerable<UserTvShow> UsersWatchlists { get; set; }
 
         public virtual IEnumerable<TvShowImage> Images { get; set; }
+
+        public virtual IEnumerable<Vote> Votes { get; set; }
     }
 }

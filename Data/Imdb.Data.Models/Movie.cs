@@ -16,6 +16,7 @@
             this.Genres = new HashSet<MovieGenre>();
             this.UsersWatchlists = new HashSet<UserMovie>();
             this.MovieImages = new HashSet<MovieImage>();
+            this.Votes = new HashSet<Vote>();
         }
 
         [Required]
@@ -34,10 +35,6 @@
         [Required]
         public decimal Budget { get; set; }
 
-        [Required]
-        [Range(0, 10)]
-        public decimal Rating { get; set; }
-
         public DateTime ReleaseDate { get; set; }
 
         [Required]
@@ -50,6 +47,8 @@
 
         public Director Director { get; set; }
 
+        public string GeneralImageUrl { get; set; }
+
         public virtual IEnumerable<MovieGenre> Genres { get; set; }
 
         public virtual IEnumerable<MovieActor> Actors { get; set; }
@@ -59,5 +58,7 @@
         public virtual IEnumerable<UserMovie> UsersWatchlists { get; set; }
 
         public virtual IEnumerable<MovieImage> MovieImages { get; set; }
+
+        public virtual IEnumerable<Vote> Votes { get; set; }
     }
 }
