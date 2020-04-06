@@ -18,12 +18,11 @@ namespace Imdb.Services.Data
             this.actorsRepository = actorsRepository;
         }
 
-        public async Task AddAsync(string firstName, string middleName, string lastName, Gender gender, DateTime? born, string imageUrl, string description)
+        public async Task AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description)
         {
             var actor = new Actor()
             {
                 FirstName = firstName,
-                MiddleName = middleName,
                 LastName = lastName,
                 Gender = gender,
                 Born = born,

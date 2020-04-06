@@ -27,15 +27,13 @@
         [MaxLength(500)]
         public string Description { get; set; }
 
-        [Required]
-        public TimeSpan Duration { get; set; }
+        public TimeSpan? Duration { get; set; }
 
-        public long Gross { get; set; }
+        public long? Gross { get; set; }
 
-        [Required]
-        public decimal Budget { get; set; }
+        public decimal? Budget { get; set; }
 
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         [Required]
         public int LanguageId { get; set; }

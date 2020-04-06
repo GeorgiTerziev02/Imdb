@@ -48,7 +48,7 @@
                 imageUrl = GlobalConstants.DefaulProfilePicture;
             }
 
-            await this.directorsService.AddAsync(input.FirstName, input.MiddleName, input.LastName, input.Gender, input.Born, imageUrl, input.Description);
+            await this.directorsService.AddAsync(input.FirstName, input.LastName, input.Gender, input.Born, imageUrl, input.Description);
 
             return this.Redirect("/Home/Index");
         }
@@ -72,7 +72,7 @@
                 imageUrl = GlobalConstants.DefaulProfilePicture;
             }
 
-            await this.actorsService.AddAsync(input.FirstName, input.MiddleName, input.LastName, input.Gender, input.Born, imageUrl, input.Description);
+            await this.actorsService.AddAsync(input.FirstName, input.LastName, input.Gender, input.Born, imageUrl, input.Description);
 
             return this.Redirect("/Home/Index");
         }

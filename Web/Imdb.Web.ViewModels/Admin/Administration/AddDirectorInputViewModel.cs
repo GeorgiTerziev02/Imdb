@@ -14,8 +14,6 @@ namespace Imdb.Web.ViewModels.Admin.Administration
         [Required]
         public string FirstName { get; set; }
 
-        public string MiddleName { get; set; }
-
         [Required]
         public string LastName { get; set; }
 

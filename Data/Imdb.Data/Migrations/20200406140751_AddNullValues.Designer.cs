@@ -4,14 +4,16 @@ using Imdb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Imdb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200406140751_AddNullValues")]
+    partial class AddNullValues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -280,6 +282,7 @@ namespace Imdb.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal?>("Budget")
+                        .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -298,6 +301,7 @@ namespace Imdb.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<TimeSpan?>("Duration")
+                        .IsRequired()
                         .HasColumnType("time");
 
                     b.Property<string>("GeneralImageUrl")

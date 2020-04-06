@@ -28,12 +28,12 @@
         public string Description { get; set; }
 
         [Range(0, 100000)]
-        public int EpisodesCount { get; set; }
+        public int? EpisodesCount { get; set; }
 
         [Required]
-        public decimal Budget { get; set; }
+        public decimal? Budget { get; set; }
 
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         [Required]
         public int LanguageId { get; set; }

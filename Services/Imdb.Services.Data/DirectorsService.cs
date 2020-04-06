@@ -15,12 +15,11 @@ namespace Imdb.Services.Data.Contracts
             this.directorsRepository = directorsRepository;
         }
 
-        public async Task AddAsync(string firstName, string middleName, string lastName, Gender gender, DateTime? born, string imageUrl, string description)
+        public async Task AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description)
         {
             var director = new Director()
             {
                 FirstName = firstName,
-                MiddleName = middleName,
                 LastName = lastName,
                 Gender = gender,
                 Born = born,

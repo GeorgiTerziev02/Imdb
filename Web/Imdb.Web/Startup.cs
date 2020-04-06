@@ -88,7 +88,6 @@
                     this.configuration["Cloudinary:AppKey"],
                     this.configuration["Cloudinary:AppSecret"]);
             Cloudinary cloudinary = new Cloudinary(account);
-
             services.AddSingleton(cloudinary);
         }
 

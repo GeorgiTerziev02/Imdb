@@ -8,6 +8,6 @@ namespace Imdb.Services.Data.Contracts
 {
     public interface IActorsService
     {
-        Task AddAsync(string firstName, string middleName, string lastName, Gender gender, DateTime? born, string imageUrl, string description);
+        Task AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description);
     }
 }

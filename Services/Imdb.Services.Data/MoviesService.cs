@@ -25,6 +25,16 @@ namespace Imdb.Services.Data
             await this.moviesRepository.SaveChangesAsync();
         }
 
+        public IEnumerable<T> GetAll<T>()
+        {
+            return this.moviesRepository.All().To<T>().ToList();
+        }
+
+        public T GetById<T>(string id)
+        {
+            return this.moviesRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefault();
+        }
+
         public IEnumerable<T> GetTop5Movies<T>()
         {
             return this.moviesRepository.All().OrderByDescending(x => x.Votes.Average(y => y.Rating)).To<T>().ToList();

@@ -9,6 +9,20 @@
 </div>
 
 <div class="text-center">
-    <h3 class="display-4">@Model.Name</h3>
+    <h3 class="display-4">Top Movies</h3>
+</div>
+
+<div class="text-center">
+    @foreach (var movie in Model.TopMovies)
+    {
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="@(GlobalConstants.BaseDeliveryUrl+movie.GeneralImageUrl)" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">@movie.Title</h5>
+                <p class="card-text">Description</p>
+                <a href="#" class="btn btn-primary">View Movie</a>
+            </div>
+        </div>
+    }
 </div>
 
