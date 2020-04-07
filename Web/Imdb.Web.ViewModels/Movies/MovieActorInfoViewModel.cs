@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Imdb.Web.ViewModels.Movies
 {
-    public class MovieActorsInfoViewModel : IMapFrom<MovieActor>, IHaveCustomMappings
+    public class MovieActorInfoViewModel : IMapFrom<MovieActor>, IHaveCustomMappings
     {
         public string ActorId { get; set; }
 
@@ -15,7 +15,7 @@ namespace Imdb.Web.ViewModels.Movies
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<MovieActor, MovieActorsInfoViewModel>()
+            configuration.CreateMap<MovieActor, MovieActorInfoViewModel>()
                 .ForMember(x => x.ActorName, y => y.MapFrom(x => x.Actor.FirstName + x.Actor.LastName));
         }
     }

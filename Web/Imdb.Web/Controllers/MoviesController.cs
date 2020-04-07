@@ -1,9 +1,9 @@
-﻿using Imdb.Services.Data.Contracts;
-using Imdb.Web.ViewModels.Movies;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Imdb.Web.Controllers
+﻿namespace Imdb.Web.Controllers
 {
+    using Imdb.Services.Data.Contracts;
+    using Imdb.Web.ViewModels.Movies;
+    using Microsoft.AspNetCore.Mvc;
+
     public class MoviesController : BaseController
     {
         private readonly IMoviesService moviesService;
@@ -27,6 +27,12 @@ namespace Imdb.Web.Controllers
         public IActionResult ById(string id)
         {
             var movie = this.moviesService.GetById<MovieInfoViewModel>(id);
+
+            if (movie == null)
+            {
+                // TODO: 4040
+            }
+
             return this.Json(movie);
         }
     }

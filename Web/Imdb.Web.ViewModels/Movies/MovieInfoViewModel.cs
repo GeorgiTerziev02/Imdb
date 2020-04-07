@@ -36,7 +36,7 @@
 
         public virtual IEnumerable<MovieGenreInfoViewModel> Genres { get; set; }
 
-        public virtual IEnumerable<MovieActorsInfoViewModel> Actors { get; set; }
+        public virtual IEnumerable<MovieActorInfoViewModel> Actors { get; set; }
 
         public virtual IEnumerable<MovieReviewViewModel> Reviews { get; set; }
 

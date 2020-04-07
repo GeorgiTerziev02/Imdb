@@ -1,11 +1,8 @@
-﻿using Imdb.Data.Models;
-using Imdb.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Imdb.Web.ViewModels.Movies
+﻿namespace Imdb.Web.ViewModels.Movies
 {
+    using Imdb.Data.Models;
+    using Imdb.Services.Mapping;
+
     public class MovieGenreInfoViewModel : IMapFrom<MovieGenre>
     {
         public string GenreId { get; set; }

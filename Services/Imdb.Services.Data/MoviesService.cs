@@ -1,14 +1,15 @@
-﻿using Imdb.Data.Common.Repositories;
-using Imdb.Data.Models;
-using Imdb.Services.Data.Contracts;
-using Imdb.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Imdb.Services.Data
+﻿namespace Imdb.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Imdb.Data.Common.Repositories;
+    using Imdb.Data.Models;
+    using Imdb.Services.Data.Contracts;
+    using Imdb.Services.Mapping;
+
     public class MoviesService : IMoviesService
     {
         private readonly IDeletableEntityRepository<Movie> moviesRepository;

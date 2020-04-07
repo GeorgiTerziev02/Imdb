@@ -20,7 +20,11 @@
             <div class="card-body">
                 <h5 class="card-title">@movie.Title</h5>
                 <p class="card-text">Description</p>
-                <a href="#" class="btn btn-primary">View Movie</a>
+                <a asp-controller="Movies" asp-action="ById" asp-route-id="@movie.Id" class="btn btn-primary">View Movie</a>
+                @if (this.User.Identity.IsAuthenticated)
+                {
+                    <a href="#" ><i class="fas fa-star">Add to watchlist</i></a>
+                }
             </div>
         </div>
     }
