@@ -22,6 +22,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using SendGrid;
 
     public class Startup
     {
@@ -74,8 +75,12 @@
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
+            // SendGrid
+            var sendGrid = new SendGridClient(this.configuration["SendGrid"]);
+            services.AddSingleton(sendGrid);
+
             // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
+            services.AddTransient<IEmailSender, SendGridEmailSender>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ICloudinaryService, CloudinaryService>();
             services.AddTransient<IDirectorsService, DirectorsService>();

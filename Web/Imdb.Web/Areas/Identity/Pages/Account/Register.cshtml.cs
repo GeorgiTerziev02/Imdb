@@ -25,13 +25,13 @@ namespace Imdb.Web.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly Imdb.Services.Messaging.IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            Imdb.Services.Messaging.IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -99,10 +99,10 @@ namespace Imdb.Web.Areas.Identity.Pages.Account
                     return this.Page();
                 }
 
-                var user = new ApplicationUser 
-                { 
+                var user = new ApplicationUser
+                {
                     UserName = Input.UserName,
-                    Email = Input.Email, 
+                    Email = Input.Email,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     Gender = Input.Gender,
@@ -123,18 +123,18 @@ namespace Imdb.Web.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    await _emailSender.SendEmailAsync("terzata2002@gmail.com", "FakeImdb", Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
+                    //if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    //{
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    //}
+                    //else
+                    //{
+                    //    await _signInManager.SignInAsync(user, isPersistent: false);
+                    //   return LocalRedirect(returnUrl);
+                    //}
                 }
                 foreach (var error in result.Errors)
                 {
