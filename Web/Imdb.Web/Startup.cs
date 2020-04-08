@@ -87,6 +87,7 @@
             services.AddTransient<IMoviesService, MoviesService>();
             services.AddTransient<IActorsService, ActorsService>();
             services.AddTransient<ITvShowsService, TvShowsService>();
+            services.AddTransient<IWatchlistsService, WatchlistService>();
 
             // Cloudinary
             Account account = new Account(

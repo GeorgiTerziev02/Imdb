@@ -21,7 +21,7 @@
                 Movies = this.moviesService.GetAll<ListMovieViewModel>(),
             };
 
-            return this.Json(allMovies);
+            return this.View(allMovies);
         }
 
         public IActionResult ById(string id)
