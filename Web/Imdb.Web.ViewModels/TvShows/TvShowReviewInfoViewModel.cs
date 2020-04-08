@@ -1,11 +1,12 @@
-﻿using Imdb.Data.Models;
-using Imdb.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Imdb.Web.ViewModels.TvShows
+﻿namespace Imdb.Web.ViewModels.TvShows
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
+    using Imdb.Data.Models;
+    using Imdb.Services.Mapping;
+
     public class TvShowReviewInfoViewModel : IMapFrom<Review>
     {
         public string UserUsername { get; set; }

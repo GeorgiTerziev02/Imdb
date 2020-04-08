@@ -42,19 +42,9 @@
 
         public DbSet<Review> Reviews { get; set; }
 
-        public DbSet<TvShow> TvShows { get; set; }
-
-        public DbSet<TvShowActor> TvShowActors { get; set; }
-
-        public DbSet<TvShowGenre> TvShowGenres { get; set; }
-
         public DbSet<UserMovie> UserMovies { get; set; }
 
-        public DbSet<UserTvShow> UserTvShows { get; set; }
-
         public DbSet<MovieImage> MovieImages { get; set; }
-
-        public DbSet<TvShowImage> TvShowImages { get; set; }
 
         public DbSet<Vote> Votes { get; set; }
 
@@ -84,10 +74,6 @@
 
             builder.Entity<Actor>(act =>
             {
-                act.HasMany(a => a.TvShows)
-                    .WithOne(tvs => tvs.Actor)
-                    .HasForeignKey(tvs => tvs.ActorId);
-
                 act.HasMany(a => a.Movies)
                     .WithOne(m => m.Actor)
                     .HasForeignKey(m => m.ActorId);
@@ -95,10 +81,6 @@
 
             builder.Entity<Director>(d =>
             {
-                d.HasMany(d => d.TvShows)
-                    .WithOne(tvs => tvs.Director)
-                    .HasForeignKey(tvs => tvs.DirectorId);
-
                 d.HasMany(d => d.Movies)
                     .WithOne(m => m.Director)
                     .HasForeignKey(m => m.DirectorId);
@@ -109,18 +91,10 @@
                 g.HasMany(gn => gn.Movies)
                     .WithOne(m => m.Genre)
                     .HasForeignKey(m => m.GenreId);
-
-                g.HasMany(gn => gn.TvShows)
-                    .WithOne(tvs => tvs.Genre)
-                    .HasForeignKey(tvs => tvs.GenreId);
             });
 
             builder.Entity<Language>(l =>
             {
-                l.HasMany(l => l.TvShows)
-                    .WithOne(tvs => tvs.Language)
-                    .HasForeignKey(tvs => tvs.LanguageId);
-
                 l.HasMany(l => l.Movies)
                     .WithOne(m => m.Language)
                     .HasForeignKey(m => m.LanguageId);
@@ -150,38 +124,6 @@
                 r.HasOne(re => re.Movie)
                     .WithMany(u => u.Reviews)
                     .HasForeignKey(re => re.MovieId);
-
-                r.HasOne(re => re.TvShow)
-                    .WithMany(u => u.Reviews)
-                    .HasForeignKey(re => re.TvShowId);
-            });
-
-            builder.Entity<TvShow>(tvs =>
-            {
-                tvs.HasMany(t => t.Actors)
-                    .WithOne(a => a.TvShow)
-                    .HasForeignKey(a => a.TvShowId);
-
-                tvs.HasMany(t => t.Genres)
-                    .WithOne(g => g.TvShow)
-                    .HasForeignKey(g => g.TvShowId);
-
-                tvs.HasMany(t => t.Reviews)
-                    .WithOne(r => r.TvShow)
-                    .HasForeignKey(r => r.TvShowId);
-            });
-
-            builder.Entity<UserTvShow>(utvs =>
-            {
-                utvs.HasKey(ut => new { ut.TvShowId, ut.UserId });
-
-                utvs.HasOne(ut => ut.User)
-                    .WithMany(u => u.TvShowsWatchList)
-                    .HasForeignKey(ut => ut.UserId);
-
-                utvs.HasOne(ut => ut.TvShow)
-                    .WithMany(t => t.UsersWatchlists)
-                    .HasForeignKey(ut => ut.TvShowId);
             });
 
             builder.Entity<UserMovie>(um =>
@@ -189,13 +131,12 @@
                 um.HasKey(u => new { u.UserId, u.MovieId });
 
                 um.HasOne(ums => ums.User)
-                    .WithMany(u => u.MovieWatchList)
+                    .WithMany(u => u.WatchList)
                     .HasForeignKey(ums => ums.UserId);
 
                 um.HasOne(ums => ums.Movie)
                     .WithMany(m => m.UsersWatchlists)
                     .HasForeignKey(ums => ums.MovieId);
-
             });
 
             this.ConfigureUserIdentityRelations(builder);

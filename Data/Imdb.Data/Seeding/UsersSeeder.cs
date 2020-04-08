@@ -1,14 +1,15 @@
-﻿using Imdb.Common;
-using Imdb.Data.Models;
-using Imdb.Data.Models.Enumerations;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Imdb.Data.Seeding
+﻿namespace Imdb.Data.Seeding
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Imdb.Common;
+    using Imdb.Data.Models;
+    using Imdb.Data.Models.Enumerations;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.DependencyInjection;
+
     public class UsersSeeder : ISeeder
     {
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)

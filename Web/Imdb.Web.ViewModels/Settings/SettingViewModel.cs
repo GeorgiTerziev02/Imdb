@@ -1,9 +1,8 @@
 ﻿namespace Imdb.Web.ViewModels.Settings
 {
+    using AutoMapper;
     using Imdb.Data.Models;
     using Imdb.Services.Mapping;
-
-    using AutoMapper;
 
     public class SettingViewModel : IMapFrom<Setting>, IHaveCustomMappings
     {

@@ -1,11 +1,12 @@
-﻿using Imdb.Data.Common.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-
-namespace Imdb.Data.Models
+﻿namespace Imdb.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Text;
+
+    using Imdb.Data.Common.Models;
+
     public class Vote : BaseModel<int>
     {
         [Required]
@@ -20,9 +21,5 @@ namespace Imdb.Data.Models
         public string MovieId { get; set; }
 
         public Movie Movie { get; set; }
-
-        public string TvShowId { get; set; }
-
-        public TvShow TvShow { get; set; }
     }
 }

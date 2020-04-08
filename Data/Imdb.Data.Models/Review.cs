@@ -1,9 +1,10 @@
-﻿using Imdb.Data.Common.Models;
-using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace Imdb.Data.Models
+﻿namespace Imdb.Data.Models
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
+    using Imdb.Data.Common.Models;
+
     public class Review : BaseDeletableModel<string>
     {
         public Review()
@@ -18,10 +19,6 @@ namespace Imdb.Data.Models
 
         [Required]
         public string Content { get; set; }
-
-        public string TvShowId { get; set; }
-
-        public TvShow TvShow { get; set; }
 
         public string MovieId { get; set; }
 

@@ -17,6 +17,7 @@
             this.UsersWatchlists = new HashSet<UserMovie>();
             this.MovieImages = new HashSet<MovieImage>();
             this.Votes = new HashSet<Vote>();
+            this.EpisodesCount = 1;
         }
 
         [Required]
@@ -35,6 +36,11 @@
 
         public DateTime? ReleaseDate { get; set; }
 
+        public bool IsTvShow { get; set; }
+
+        [Range(0, 100000)]
+        public int? EpisodesCount { get; set; }
+
         [Required]
         public int LanguageId { get; set; }
 
@@ -46,6 +52,8 @@
         public Director Director { get; set; }
 
         public string GeneralImageUrl { get; set; }
+
+        public string Trailer { get; set; }
 
         public virtual IEnumerable<MovieGenre> Genres { get; set; }
 

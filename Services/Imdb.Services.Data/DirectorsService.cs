@@ -1,11 +1,12 @@
-﻿using Imdb.Data.Common.Repositories;
-using Imdb.Data.Models;
-using Imdb.Data.Models.Enumerations;
-using System;
-using System.Threading.Tasks;
-
-namespace Imdb.Services.Data.Contracts
+﻿namespace Imdb.Services.Data.Contracts
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Imdb.Data.Common.Repositories;
+    using Imdb.Data.Models;
+    using Imdb.Data.Models.Enumerations;
+
     public class DirectorsService : IDirectorsService
     {
         private readonly IDeletableEntityRepository<Director> directorsRepository;

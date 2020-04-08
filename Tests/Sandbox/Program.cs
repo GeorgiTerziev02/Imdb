@@ -5,6 +5,7 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using CommandLine;
     using Imdb.Data;
     using Imdb.Data.Common;
     using Imdb.Data.Common.Repositories;
@@ -13,9 +14,6 @@
     using Imdb.Data.Seeding;
     using Imdb.Services.Data;
     using Imdb.Services.Messaging;
-
-    using CommandLine;
-
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;

@@ -7,7 +7,7 @@
     using Imdb.Data.Models;
     using Imdb.Services.Mapping;
 
-    public class ListTvShowViewModel : IMapFrom<TvShow>
+    public class ListTvShowViewModel : IMapFrom<Movie>
     {
         public string Id { get; set; }
 

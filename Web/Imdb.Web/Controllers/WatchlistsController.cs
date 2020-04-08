@@ -6,12 +6,24 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
     public class WatchlistsController : BaseController
     {
-        public WatchlistsController()
+        public async Task<IActionResult> AddToWatchlist()
         {
+            return this.Json(string.Empty);
+        }
+
+        public IActionResult Movies(string id)
+        {
+            return this.Json(string.Empty);
+        }
+
+        public IActionResult Tvshows(string id)
+        {
+            return this.Json(string.Empty);
         }
     }
 }

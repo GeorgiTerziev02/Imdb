@@ -1,12 +1,13 @@
 ﻿namespace Imdb.Web.Areas.Administration.Controllers
 {
+    using System.Threading.Tasks;
+
     using Imdb.Common;
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.Controllers;
     using Imdb.Web.ViewModels.Admin.Administration;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using System.Threading.Tasks;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     [Area("Admin")]

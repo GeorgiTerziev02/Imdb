@@ -1,18 +1,18 @@
-﻿using Imdb.Data.Common.Models;
-using Imdb.Data.Models.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace Imdb.Data.Models
+﻿namespace Imdb.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
+    using Imdb.Data.Common.Models;
+    using Imdb.Data.Models.Enumerations;
+
     public class Director : BaseDeletableModel<string>
     {
         public Director()
         {
             this.Id = Guid.NewGuid().ToString();
             this.Movies = new HashSet<Movie>();
-            this.TvShows = new HashSet<TvShow>();
         }
 
         [Required]
@@ -31,7 +31,5 @@ namespace Imdb.Data.Models
         public string Description { get; set; }
 
         public virtual IEnumerable<Movie> Movies { get; set; }
-
-        public virtual IEnumerable<TvShow> TvShows { get; set; }
     }
 }

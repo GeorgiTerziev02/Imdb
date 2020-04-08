@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Imdb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200406142045_AddMoreNullValues")]
-    partial class AddMoreNullValues
+    [Migration("20200408200126_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -242,8 +242,10 @@ namespace Imdb.Data.Migrations
 
             modelBuilder.Entity("Imdb.Data.Models.Genre", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -302,6 +304,9 @@ namespace Imdb.Data.Migrations
                     b.Property<TimeSpan?>("Duration")
                         .HasColumnType("time");
 
+                    b.Property<int?>("EpisodesCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("GeneralImageUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -309,6 +314,9 @@ namespace Imdb.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTvShow")
                         .HasColumnType("bit");
 
                     b.Property<int>("LanguageId")
@@ -325,6 +333,9 @@ namespace Imdb.Data.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
+                    b.Property<string>("Trailer")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DirectorId");
@@ -338,8 +349,10 @@ namespace Imdb.Data.Migrations
 
             modelBuilder.Entity("Imdb.Data.Models.MovieActor", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ActorId")
                         .HasColumnType("nvarchar(450)");
@@ -364,14 +377,16 @@ namespace Imdb.Data.Migrations
 
             modelBuilder.Entity("Imdb.Data.Models.MovieGenre", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("GenreId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("GenreId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
@@ -434,9 +449,6 @@ namespace Imdb.Data.Migrations
                     b.Property<string>("MovieId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("TvShowId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -446,8 +458,6 @@ namespace Imdb.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.HasIndex("MovieId");
-
-                    b.HasIndex("TvShowId");
 
                     b.HasIndex("UserId");
 
@@ -486,138 +496,6 @@ namespace Imdb.Data.Migrations
                     b.ToTable("Settings");
                 });
 
-            modelBuilder.Entity("Imdb.Data.Models.TvShow", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal?>("Budget")
-                        .IsRequired()
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
-
-                    b.Property<string>("DirectorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("EpisodesCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GeneralImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ReleaseDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DirectorId");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.HasIndex("LanguageId");
-
-                    b.ToTable("TvShows");
-                });
-
-            modelBuilder.Entity("Imdb.Data.Models.TvShowActor", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ActorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TvShowId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActorId");
-
-                    b.HasIndex("TvShowId");
-
-                    b.ToTable("TvShowActors");
-                });
-
-            modelBuilder.Entity("Imdb.Data.Models.TvShowGenre", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GenreId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TvShowId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GenreId");
-
-                    b.HasIndex("TvShowId");
-
-                    b.ToTable("TvShowGenres");
-                });
-
-            modelBuilder.Entity("Imdb.Data.Models.TvShowImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TvShowId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TvShowId");
-
-                    b.ToTable("TvShowImages");
-                });
-
             modelBuilder.Entity("Imdb.Data.Models.UserMovie", b =>
                 {
                     b.Property<string>("UserId")
@@ -631,21 +509,6 @@ namespace Imdb.Data.Migrations
                     b.HasIndex("MovieId");
 
                     b.ToTable("UserMovies");
-                });
-
-            modelBuilder.Entity("Imdb.Data.Models.UserTvShow", b =>
-                {
-                    b.Property<string>("TvShowId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("TvShowId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserTvShows");
                 });
 
             modelBuilder.Entity("Imdb.Data.Models.Vote", b =>
@@ -667,9 +530,6 @@ namespace Imdb.Data.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<string>("TvShowId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -677,8 +537,6 @@ namespace Imdb.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MovieId");
-
-                    b.HasIndex("TvShowId");
 
                     b.HasIndex("UserId");
 
@@ -819,7 +677,9 @@ namespace Imdb.Data.Migrations
                 {
                     b.HasOne("Imdb.Data.Models.Genre", "Genre")
                         .WithMany("Movies")
-                        .HasForeignKey("GenreId");
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Imdb.Data.Models.Movie", "Movie")
                         .WithMany("Genres")
@@ -841,59 +701,9 @@ namespace Imdb.Data.Migrations
                         .WithMany("Reviews")
                         .HasForeignKey("MovieId");
 
-                    b.HasOne("Imdb.Data.Models.TvShow", "TvShow")
-                        .WithMany("Reviews")
-                        .HasForeignKey("TvShowId");
-
                     b.HasOne("Imdb.Data.Models.ApplicationUser", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Imdb.Data.Models.TvShow", b =>
-                {
-                    b.HasOne("Imdb.Data.Models.Director", "Director")
-                        .WithMany("TvShows")
-                        .HasForeignKey("DirectorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Imdb.Data.Models.Language", "Language")
-                        .WithMany("TvShows")
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Imdb.Data.Models.TvShowActor", b =>
-                {
-                    b.HasOne("Imdb.Data.Models.Actor", "Actor")
-                        .WithMany("TvShows")
-                        .HasForeignKey("ActorId");
-
-                    b.HasOne("Imdb.Data.Models.TvShow", "TvShow")
-                        .WithMany("Actors")
-                        .HasForeignKey("TvShowId");
-                });
-
-            modelBuilder.Entity("Imdb.Data.Models.TvShowGenre", b =>
-                {
-                    b.HasOne("Imdb.Data.Models.Genre", "Genre")
-                        .WithMany("TvShows")
-                        .HasForeignKey("GenreId");
-
-                    b.HasOne("Imdb.Data.Models.TvShow", "TvShow")
-                        .WithMany("Genres")
-                        .HasForeignKey("TvShowId");
-                });
-
-            modelBuilder.Entity("Imdb.Data.Models.TvShowImage", b =>
-                {
-                    b.HasOne("Imdb.Data.Models.TvShow", "TvShow")
-                        .WithMany("Images")
-                        .HasForeignKey("TvShowId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -907,22 +717,7 @@ namespace Imdb.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Imdb.Data.Models.ApplicationUser", "User")
-                        .WithMany("MovieWatchList")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Imdb.Data.Models.UserTvShow", b =>
-                {
-                    b.HasOne("Imdb.Data.Models.TvShow", "TvShow")
-                        .WithMany("UsersWatchlists")
-                        .HasForeignKey("TvShowId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Imdb.Data.Models.ApplicationUser", "User")
-                        .WithMany("TvShowsWatchList")
+                        .WithMany("WatchList")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -933,10 +728,6 @@ namespace Imdb.Data.Migrations
                     b.HasOne("Imdb.Data.Models.Movie", "Movie")
                         .WithMany("Votes")
                         .HasForeignKey("MovieId");
-
-                    b.HasOne("Imdb.Data.Models.TvShow", "TvShow")
-                        .WithMany("Votes")
-                        .HasForeignKey("TvShowId");
 
                     b.HasOne("Imdb.Data.Models.ApplicationUser", "User")
                         .WithMany()

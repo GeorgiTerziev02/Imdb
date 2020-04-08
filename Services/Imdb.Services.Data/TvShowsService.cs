@@ -11,21 +11,21 @@
 
     public class TvShowsService : ITvShowsService
     {
-        private readonly IDeletableEntityRepository<TvShow> tvshowsRepository;
+        private readonly IDeletableEntityRepository<Movie> tvshowsRepository;
 
-        public TvShowsService(IDeletableEntityRepository<TvShow> tvshowsRepository)
+        public TvShowsService(IDeletableEntityRepository<Movie> tvshowsRepository)
         {
             this.tvshowsRepository = tvshowsRepository;
         }
 
         public IEnumerable<T> GetAll<T>()
         {
-            return this.tvshowsRepository.All().To<T>().ToList();
+            return this.tvshowsRepository.All().Where(x => x.IsTvShow).To<T>().ToList();
         }
 
         public T GetById<T>(string id)
         {
-            return this.tvshowsRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefault();
+            return this.tvshowsRepository.All().Where(x => x.IsTvShow).Where(x => x.Id == id).To<T>().FirstOrDefault();
         }
     }
 }

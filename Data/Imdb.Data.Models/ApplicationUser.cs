@@ -15,8 +15,7 @@
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
-            this.MovieWatchList = new HashSet<UserMovie>();
-            this.TvShowsWatchList = new HashSet<UserTvShow>();
+            this.WatchList = new HashSet<UserMovie>();
             this.Reviews = new HashSet<Review>();
         }
 
@@ -42,9 +41,7 @@
 
         public Gender Gender { get; set; }
 
-        public virtual IEnumerable<UserMovie> MovieWatchList { get; set; }
-
-        public virtual IEnumerable<UserTvShow> TvShowsWatchList { get; set; }
+        public virtual IEnumerable<UserMovie> WatchList { get; set; }
 
         public virtual IEnumerable<Review> Reviews { get; set; }
     }

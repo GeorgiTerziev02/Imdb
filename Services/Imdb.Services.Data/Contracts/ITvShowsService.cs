@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Text;
-
-namespace Imdb.Services.Data.Contracts
+﻿namespace Imdb.Services.Data.Contracts
 {
+    using System.Collections.Generic;
+    using System.Text;
+
     public interface ITvShowsService
     {
         T GetById<T>(string id);

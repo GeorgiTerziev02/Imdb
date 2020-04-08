@@ -1,20 +1,16 @@
-﻿using Imdb.Data.Common.Models;
-using System;
-
-namespace Imdb.Data.Models
+﻿namespace Imdb.Data.Models
 {
-    public class MovieGenre : BaseModel<string>
-    {
-        public MovieGenre()
-        {
-            this.Id = Guid.NewGuid().ToString();
-        }
+    using System;
 
+    using Imdb.Data.Common.Models;
+
+    public class MovieGenre : BaseModel<int>
+    {
         public string MovieId { get; set; }
 
         public Movie Movie { get; set; }
 
-        public string GenreId { get; set; }
+        public int GenreId { get; set; }
 
         public Genre Genre { get; set; }
     }

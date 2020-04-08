@@ -1,14 +1,15 @@
-﻿using Imdb.Data.Common.Repositories;
-using Imdb.Data.Models;
-using Imdb.Data.Models.Enumerations;
-using Imdb.Services.Data.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Imdb.Services.Data
+﻿namespace Imdb.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using Imdb.Data.Common.Repositories;
+    using Imdb.Data.Models;
+    using Imdb.Data.Models.Enumerations;
+    using Imdb.Services.Data.Contracts;
+
     public class ActorsService : IActorsService
     {
         private readonly IDeletableEntityRepository<Actor> actorsRepository;

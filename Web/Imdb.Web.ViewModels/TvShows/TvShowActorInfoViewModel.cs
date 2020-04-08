@@ -8,7 +8,7 @@
     using Imdb.Data.Models;
     using Imdb.Services.Mapping;
 
-    public class TvShowActorInfoViewModel : IMapFrom<TvShowActor>, IHaveCustomMappings
+    public class TvShowActorInfoViewModel : IMapFrom<MovieActor>, IHaveCustomMappings
     {
         public string ActorId { get; set; }
 
@@ -16,7 +16,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<TvShowActor, TvShowActorInfoViewModel>()
+            configuration.CreateMap<MovieActor, TvShowActorInfoViewModel>()
                 .ForMember(x => x.ActorName, y => y.MapFrom(x => x.Actor.FirstName + x.Actor.LastName));
         }
     }

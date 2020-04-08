@@ -23,7 +23,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<TvShow, ListMovieViewModel>()
+            configuration.CreateMap<Movie, ListMovieViewModel>()
                 .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(z => z.Rating)));
         }
     }

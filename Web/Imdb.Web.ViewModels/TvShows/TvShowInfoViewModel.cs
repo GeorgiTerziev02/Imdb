@@ -1,14 +1,14 @@
-﻿using AutoMapper;
-using Imdb.Data.Models;
-using Imdb.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Imdb.Web.ViewModels.TvShows
+﻿namespace Imdb.Web.ViewModels.TvShows
 {
-    public class TvShowInfoViewModel : IMapFrom<TvShow>, IHaveCustomMappings
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using AutoMapper;
+    using Imdb.Data.Models;
+    using Imdb.Services.Mapping;
+
+    public class TvShowInfoViewModel : IMapFrom<Movie>, IHaveCustomMappings
     {
         public string Id { get; set; }
 
@@ -42,7 +42,7 @@ namespace Imdb.Web.ViewModels.TvShows
         // public virtual IEnumerable<TvShowImage> Images { get; set; }
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<TvShow, TvShowInfoViewModel>()
+            configuration.CreateMap<Movie, TvShowInfoViewModel>()
                 .ForMember(x => x.DirectorName, y => y.MapFrom(x => x.Director.FirstName + x.Director.LastName))
                 .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(z => z.Rating)));
         }

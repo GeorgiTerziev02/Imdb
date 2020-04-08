@@ -1,11 +1,12 @@
-﻿using Imdb.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Imdb.Data.Seeding
+﻿namespace Imdb.Data.Seeding
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Imdb.Data.Models;
+
     public class LanguagesSeeder : ISeeder
     {
         private readonly List<string> languages = new List<string>

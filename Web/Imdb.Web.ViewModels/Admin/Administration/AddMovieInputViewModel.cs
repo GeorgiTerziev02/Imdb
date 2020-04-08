@@ -1,8 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace Imdb.Web.ViewModels.Admin.Administration
+﻿namespace Imdb.Web.ViewModels.Admin.Administration
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
     public class AddMovieInputViewModel
     {
         [Required]
@@ -33,6 +33,6 @@ namespace Imdb.Web.ViewModels.Admin.Administration
         [Required]
         public string DirectorId { get; set; }
 
-        //public Director Director { get; set; }
+        // public Director Director { get; set; }
     }
 }

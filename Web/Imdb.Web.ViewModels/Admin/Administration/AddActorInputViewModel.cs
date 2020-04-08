@@ -1,14 +1,13 @@
-﻿using Imdb.Data.Models;
-using Imdb.Data.Models.Enumerations;
-using Imdb.Services.Mapping;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-
-namespace Imdb.Web.ViewModels.Admin.Administration
+﻿namespace Imdb.Web.ViewModels.Admin.Administration
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
+    using Imdb.Data.Models;
+    using Imdb.Data.Models.Enumerations;
+    using Imdb.Services.Mapping;
+    using Microsoft.AspNetCore.Http;
+
     public class AddActorInputViewModel : IMapTo<Actor>
     {
         [Required]

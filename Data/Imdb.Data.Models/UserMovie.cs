@@ -1,7 +1,4 @@
 ﻿// ReSharper disable VirtualMemberCallInConstructor
-using Imdb.Data.Common.Models;
-using System;
-
 namespace Imdb.Data.Models
 {
     public class UserMovie

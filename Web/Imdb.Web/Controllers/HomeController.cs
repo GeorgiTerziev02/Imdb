@@ -1,6 +1,7 @@
 ﻿namespace Imdb.Web.Controllers
 {
     using System.Diagnostics;
+
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.ViewModels;
     using Imdb.Web.ViewModels.Home;
