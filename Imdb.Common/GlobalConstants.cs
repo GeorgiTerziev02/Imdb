@@ -11,5 +11,7 @@
         public const string BaseDeliveryUrl = @"http://res.cloudinary.com/dlgtvkmfb";
 
         public const string DefaulProfilePicture = @"/image/upload/v1585137274/default-profile_grl2kr.png";
+
+        public const string NoImagePicture = @"/image/upload/v1586527555/112815953-stock-vector-no-image-available-icon-flat-vector_lzbg4k.jpg";
     }
 }

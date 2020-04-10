@@ -31,6 +31,7 @@
             return this.moviesRepository.All().To<T>().ToList();
         }
 
+        // TODO: Test add movie
         public T GetById<T>(string id)
         {
             return this.moviesRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefault();

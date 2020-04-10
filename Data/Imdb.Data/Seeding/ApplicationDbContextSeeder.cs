@@ -30,6 +30,8 @@
                               new UsersSeeder(),
                               new LanguagesSeeder(),
                               new GenresSeeder(),
+                              new DirectorsSeeder(),
+                              new ActorsSeeder(),
                           };
 
             foreach (var seeder in seeders)

@@ -1,9 +1,15 @@
 ﻿namespace Imdb.Web.ViewModels.Admin.Administration
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
-    public class AddMovieInputViewModel
+    using Imdb.Data.Models;
+    using Imdb.Services.Mapping;
+    using Microsoft.AspNetCore.Http;
+
+    public class AddMovieInputViewModel : IMapTo<Movie>
     {
         [Required]
         [MaxLength(100)]
@@ -13,26 +19,32 @@
         [MaxLength(500)]
         public string Description { get; set; }
 
-        [Required]
-        public TimeSpan Duration { get; set; }
+        public TimeSpan? Duration { get; set; }
 
-        public long Gross { get; set; }
+        public long? Gross { get; set; }
 
-        [Required]
-        public decimal Budget { get; set; }
-
-        [Required]
-        [Range(0, 10)]
-        public decimal Rating { get; set; }
+        public decimal? Budget { get; set; }
 
         public DateTime ReleaseDate { get; set; }
 
+        public IFormFile Image { get; set; }
+
+        public string GeneralImageUrl { get; set; }
+
+        public string TrailerUrl { get; set; }
+
         [Required]
+        [Display(Name = "Language")]
         public int LanguageId { get; set; }
 
         [Required]
+        [Display(Name = "Director")]
         public string DirectorId { get; set; }
 
-        // public Director Director { get; set; }
+        [NotMapped]
+        public IEnumerable<DirectorDropDownViewModel> Directors { get; set; }
+
+        [NotMapped]
+        public IEnumerable<LanguageDropDownViewModel> Languages { get; set; }
     }
 }

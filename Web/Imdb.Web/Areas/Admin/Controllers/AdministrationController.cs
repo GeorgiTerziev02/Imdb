@@ -13,15 +13,24 @@
     [Area("Admin")]
     public class AdministrationController : BaseController
     {
+        private readonly IMoviesService moviesService;
         private readonly IDirectorsService directorsService;
         private readonly IActorsService actorsService;
         private readonly ICloudinaryService cloudinaryService;
+        private readonly ILanguageService languageService;
 
-        public AdministrationController(IDirectorsService directorsService, IActorsService actorsService, ICloudinaryService cloudinaryService)
+        public AdministrationController(
+            IMoviesService moviesService,
+            IDirectorsService directorsService,
+            IActorsService actorsService,
+            ICloudinaryService cloudinaryService,
+            ILanguageService languageService)
         {
+            this.moviesService = moviesService;
             this.directorsService = directorsService;
             this.actorsService = actorsService;
             this.cloudinaryService = cloudinaryService;
+            this.languageService = languageService;
         }
 
         public IActionResult Index()
@@ -80,12 +89,31 @@
 
         public IActionResult AddMovie()
         {
-            return this.View();
+            var viewModel = new AddMovieInputViewModel()
+            {
+                Languages = this.languageService.GetAll<LanguageDropDownViewModel>(),
+                Directors = this.directorsService.GetAll<DirectorDropDownViewModel>(),
+            };
+            return this.View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult AddMovie(AddMovieInputViewModel input)
+        public async Task<IActionResult> AddMovie(AddMovieInputViewModel input)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(input);
+            }
+
+            var imageUrl = await this.cloudinaryService.UploudImageAsync(input.Image);
+            if (imageUrl == null)
+            {
+                imageUrl = GlobalConstants.NoImagePicture;
+            }
+
+            input.GeneralImageUrl = imageUrl;
+            await this.moviesService.AddMovie<AddMovieInputViewModel>(input);
+
             return this.Redirect("/Home/Index");
         }
 

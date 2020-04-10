@@ -1,11 +1,14 @@
 ﻿namespace Imdb.Services.Data.Contracts
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Imdb.Data.Common.Repositories;
     using Imdb.Data.Models;
     using Imdb.Data.Models.Enumerations;
+    using Imdb.Services.Mapping;
 
     public class DirectorsService : IDirectorsService
     {
@@ -30,6 +33,11 @@
 
             await this.directorsRepository.AddAsync(director);
             await this.directorsRepository.SaveChangesAsync();
+        }
+
+        public IEnumerable<T> GetAll<T>()
+        {
+            return this.directorsRepository.AllAsNoTracking().OrderBy(x => x.FirstName).ThenBy(x => x.LastName).To<T>().ToList();
         }
     }
 }
