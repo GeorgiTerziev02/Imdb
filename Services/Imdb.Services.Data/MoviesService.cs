@@ -22,6 +22,7 @@
         public async Task AddMovie<T>(T model)
         {
             var newMovie = AutoMapperConfig.MapperInstance.Map<Movie>(model);
+            newMovie.IsTvShow = false;
             await this.moviesRepository.AddAsync(newMovie);
             await this.moviesRepository.SaveChangesAsync();
         }
@@ -37,9 +38,9 @@
             return this.moviesRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefault();
         }
 
-        public IEnumerable<T> GetTop5Movies<T>()
+        public IEnumerable<T> GetTopMovies<T>(int count)
         {
-            return this.moviesRepository.All().OrderByDescending(x => x.Votes.Average(y => y.Rating)).To<T>().ToList();
+            return this.moviesRepository.All().OrderByDescending(x => x.Votes.Average(y => y.Rating)).Take(count).To<T>().ToList();
         }
     }
 }

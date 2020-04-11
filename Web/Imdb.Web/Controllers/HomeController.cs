@@ -10,6 +10,7 @@
     public class HomeController : BaseController
     {
         private readonly IMoviesService moviesService;
+        private const int TopMoviesCount = 3;
 
         public HomeController(IMoviesService moviesService)
         {
@@ -20,7 +21,7 @@
         {
             IndexViewModel topMovie = new IndexViewModel
             {
-                TopMovies = this.moviesService.GetTop5Movies<TopMovieViewModel>(),
+                TopMovies = this.moviesService.GetTopMovies<TopMovieViewModel>(TopMoviesCount),
             };
             return this.View(topMovie);
         }

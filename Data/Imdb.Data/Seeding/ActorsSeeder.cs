@@ -1,14 +1,14 @@
-﻿using Imdb.Common;
-using Imdb.Data.Models;
-using Imdb.Data.Models.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Imdb.Data.Seeding
+﻿namespace Imdb.Data.Seeding
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Imdb.Common;
+    using Imdb.Data.Models;
+    using Imdb.Data.Models.Enumerations;
+
     public class ActorsSeeder : ISeeder
     {
         private readonly List<string> names = new List<string>
@@ -117,6 +117,10 @@ namespace Imdb.Data.Seeding
 
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
+            if (dbContext.Actors.Any())
+            {
+                return;
+            }
 
             foreach (var name in this.names)
             {

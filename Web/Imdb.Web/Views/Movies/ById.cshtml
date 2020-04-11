@@ -1,7 +1,47 @@
 ﻿@model Imdb.Web.ViewModels.Movies.MovieInfoViewModel
 @{
     ViewData["Title"] = "ById";
-}
+    var releaseDate = string.Empty;
 
-<h1>@Model.Title</h1>
+    if (!Model.ReleaseDate.HasValue)
+    {
+        releaseDate = "Not announced";
+    }
+    else
+    {
+        releaseDate = Model.ReleaseDate.Value.Date.ToShortDateString();
+    }
+}
+<div class="text-center">
+    <img src="@(GlobalConstants.BaseDeliveryUrl+Model.GeneralImageUrl)" width="500" height="350" />
+
+    <h1 class="text-center">@Model.Title</h1>
+    <p class="small">@Model.LanguageName | @releaseDate | @Model.Duration </p>
+    <p class="small">Gross: @Model.Gross | Budget: @Model.Budget </p>
+
+    <label class="font-weight-bold" asp-for="@Model.Description"></label>
+    <div class="form-group">@Model.Description</div>
+
+    <label class="font-weight-bold" asp-for="@Model.DirectorName"></label>
+    <div class="form-group">@Model.DirectorName</div>
+
+    @*
+        public string DirectorId { get; set; }
+
+        [Display(Name = "Director's name")]
+        public string DirectorName { get; set; }
+
+        [Display(Name = "Image")]
+        public string GeneralImageUrl { get; set; }
+
+        public double? Rating { get; set; }
+
+        public virtual IEnumerable<MovieGenreInfoViewModel>
+            Genres { get; set; }
+
+            public virtual IEnumerable<MovieActorInfoViewModel>
+                Actors { get; set; }
+
+                public virtual IEnumerable<MovieReviewViewModel> Reviews { get; set; }*@
+</div>
 

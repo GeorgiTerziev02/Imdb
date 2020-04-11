@@ -12,19 +12,21 @@
     <h3 class="display-4">Top Movies</h3>
 </div>
 
-<div class="text-center">
+<div class="text-center row">
     @foreach (var movie in Model.TopMovies)
     {
-        <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="@(GlobalConstants.BaseDeliveryUrl+movie.GeneralImageUrl)" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">@movie.Title</h5>
-                <p class="card-text">Description</p>
-                <a asp-controller="Movies" asp-action="ById" asp-route-id="@movie.Id" class="btn btn-primary">View Movie</a>
-                @if (this.User.Identity.IsAuthenticated)
-                {
-                    <a href="#" ><i class="fas fa-star">Add to watchlist</i></a>
-                }
+        <div class="col-md-4">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="@(GlobalConstants.BaseDeliveryUrl+movie.GeneralImageUrl)" width="300" height="200" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@movie.Title</h5>
+                    <p class="card-text">@movie.ShortDescription</p>
+                    <a asp-controller="Movies" asp-action="ById" asp-route-id="@movie.Id" class="btn btn-primary">View Movie</a>
+                    @if (this.User.Identity.IsAuthenticated)
+                    {
+                        <a href="#"><i class="fas fa-star">Add to watchlist</i></a>
+                    }
+                </div>
             </div>
         </div>
     }

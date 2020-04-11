@@ -19,19 +19,22 @@
         [MaxLength(500)]
         public string Description { get; set; }
 
-        public TimeSpan? Duration { get; set; }
+        [RegularExpression("^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$", ErrorMessage = "Duration must be in format hh:mm/hh:mm:ss")]
+        public string Duration { get; set; }
 
         public long? Gross { get; set; }
 
         public decimal? Budget { get; set; }
 
-        public DateTime ReleaseDate { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? ReleaseDate { get; set; }
 
         public IFormFile Image { get; set; }
 
         public string GeneralImageUrl { get; set; }
 
-        public string TrailerUrl { get; set; }
+        [Display(Name = "Trailer url")]
+        public string Trailer { get; set; }
 
         [Required]
         [Display(Name = "Language")]

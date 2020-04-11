@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
     using AutoMapper;
@@ -22,14 +23,18 @@
 
         public decimal? Budget { get; set; }
 
+        [Display(Name = "Release date")]
         public DateTime? ReleaseDate { get; set; }
 
+        [Display(Name = "Language")]
         public string LanguageName { get; set; }
 
         public string DirectorId { get; set; }
 
+        [Display(Name = "Director's name")]
         public string DirectorName { get; set; }
 
+        [Display(Name = "Image")]
         public string GeneralImageUrl { get; set; }
 
         public double? Rating { get; set; }

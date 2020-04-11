@@ -30,10 +30,11 @@
 
             if (movie == null)
             {
-                // TODO: 4040
+                // TODO: 404
+                return this.BadRequest();
             }
 
-            return this.Json(movie);
+            return this.View(movie);
         }
     }
 }

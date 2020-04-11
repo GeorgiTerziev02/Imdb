@@ -30,8 +30,10 @@
 
         public TimeSpan? Duration { get; set; }
 
+        [Range(1, long.MaxValue)]
         public long? Gross { get; set; }
 
+        [Range(1, double.MaxValue)]
         public decimal? Budget { get; set; }
 
         public DateTime? ReleaseDate { get; set; }
