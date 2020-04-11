@@ -2,6 +2,7 @@
 @model Imdb.Web.ViewModels.Home.IndexViewModel
 @{
     this.ViewData["Title"] = "Home Page";
+    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 <div class="text-center">
@@ -24,7 +25,7 @@
                     <a asp-controller="Movies" asp-action="ById" asp-route-id="@movie.Id" class="btn btn-primary">View Movie</a>
                     @if (this.User.Identity.IsAuthenticated)
                     {
-                        <a href="#"><i class="fas fa-star">Add to watchlist</i></a>
+                        <a asp-area="" asp-controller="Watchlists" asp-action="Add" asp-route-userId="@userId" asp-route-movieId="@movie.Id"><i class="fas fa-star">Add to watchlist</i></a>
                     }
                 </div>
             </div>

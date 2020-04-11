@@ -42,5 +42,10 @@
         {
             return this.moviesRepository.All().OrderByDescending(x => x.Votes.Average(y => y.Rating)).Take(count).To<T>().ToList();
         }
+
+        public bool IsMovieIdValid(string movieId)
+        {
+            return this.moviesRepository.AllAsNoTracking().Any(x => x.Id == movieId);
+        }
     }
 }

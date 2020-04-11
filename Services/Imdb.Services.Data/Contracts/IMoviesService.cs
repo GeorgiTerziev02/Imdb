@@ -15,5 +15,7 @@
         T GetById<T>(string id);
 
         IEnumerable<T> GetAll<T>();
+
+        bool IsMovieIdValid(string movieId);
     }
 }

@@ -18,7 +18,7 @@
             this.watchlistRepository = watchlistRepository;
         }
 
-        public async Task AddToWatchlist(string userId, string movieId)
+        public async Task AddToWatchlistAsync(string userId, string movieId)
         {
             var userMovie = new UserMovie()
             {
@@ -38,6 +38,19 @@
         public IEnumerable<T> GetMovies<T>(string userId)
         {
             return this.watchlistRepository.All().Where(x => x.UserId == userId).To<T>().ToList();
+        }
+
+        public async Task RemoveFromWatchlistAsync(string userId, string movieId)
+        {
+            var userMoive = this.watchlistRepository.All().FirstOrDefault(x => x.UserId == userId && x.MovieId == movieId);
+
+            this.watchlistRepository.Delete(userMoive);
+            await this.watchlistRepository.SaveChangesAsync();
+        }
+
+        public bool WatchlistMovieExists(string userId, string movieId)
+        {
+            return this.watchlistRepository.AllAsNoTracking().Any(x => x.UserId == userId && x.MovieId == movieId);
         }
 
         public IEnumerable<T> TvShows<T>(string userId)

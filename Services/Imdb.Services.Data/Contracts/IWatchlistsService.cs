@@ -7,12 +7,12 @@
 
     public interface IWatchlistsService
     {
-        Task AddToWatchlist(string userId, string movieId);
+        Task AddToWatchlistAsync(string userId, string movieId);
+
+        bool WatchlistMovieExists(string userId, string movieId);
+
+        Task RemoveFromWatchlistAsync(string userId, string movieId);
 
         IEnumerable<T> GetMovies<T>(string userId);
-
-        IEnumerable<T> TvShows<T>(string userId);
-
-        IEnumerable<T> GetFullWatchlist<T>(string userId);
     }
 }
