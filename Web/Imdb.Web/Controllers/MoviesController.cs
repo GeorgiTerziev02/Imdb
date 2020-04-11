@@ -3,6 +3,7 @@
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.ViewModels.Movies;
     using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
 
     public class MoviesController : BaseController
     {
@@ -42,6 +43,8 @@
                 // TODO: 404
                 return this.BadRequest();
             }
+
+            movie.PossibleVotes = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
             return this.View(movie);
         }

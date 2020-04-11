@@ -47,7 +47,7 @@
 
         public virtual IEnumerable<MovieReviewViewModel> Reviews { get; set; }
 
-        public int Vote { get; set; }
+        public int VotesCount { get; set; }
 
         public IEnumerable<int> PossibleVotes { get; set; }
 
@@ -56,7 +56,8 @@
         {
             configuration.CreateMap<Movie, MovieInfoViewModel>()
                 .ForMember(x => x.DirectorName, y => y.MapFrom(x => x.Director.FirstName + " " + x.Director.LastName))
-                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(z => z.Rating)));
+                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(z => z.Rating)))
+                .ForMember(x => x.VotesCount, y => y.MapFrom(x => x.Votes.Count()));
         }
     }
 }

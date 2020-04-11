@@ -11,7 +11,10 @@
     {
         releaseDate = Model.ReleaseDate.Value.Date.ToShortDateString();
     }
-
+    if (Model.Rating == null)
+    {
+        Model.Rating = 0;
+    }
     var votes = Model.PossibleVotes.Select(x => new SelectListItem(x.ToString(), x.ToString()));
 }
 <div class="text-center">
@@ -20,7 +23,21 @@
             <img src="@(GlobalConstants.BaseDeliveryUrl+Model.GeneralImageUrl)" width="100%" height="315" />
         </div>
         <div class="col-12 col-md-2">
-            
+            <form id="votesForm" method="post"></form>
+            <div class="row">
+                <div class="col-md-8">
+                    <select id="chosenNumber" asp-items="@votes" class="form-control"></select>
+                </div>
+                <div class="col-md-4">
+                    <a href="#" onclick="vote(@Model.Id)">
+                        <i class="fas fa-play"></i>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div id="rating">Rating: @Model.Rating/10</div>
+                <div id="votesCount">(Total Votes: @Model.VotesCount)</div>
+            </div>
         </div>
         <div class="col-12 col-md-6">
             <iframe width="560" height="315" src="@Model.Trailer" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -36,24 +53,27 @@
 
     <label class="font-weight-bold" asp-for="@Model.DirectorName"></label>
     <div class="form-group">@Model.DirectorName</div>
-
-    @*
-        public string DirectorId { get; set; }
-
-        [Display(Name = "Director's name")]
-        public string DirectorName { get; set; }
-
-        [Display(Name = "Image")]
-        public string GeneralImageUrl { get; set; }
-
-        public double? Rating { get; set; }
-
-        public virtual IEnumerable<MovieGenreInfoViewModel>
-            Genres { get; set; }
-
-            public virtual IEnumerable<MovieActorInfoViewModel>
-                Actors { get; set; }
-
-                public virtual IEnumerable<MovieReviewViewModel> Reviews { get; set; }*@
 </div>
 
+
+@section Scripts {
+    <script>
+        function vote(movieId) {
+            var rating = $("#chosenNumber").val();
+            var token = $("#votesForm input[name=__RequestVerificationToken]").val();
+            var json = { movieId: movieId, rating: rating };
+            $.ajax({
+                url: "/api/votes",
+                type: "POST",
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: { 'X-CSRF-TOKEN': token },
+                success: function (data) {
+                    $("#votesCount").html(data.votesCount);
+                    $("#rating").html(data.rating);
+                }
+            });
+        }
+    </script>
+}
