@@ -27,12 +27,11 @@
             await this.moviesRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<T> GetAll<T>()
+        public IEnumerable<T> GetAll<T>(int skip, int itemsPerPage)
         {
-            return this.moviesRepository.All().To<T>().ToList();
+            return this.moviesRepository.All().Skip(skip).Take(itemsPerPage).OrderBy(x => x.Title).To<T>().ToList();
         }
 
-        // TODO: Test add movie
         public T GetById<T>(string id)
         {
             return this.moviesRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefault();
@@ -40,7 +39,12 @@
 
         public IEnumerable<T> GetTopMovies<T>(int count)
         {
-            return this.moviesRepository.All().OrderByDescending(x => x.Votes.Average(y => y.Rating)).Take(count).To<T>().ToList();
+            return this.moviesRepository.All().OrderByDescending(x => x.Votes.Average(y => y.Rating)).ThenByDescending(x => x.Votes.Count()).Take(count).To<T>().ToList();
+        }
+
+        public int GetTotalCount()
+        {
+            return this.moviesRepository.AllAsNoTracking().Count();
         }
 
         public bool IsMovieIdValid(string movieId)

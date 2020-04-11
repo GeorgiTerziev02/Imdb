@@ -14,8 +14,10 @@
 
         T GetById<T>(string id);
 
-        IEnumerable<T> GetAll<T>();
+        IEnumerable<T> GetAll<T>(int page, int itemsPerPage);
 
         bool IsMovieIdValid(string movieId);
+
+        int GetTotalCount();
     }
 }

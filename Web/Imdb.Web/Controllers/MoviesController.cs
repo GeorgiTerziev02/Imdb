@@ -7,20 +7,29 @@
     public class MoviesController : BaseController
     {
         private readonly IMoviesService moviesService;
+        private const int ItemsPerPage = 5;
 
         public MoviesController(IMoviesService moviesService)
         {
             this.moviesService = moviesService;
         }
 
-        // TODO: Add paging
-        public IActionResult All()
+        public IActionResult All(int page = 1)
         {
+            var count = this.moviesService.GetTotalCount();
+            if (page <= 0 || page > count)
+            {
+                page = 1;
+            }
+
             var allMovies = new ListAllMoviesViewModel
             {
-                Movies = this.moviesService.GetAll<ListMovieViewModel>(),
+                Movies = this.moviesService.GetAll<ListMovieViewModel>((page - 1) * ItemsPerPage, ItemsPerPage),
             };
 
+            var pagesCount = ((count - 1) / ItemsPerPage) + 1;
+            allMovies.PageCount = pagesCount;
+            allMovies.CurrentPage = page;
             return this.View(allMovies);
         }
 

@@ -1,16 +1,17 @@
 ﻿@model Imdb.Web.ViewModels.Movies.ListAllMoviesViewModel
 @{
     ViewData["Title"] = "View";
+    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
-<h1 class="text-center">All</h1>
+<h1 class="text-center">Movies</h1>
 
 <div class="col-md-8">
     @foreach (var movie in Model.Movies)
     {
         <div class="card">
             <div class="row align-items-center">
-                <div class="col-12 col-md-4"><img width="100%" alt="Grandfather with child" src="@(GlobalConstants.BaseDeliveryUrl + movie.GeneralImageUrl)" sizes="(max-width: 660px) 100vw, 660px"></div>
+                <div class="col-12 col-md-4"><img width="100%" height="191" src="@(GlobalConstants.BaseDeliveryUrl + movie.GeneralImageUrl)" sizes="(max-width: 660px) 100vw, 660px"></div>
                 <div class="col-12 col-md-8">
                     <h3>@movie.Title</h3>
                     @if (movie.Rating == null)
@@ -29,11 +30,61 @@
                     <a class="btn btn-primary my-3" asp-controller="Movies" asp-action="ById" asp-route-id="@movie.Id">View movie</a>
                     @if (this.User.Identity.IsAuthenticated)
                     {
-                        <a href="#"><i class="fas fa-star">Add to watchlist</i></a>
+                        <a asp-area="" asp-controller="Watchlists" asp-action="Add" asp-route-userId="@userId" asp-route-movieId="@movie.Id"><i class="fas fa-star">Add to watchlist</i></a>
                     }
                 </div>
             </div>
         </div>
-        <hr/>
+        <hr />
     }
 </div>
+
+<nav>
+    <ul class="pagination ">
+        @if (this.Model.CurrentPage == 1)
+        {
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Previous</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-area=""
+                   asp-controller="Movies"
+                   asp-action="All"
+                   asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            var active = i == this.Model.CurrentPage ? "active" : string.Empty;
+            <li class="page-item @active">
+                <a class="page-link"
+                   asp-area=""
+                   asp-controller="Movies"
+                   asp-action="All"
+                   asp-route-page="@i">@i</a>
+            </li>
+        }
+
+        @if (this.Model.CurrentPage == this.Model.PageCount)
+        {
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-area=""
+                   asp-controller="Movies"
+                   asp-action="All"
+                   asp-route-page="@(Model.CurrentPage + 1)">Next</a>
+            </li>
+        }
+    </ul>
+</nav>
