@@ -5,5 +5,7 @@
         public int VotesCount { get; set; }
 
         public double Rating { get; set; }
+
+        public int UserVote { get; set; }
     }
 }

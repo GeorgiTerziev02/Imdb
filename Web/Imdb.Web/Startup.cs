@@ -67,6 +67,11 @@
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-CSRF-TOKEN";
+            });
+
             services.AddRazorPages();
 
             services.AddSingleton(this.configuration);
@@ -90,6 +95,7 @@
             services.AddTransient<ITvShowsService, TvShowsService>();
             services.AddTransient<IWatchlistsService, WatchlistService>();
             services.AddTransient<ILanguageService, LanguageService>();
+            services.AddTransient<IVotesService, VotesService>();
 
             // Cloudinary
             Account account = new Account(

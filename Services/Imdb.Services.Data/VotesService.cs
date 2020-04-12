@@ -44,5 +44,10 @@
         {
             return this.votesRepository.AllAsNoTracking().Where(x => x.MovieId == movieId).Count();
         }
+
+        public int? GetUserRatingForMovie(string userId, string movieId)
+        {
+            return this.votesRepository.AllAsNoTracking().FirstOrDefault(x => x.UserId == userId && x.MovieId == movieId)?.Rating;
+        }
     }
 }

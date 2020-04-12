@@ -49,6 +49,8 @@
 
         public int VotesCount { get; set; }
 
+        public int? UserVote { get; set; }
+
         public IEnumerable<int> PossibleVotes { get; set; }
 
         // TODO: public virtual IEnumerable<MovieImage> MovieImages { get; set; }

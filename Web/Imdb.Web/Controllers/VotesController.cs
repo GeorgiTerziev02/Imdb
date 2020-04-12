@@ -11,7 +11,6 @@
 
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class VotesController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -24,19 +23,16 @@
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<MovieVoteResponseModel>> Post(MovieVoteInputModel input)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest();
-            }
-
             var userId = this.userManager.GetUserId(this.User);
             await this.votesService.VoteAsync(userId, input.MovieId, input.Rating);
             var response = new MovieVoteResponseModel()
             {
                 Rating = this.votesService.MovieRating(input.MovieId),
                 VotesCount = this.votesService.MovieVotesCount(input.MovieId),
+                UserVote = input.Rating,
             };
 
             return response;

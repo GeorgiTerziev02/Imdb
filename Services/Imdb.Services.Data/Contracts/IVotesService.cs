@@ -9,5 +9,7 @@
         int MovieVotesCount(string movieId);
 
         double MovieRating(string movieId);
+
+        int? GetUserRatingForMovie(string userId, string movieId);
     }
 }

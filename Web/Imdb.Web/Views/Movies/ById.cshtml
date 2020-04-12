@@ -24,19 +24,26 @@
         </div>
         <div class="col-12 col-md-2">
             <form id="votesForm" method="post"></form>
-            <div class="row">
-                <div class="col-md-8">
-                    <select id="chosenNumber" asp-items="@votes" class="form-control"></select>
+            @if (this.User.Identity.IsAuthenticated)
+            {
+                <div class="row">
+                    <div class="col-md-8">
+                        <select selected="10" id="chosenNumber" asp-items="@votes" class="form-control"></select>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="#" onclick="sendVote('@Model.Id')">
+                            <i class="fas fa-play"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <a href="#" onclick="vote(@Model.Id)">
-                        <i class="fas fa-play"></i>
-                    </a>
-                </div>
-            </div>
+            }
             <div>
-                <div id="rating">Rating: @Model.Rating/10</div>
-                <div id="votesCount">(Total Votes: @Model.VotesCount)</div>
+                @if (this.Model.UserVote != null)
+                {
+                    <div>Your vote: <span class="font-weight-bold" id="userVote">@Model.UserVote</span></div>
+                }
+                <div>Rating: <span class="font-weight-bold" id="rating">@Model.Rating</span>/10</div>
+                <div>(Total votes: <span id="votesCount">@Model.VotesCount</span>)</div>
             </div>
         </div>
         <div class="col-12 col-md-6">
@@ -58,10 +65,11 @@
 
 @section Scripts {
     <script>
-        function vote(movieId) {
+        function sendVote(movieId) {
             var rating = $("#chosenNumber").val();
             var token = $("#votesForm input[name=__RequestVerificationToken]").val();
-            var json = { movieId: movieId, rating: rating };
+            console.log(token);
+            var json = { movieId: movieId, rating: parseInt(rating) };
             $.ajax({
                 url: "/api/votes",
                 type: "POST",
@@ -72,6 +80,7 @@
                 success: function (data) {
                     $("#votesCount").html(data.votesCount);
                     $("#rating").html(data.rating);
+                    $("#userVote").html(data.userVote);
                 }
             });
         }

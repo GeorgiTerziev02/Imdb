@@ -4,15 +4,18 @@
     using Imdb.Web.ViewModels.Movies;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
+    using System.Security.Claims;
 
     public class MoviesController : BaseController
     {
         private readonly IMoviesService moviesService;
+        private readonly IVotesService votesService;
         private const int ItemsPerPage = 5;
 
-        public MoviesController(IMoviesService moviesService)
+        public MoviesController(IMoviesService moviesService, IVotesService votesService)
         {
             this.moviesService = moviesService;
+            this.votesService = votesService;
         }
 
         public IActionResult All(int page = 1)
@@ -42,6 +45,16 @@
             {
                 // TODO: 404
                 return this.BadRequest();
+            }
+
+            if (this.User.Identity.IsAuthenticated)
+            {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                movie.UserVote = this.votesService.GetUserRatingForMovie(userId, id);
+            }
+            else
+            {
+                movie.UserVote = null;
             }
 
             movie.PossibleVotes = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
