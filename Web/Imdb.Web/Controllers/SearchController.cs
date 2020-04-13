@@ -1,13 +1,9 @@
-﻿using Imdb.Services.Data.Contracts;
-using Imdb.Web.ViewModels.Search;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Imdb.Web.Controllers
+﻿namespace Imdb.Web.Controllers
 {
+    using Imdb.Services.Data.Contracts;
+    using Imdb.Web.ViewModels.Search;
+    using Microsoft.AspNetCore.Mvc;
+
     public class SearchController : Controller
     {
         private readonly IMoviesService moviesService;

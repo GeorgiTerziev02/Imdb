@@ -2,7 +2,7 @@
 {
     using System.Security.Claims;
     using System.Threading.Tasks;
-
+    using Imdb.Common;
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.ViewModels.Review;
     using Microsoft.AspNetCore.Authorization;
@@ -34,6 +34,7 @@
 
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             await this.reviewsService.AddAsync(userId, input.MovieId, input.Content);
+            this.TempData["InfoMessage"] = GlobalConstants.ThankYorForReview;
 
             return this.Redirect($"/Movies/ById/{input.MovieId}");
         }
@@ -46,8 +47,14 @@
                 return this.BadRequest();
             }
 
+            if (!this.reviewsService.ContainsReviewById(reviewId))
+            {
+                return this.BadRequest();
+            }
+
             // TODO: Check if exists
             var movieId = await this.reviewsService.RemoveById(reviewId);
+            this.TempData["InfoMessage"] = GlobalConstants.SuccessfullDelete;
 
             return this.Redirect($"/Movies/ById/{movieId}");
         }

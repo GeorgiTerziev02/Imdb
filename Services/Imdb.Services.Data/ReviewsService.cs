@@ -29,9 +29,14 @@
             await this.reviewsRepository.SaveChangesAsync();
         }
 
+        public bool ContainsReviewById(string reviewId)
+        {
+            return this.reviewsRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == reviewId) != null;
+        }
+
         public async Task<string> RemoveById(string reviewId)
         {
-            var review = this.reviewsRepository.All().FirstOrDefault(x => x.Id == reviewId);
+            var review = this.reviewsRepository.All().First(x => x.Id == reviewId);
             this.reviewsRepository.Delete(review);
             await this.reviewsRepository.SaveChangesAsync();
 

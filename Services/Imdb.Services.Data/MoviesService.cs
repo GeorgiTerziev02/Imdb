@@ -30,7 +30,7 @@
 
         public IEnumerable<T> Find<T>(string name)
         {
-            return this.moviesRepository.AllAsNoTracking().Where(x => x.Title.Contains(name)).To<T>().ToList();
+            return this.moviesRepository.AllAsNoTracking().Where(x => x.Title.StartsWith(name)).To<T>().ToList();
         }
 
         public IEnumerable<T> GetAll<T>(int skip, int itemsPerPage)
