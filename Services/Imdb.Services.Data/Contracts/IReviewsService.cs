@@ -5,5 +5,7 @@
     public interface IReviewsService
     {
         Task AddAsync(string userId, string movieId, string content);
+
+        Task<string> RemoveById(string reviewId);
     }
 }

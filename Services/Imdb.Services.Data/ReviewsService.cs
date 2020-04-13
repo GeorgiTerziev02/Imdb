@@ -1,5 +1,6 @@
 ﻿namespace Imdb.Services.Data
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Imdb.Data.Common.Repositories;
@@ -26,6 +27,15 @@
 
             await this.reviewsRepository.AddAsync(review);
             await this.reviewsRepository.SaveChangesAsync();
+        }
+
+        public async Task<string> RemoveById(string reviewId)
+        {
+            var review = this.reviewsRepository.All().FirstOrDefault(x => x.Id == reviewId);
+            this.reviewsRepository.Delete(review);
+            await this.reviewsRepository.SaveChangesAsync();
+
+            return review.MovieId;
         }
     }
 }

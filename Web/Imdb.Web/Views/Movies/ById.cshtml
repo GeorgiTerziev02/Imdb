@@ -16,6 +16,7 @@
         Model.Rating = 0;
     }
     var votes = Model.PossibleVotes.Select(x => new SelectListItem(x.ToString(), x.ToString()));
+    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 <div class="text-center">
     <div class="row">
@@ -83,6 +84,13 @@
                                     <a href="javascript:void(0)" data-abc="true">@review.UserUsername</a>
                                     <time class="text-muted small">@review.CreatedOn.ToShortDateString()</time>
                                 </div>
+                                @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || userId == review.UserId)
+                                {
+                                    <form asp-area="" asp-controller="Reviews" asp-action="Remove" method="post">
+                                        <input type="hidden" id="reviewId" name="reviewId" value="@review.Id" />
+                                        <button class="btn-danger" type="submit">Delete</button>
+                                    </form>
+                                }
                                 <div class="text-muted small ml-3">
                                     <div>Member since <strong>@review.UserCreatedOn.ToShortDateString()</strong></div>
                                     <div><strong>@review.UserReviewsCount</strong> posts</div>

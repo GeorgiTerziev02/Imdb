@@ -37,5 +37,19 @@
 
             return this.Redirect($"/Movies/ById/{input.MovieId}");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Remove(string reviewId)
+        {
+            if (string.IsNullOrWhiteSpace(reviewId))
+            {
+                return this.BadRequest();
+            }
+
+            // TODO: Check if exists
+            var movieId = await this.reviewsService.RemoveById(reviewId);
+
+            return this.Redirect($"/Movies/ById/{movieId}");
+        }
     }
 }
