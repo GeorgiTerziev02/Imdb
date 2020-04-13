@@ -1,16 +1,22 @@
 ﻿namespace Imdb.Web.ViewModels.Movies
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
-
+    using Ganss.XSS;
     using Imdb.Data.Models;
     using Imdb.Services.Mapping;
 
     public class MovieReviewViewModel : IMapFrom<Review>
     {
+        public DateTime CreatedOn { get; set; }
+
         public string UserUsername { get; set; }
 
+        public int UserReviewsCount { get; set; }
+
+        public DateTime UserCreatedOn { get; set; }
+
         public string Content { get; set; }
+
+        public string SanitizedContent => new HtmlSanitizer().Sanitize(this.Content);
     }
 }

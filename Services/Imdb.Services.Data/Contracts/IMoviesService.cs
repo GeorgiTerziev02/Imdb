@@ -19,5 +19,7 @@
         bool IsMovieIdValid(string movieId);
 
         int GetTotalCount();
+
+        IEnumerable<T> Find<T>(string name);
     }
 }

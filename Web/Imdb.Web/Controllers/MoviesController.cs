@@ -1,15 +1,18 @@
 ﻿namespace Imdb.Web.Controllers
 {
+    using System.Collections.Generic;
+    using System.Security.Claims;
+
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.ViewModels.Movies;
     using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
-    using System.Security.Claims;
 
     public class MoviesController : BaseController
     {
         private readonly IMoviesService moviesService;
         private readonly IVotesService votesService;
+
+        // TODO: pull up to baseController
         private const int ItemsPerPage = 5;
 
         public MoviesController(IMoviesService moviesService, IVotesService votesService)
@@ -57,6 +60,7 @@
                 movie.UserVote = null;
             }
 
+            // TODO: Add user review picture
             movie.PossibleVotes = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
             return this.View(movie);

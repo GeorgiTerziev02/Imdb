@@ -96,6 +96,7 @@
             services.AddTransient<IWatchlistsService, WatchlistService>();
             services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<IVotesService, VotesService>();
+            services.AddTransient<IReviewsService, ReviewsService>();
 
             // Cloudinary
             Account account = new Account(

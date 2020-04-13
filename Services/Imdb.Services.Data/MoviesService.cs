@@ -9,6 +9,7 @@
     using Imdb.Data.Models;
     using Imdb.Services.Data.Contracts;
     using Imdb.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
 
     public class MoviesService : IMoviesService
     {
@@ -25,6 +26,11 @@
             newMovie.IsTvShow = false;
             await this.moviesRepository.AddAsync(newMovie);
             await this.moviesRepository.SaveChangesAsync();
+        }
+
+        public IEnumerable<T> Find<T>(string name)
+        {
+            return this.moviesRepository.AllAsNoTracking().Where(x => x.Title.Contains(name)).To<T>().ToList();
         }
 
         public IEnumerable<T> GetAll<T>(int skip, int itemsPerPage)
