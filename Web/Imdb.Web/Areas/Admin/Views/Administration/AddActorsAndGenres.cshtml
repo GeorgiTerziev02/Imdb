@@ -1,0 +1,59 @@
+﻿@model Imdb.Web.ViewModels.Admin.Administration.AddActorsAndGenresViewModel
+@{
+    ViewData["Title"] = "Add actors and genres";
+    var availableGenres = Model.AvailableGenres.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="text-center">
+    <h2>@Model.Title</h2>
+</div>
+<hr />
+<div class="row">
+    Genres :
+    <ul id="genres">
+        @foreach (var genre in Model.Genres)
+        {
+            <li>@genre.GenreName </li>
+        }
+    </ul>
+</div>
+<form id="votesForm" method="post"></form>
+<hr />
+<div class="row">
+    <div class="col-12 col-md-6">
+        <select id="chosenGenre" asp-items="@availableGenres" class="form-control"></select>
+    </div>
+    <div>
+        <a href="#" onclick="addGenre('@Model.Id')">Add genre</a>
+    </div>
+</div>
+<hr />
+
+@section Scripts {
+    <script>
+        function addGenre(movieId) {
+            var genreId = $("#chosenGenre").val();
+            var token = $("#votesForm input[name=__RequestVerificationToken]").val();
+            console.log(token);
+            var json = { movieId: movieId, genreId: parseInt(genreId) };
+            $.ajax({
+                url: "/api/genres",
+                type: "POST",
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: { 'X-CSRF-TOKEN': token },
+                success: function (data) {
+                    console.log(data.genreName);
+                    var item = document.createElement("li");
+                    var node = document.createTextNode(data.genreName);
+                    item.appendChild(node);
+                    var element = document.getElementById("genres");
+                    element.appendChild(item);
+                }
+            });
+        }
+    </script>
+}

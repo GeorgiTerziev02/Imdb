@@ -20,12 +20,14 @@
             this.moviesRepository = moviesRepository;
         }
 
-        public async Task AddMovie<T>(T model)
+        public async Task<string> AddMovie<T>(T model)
         {
             var newMovie = AutoMapperConfig.MapperInstance.Map<Movie>(model);
             newMovie.IsTvShow = false;
             await this.moviesRepository.AddAsync(newMovie);
             await this.moviesRepository.SaveChangesAsync();
+
+            return newMovie.Id;
         }
 
         public IEnumerable<T> Find<T>(string name)

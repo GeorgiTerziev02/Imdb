@@ -18,19 +18,22 @@
         private readonly IActorsService actorsService;
         private readonly ICloudinaryService cloudinaryService;
         private readonly ILanguageService languageService;
+        private readonly IGenresService genresService;
 
         public AdministrationController(
             IMoviesService moviesService,
             IDirectorsService directorsService,
             IActorsService actorsService,
             ICloudinaryService cloudinaryService,
-            ILanguageService languageService)
+            ILanguageService languageService,
+            IGenresService genresService)
         {
             this.moviesService = moviesService;
             this.directorsService = directorsService;
             this.actorsService = actorsService;
             this.cloudinaryService = cloudinaryService;
             this.languageService = languageService;
+            this.genresService = genresService;
         }
 
         public IActionResult Index()
@@ -112,9 +115,9 @@
             }
 
             input.GeneralImageUrl = imageUrl;
-            await this.moviesService.AddMovie<AddMovieInputViewModel>(input);
+            var movieId = await this.moviesService.AddMovie<AddMovieInputViewModel>(input);
 
-            return this.Redirect("/Home/Index");
+            return this.Redirect($"/Admin/Administration/{movieId}");
         }
 
         public IActionResult AddTvShow()
@@ -126,6 +129,14 @@
         public IActionResult AddTvShow(AddTvShowInputViewModel input)
         {
             return this.Redirect("/Home/Index");
+        }
+
+        public IActionResult AddActorsAndGenres(string id)
+        {
+            var model = this.moviesService.GetById<AddActorsAndGenresViewModel>(id);
+            model.AvailableGenres = this.genresService.GetAll<GenreDropDownViewModel>();
+
+            return this.View(model);
         }
     }
 }

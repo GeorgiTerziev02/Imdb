@@ -97,6 +97,7 @@
             services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<IVotesService, VotesService>();
             services.AddTransient<IReviewsService, ReviewsService>();
+            services.AddTransient<IGenresService, GenresService>();
 
             // Cloudinary
             Account account = new Account(

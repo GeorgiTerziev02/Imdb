@@ -155,7 +155,6 @@
         function sendVote(movieId) {
             var rating = $("#chosenNumber").val();
             var token = $("#votesForm input[name=__RequestVerificationToken]").val();
-            console.log(token);
             var json = { movieId: movieId, rating: parseInt(rating) };
             $.ajax({
                 url: "/api/votes",
