@@ -1,5 +1,6 @@
 ﻿namespace Imdb.Services.Data.Contracts
 {
+    using System;
     using System.Threading.Tasks;
 
     public interface IReviewsService
@@ -9,5 +10,7 @@
         bool ContainsReviewById(string reviewId);
 
         Task<string> RemoveById(string reviewId);
+
+        bool HasPermissionToPost(string userId);
     }
 }

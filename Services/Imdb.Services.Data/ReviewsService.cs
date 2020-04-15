@@ -1,5 +1,6 @@
 ﻿namespace Imdb.Services.Data
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -32,6 +33,25 @@
         public bool ContainsReviewById(string reviewId)
         {
             return this.reviewsRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == reviewId) != null;
+        }
+
+        public bool HasPermissionToPost(string userId)
+        {
+            var lastReview = this.reviewsRepository.AllAsNoTracking().OrderByDescending(x => x.CreatedOn).FirstOrDefault(x => x.UserId == userId);
+
+            if (lastReview == null)
+            {
+                return true;
+            }
+
+            TimeSpan timeSpan = DateTime.UtcNow.Subtract(lastReview.CreatedOn);
+
+            if (timeSpan.TotalHours < 1)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<string> RemoveById(string reviewId)

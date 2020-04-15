@@ -12,9 +12,6 @@
         private readonly IMoviesService moviesService;
         private readonly IVotesService votesService;
 
-        // TODO: pull up to baseController
-        private const int ItemsPerPage = 5;
-
         public MoviesController(IMoviesService moviesService, IVotesService votesService)
         {
             this.moviesService = moviesService;

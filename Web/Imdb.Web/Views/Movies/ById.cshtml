@@ -26,6 +26,13 @@
     </div>
 }
 
+@if (this.TempData["Warning"] != null)
+{
+    <div class="alert alert-warning" id="dialog">
+        @this.TempData["Warning"] <a href="#" onclick="closeMessage()"><i class="fas fa-times"></i></a>
+    </div>
+}
+
 <div class="text-center">
     <div class="row">
         <div class="col-12 col-md-4">
@@ -111,7 +118,7 @@
                                 @*//<img src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1574583246/AAA/2.jpg" class="d-block ui-w-40 rounded-circle" alt="">*@
                                 <div class="media-body ml-3">
                                     <a href="javascript:void(0)" data-abc="true">@review.UserUsername</a>
-                                    <time class="text-muted small">@review.CreatedOn.ToShortDateString()</time>
+                                    <time datetime="@review.CreatedOn.ToString("O")" class="text-muted small"></time>
                                 </div>
                                 @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || userId == review.UserId)
                                 {

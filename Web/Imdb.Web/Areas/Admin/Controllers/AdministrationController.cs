@@ -41,7 +41,6 @@
             return this.View();
         }
 
-        // TODO: Try to do with one code
         public IActionResult AddDirector()
         {
             return this.View();
