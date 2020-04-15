@@ -23,5 +23,7 @@
         bool ContainsActor(string movieId, string actorId);
 
         Task AddActorAsync(string movieId, string actorId);
+
+        IEnumerable<string> NamesSuggestion(string name);
     }
 }

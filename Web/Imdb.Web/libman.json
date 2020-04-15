@@ -82,6 +82,12 @@
       "files": [
         "min/moment-with-locales.min.js"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "jqueryui@1.12.1",
+      "destination": "wwwroot/lib/jquery-ui/",
+      "files": ["jquery-ui.min.js", "jquery-ui.min.css"]
     }
   ]
 }

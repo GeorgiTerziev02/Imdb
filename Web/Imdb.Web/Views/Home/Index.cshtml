@@ -9,6 +9,18 @@
     <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
 </div>
 
+<form asp-area="" asp-controller="Movies" asp-action="Results" method="get">
+    <div class="row">
+        <div class="col-12 col-md-1"></div>
+        <div class="col-12 col-md-8">
+            <input class="form-control" id="movieTitle" name="movieTitle" type="text" placeholder="Search" aria-label="Search">
+        </div>
+        <div class="col-12 col-md-2">
+            <button class="btn btn-primary">Search</button>
+        </div>
+    </div>
+</form>
+
 <div class="text-center">
     <h3 class="display-4">Top Movies</h3>
 </div>
@@ -33,3 +45,15 @@
     }
 </div>
 
+@section Scripts{
+    @*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
+    <script>
+        $(document).ready(function () {
+            $("#movieTitle").autocomplete({
+                source: 'api/moviesApi/search'
+            });
+            $(".ui-helper-hidden-accessible").remove();
+        });
+    </script>
+}

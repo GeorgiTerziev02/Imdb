@@ -55,6 +55,12 @@
             return this.moviesRepository.AllAsNoTracking().Where(x => x.Title.StartsWith(name)).To<T>().ToList();
         }
 
+        public IEnumerable<string> NamesSuggestion(string name)
+        {
+            return this.moviesRepository.AllAsNoTracking().Where(x => x.Title.StartsWith(name))
+                .Select(x => x.Title).ToList();
+        }
+
         public IEnumerable<T> GetAll<T>(int skip, int itemsPerPage)
         {
             return this.moviesRepository.All().Skip(skip).Take(itemsPerPage).OrderBy(x => x.Title).To<T>().ToList();

@@ -1,4 +1,4 @@
-﻿namespace Imdb.Web.ViewModels.Search
+﻿namespace Imdb.Web.ViewModels.Movies
 {
     using Imdb.Data.Models;
     using Imdb.Services.Mapping;

@@ -62,5 +62,15 @@
 
             return this.View(movie);
         }
+
+        public IActionResult Results(string movieTitle)
+        {
+            var movies = new SearchListViewModel()
+            {
+                Results = this.moviesService.Find<SearchMovieViewModel>(movieTitle),
+            };
+
+            return this.Json(movies);
+        }
     }
 }
