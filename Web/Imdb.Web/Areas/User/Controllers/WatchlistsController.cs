@@ -1,14 +1,16 @@
-﻿namespace Imdb.Web.Controllers
+﻿namespace Imdb.Web.Areas.User
 {
     using System.Security.Claims;
     using System.Threading.Tasks;
 
     using Imdb.Services.Data.Contracts;
+    using Imdb.Web.Controllers;
     using Imdb.Web.ViewModels.Watchlists;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
+    [Area("User")]
     public class WatchlistsController : BaseController
     {
         private readonly IMoviesService moviesService;

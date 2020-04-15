@@ -42,6 +42,11 @@
             return this.actorsRepository.AllAsNoTracking().OrderBy(x => x.FirstName).ThenBy(x => x.LastName).To<T>().ToList();
         }
 
+        public T GetById<T>(string actorId)
+        {
+            return this.actorsRepository.AllAsNoTracking().Where(x => x.Id == actorId).To<T>().FirstOrDefault();
+        }
+
         public string GetName(string actorId)
         {
             var actor = this.actorsRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == actorId);

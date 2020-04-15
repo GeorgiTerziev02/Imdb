@@ -15,5 +15,7 @@
         bool IsActorIdValid(string actorId);
 
         string GetName(string actorId);
+
+        T GetById<T>(string actorId);
     }
 }
