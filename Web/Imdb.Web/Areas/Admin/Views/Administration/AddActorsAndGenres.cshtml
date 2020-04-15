@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Add actors and genres";
     var availableGenres = Model.AvailableGenres.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+    var availableActors = Model.AvailableActors.Select(x => new SelectListItem(x.Name, x.Id));
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -30,6 +31,26 @@
     </div>
 </div>
 <hr />
+<div class="row">
+    Actors :
+    <ul id="actors">
+        @foreach (var genre in Model.Actors)
+        {
+            <li>@genre.Name </li>
+        }
+    </ul>
+</div>
+<hr />
+<div class="row">
+    <div class="col-12 col-md-6">
+        <select id="chosenActor" asp-items="@availableActors" class="form-control"></select>
+    </div>
+    <div>
+        <a href="#" onclick="addActor('@Model.Id')">Add actor</a>
+    </div>
+</div>
+<hr />
+<a asp-area="" asp-controller="Movies" asp-action="ById" asp-route-id="@Model.Id">Done</a>
 
 @section Scripts {
     <script>
@@ -51,6 +72,30 @@
                     var node = document.createTextNode(data.genreName);
                     item.appendChild(node);
                     var element = document.getElementById("genres");
+                    element.appendChild(item);
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function addActor(movieId) {
+            var actorId = $("#chosenActor").val();
+            var token = $("#votesForm input[name=__RequestVerificationToken]").val();
+            console.log(token);
+            var json = { movieId: movieId, actorId: actorId };
+            $.ajax({
+                url: "/api/addActors",
+                type: "POST",
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: { 'X-CSRF-TOKEN': token },
+                success: function (data) {
+                    var item = document.createElement("li");
+                    var node = document.createTextNode(data.name);
+                    item.appendChild(node);
+                    var element = document.getElementById("actors");
                     element.appendChild(item);
                 }
             });

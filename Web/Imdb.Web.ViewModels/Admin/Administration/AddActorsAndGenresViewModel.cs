@@ -14,6 +14,8 @@ namespace Imdb.Web.ViewModels.Admin.Administration
 
         public IEnumerable<GenreInfoViewModel> Genres { get; set; }
 
+        public IEnumerable<ActorInfoViewModel> Actors { get; set; }
+
         public IEnumerable<GenreDropDownViewModel> AvailableGenres { get; set; }
 
         public IEnumerable<ActorsDropDownViewModel> AvailableActors { get; set; }

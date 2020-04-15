@@ -14,10 +14,24 @@
     public class MoviesService : IMoviesService
     {
         private readonly IDeletableEntityRepository<Movie> moviesRepository;
+        private readonly IRepository<MovieActor> movieActorsRepository;
 
-        public MoviesService(IDeletableEntityRepository<Movie> moviesRepository)
+        public MoviesService(IDeletableEntityRepository<Movie> moviesRepository, IRepository<MovieActor> movieActorsRepository)
         {
             this.moviesRepository = moviesRepository;
+            this.movieActorsRepository = movieActorsRepository;
+        }
+
+        public async Task AddActorAsync(string movieId, string actorId)
+        {
+            var model = new MovieActor()
+            {
+                ActorId = actorId,
+                MovieId = movieId,
+            };
+
+            await this.movieActorsRepository.AddAsync(model);
+            await this.movieActorsRepository.SaveChangesAsync();
         }
 
         public async Task<string> AddMovie<T>(T model)
@@ -28,6 +42,12 @@
             await this.moviesRepository.SaveChangesAsync();
 
             return newMovie.Id;
+        }
+
+        public bool ContainsActor(string movieId, string actorId)
+        {
+            return this.movieActorsRepository.AllAsNoTracking()
+                .Where(x => x.ActorId == actorId && x.MovieId == movieId).FirstOrDefault() != null;
         }
 
         public IEnumerable<T> Find<T>(string name)

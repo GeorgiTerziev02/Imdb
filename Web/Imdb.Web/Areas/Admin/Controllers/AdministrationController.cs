@@ -135,6 +135,7 @@
         {
             var model = this.moviesService.GetById<AddActorsAndGenresViewModel>(id);
             model.AvailableGenres = this.genresService.GetAll<GenreDropDownViewModel>();
+            model.AvailableActors = this.actorsService.GetAll<ActorsDropDownViewModel>();
 
             return this.View(model);
         }

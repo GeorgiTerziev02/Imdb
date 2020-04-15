@@ -19,5 +19,9 @@
         int GetTotalCount();
 
         IEnumerable<T> Find<T>(string name);
+
+        bool ContainsActor(string movieId, string actorId);
+
+        Task AddActorAsync(string movieId, string actorId);
     }
 }

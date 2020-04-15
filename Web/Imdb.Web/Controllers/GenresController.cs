@@ -1,6 +1,7 @@
 ﻿namespace Imdb.Web.Controllers
 {
     using System.Threading.Tasks;
+
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.ViewModels.Genres;
     using Microsoft.AspNetCore.Authorization;

@@ -69,6 +69,25 @@
 
     <label class="font-weight-bold" asp-for="@Model.DirectorName"></label>
     <div class="form-group">@Model.DirectorName</div>
+
+    <label class="font-weight-bold">Genres:</label>
+
+    <div>
+        @foreach (var genre in this.Model.Genres)
+        {
+            <a href="#">@genre.GenreName</a>
+        }
+    </div>
+
+    <label class="font-weight-bold" asp-for="@Model.Actors"></label>
+    <ul>
+        @foreach (var actor in Model.Actors)
+        {
+            <div class="text-center">
+                <a asp-area="" asp-controller="Actors" asp-action="By" asp-route-id="@actor.ActorId">@actor.ActorName</a>
+            </div>
+        }
+    </ul>
 </div>
 
 <div>

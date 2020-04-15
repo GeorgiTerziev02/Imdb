@@ -13,7 +13,7 @@
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<MovieActor, MovieActorInfoViewModel>()
-                .ForMember(x => x.ActorName, y => y.MapFrom(x => x.Actor.FirstName + x.Actor.LastName));
+                .ForMember(x => x.ActorName, y => y.MapFrom(x => x.Actor.FirstName + " " + x.Actor.LastName));
         }
     }
 }
