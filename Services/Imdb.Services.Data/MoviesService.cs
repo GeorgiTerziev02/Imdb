@@ -106,5 +106,15 @@
 
             await this.movieImagesRepository.SaveChangesAsync();
         }
+
+        public async Task RemoveMovieActor(int id)
+        {
+            var movieActor = this.movieActorsRepository.All().FirstOrDefault(x => x.Id == id);
+            if (movieActor != null)
+            {
+                this.movieActorsRepository.Delete(movieActor);
+                await this.movieActorsRepository.SaveChangesAsync();
+            }
+        }
     }
 }

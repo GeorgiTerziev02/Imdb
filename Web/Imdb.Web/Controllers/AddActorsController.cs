@@ -49,5 +49,13 @@
 
             return response;
         }
+
+        [Authorize]
+        [HttpDelete]
+        public async Task<ActionResult<DeleteActorResponseModel>> Delete(DeleteByIdActorMovieInputMovdel input)
+        {
+            await this.moviesService.RemoveMovieActor(input.Id);
+            return new DeleteActorResponseModel() { Id = input.Id };
+        }
     }
 }

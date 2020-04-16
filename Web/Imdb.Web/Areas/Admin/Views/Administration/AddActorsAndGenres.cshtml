@@ -34,9 +34,9 @@
 <div class="row">
     Actors :
     <ul id="actors">
-        @foreach (var genre in Model.Actors)
+        @foreach (var actor in Model.Actors)
         {
-            <li>@genre.Name </li>
+            <li id="@actor.Id">@actor.Name <a href="#" onclick="deleteById('@actor.Id')"><i class="fas fa-user-times"></i></a></li>
         }
     </ul>
 </div>
@@ -57,7 +57,6 @@
         function addGenre(movieId) {
             var genreId = $("#chosenGenre").val();
             var token = $("#votesForm input[name=__RequestVerificationToken]").val();
-            console.log(token);
             var json = { movieId: movieId, genreId: parseInt(genreId) };
             $.ajax({
                 url: "/api/genres",
@@ -76,9 +75,22 @@
                 }
             });
         }
-    </script>
 
-    <script>
+        function deleteById(id) {
+            var token = $("#votesForm input[name=__RequestVerificationToken]").val();
+            var json = { id: parseInt(id) };
+            $.ajax({
+                url: "/api/addActors",
+                type: "DELETE",
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: { 'X-CSRF-TOKEN': token },
+                success: function (data) {
+                    $(`#${data.id}`).remove();
+                }
+            });
+        }
         function addActor(movieId) {
             var actorId = $("#chosenActor").val();
             var token = $("#votesForm input[name=__RequestVerificationToken]").val();

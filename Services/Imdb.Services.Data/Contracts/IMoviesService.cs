@@ -27,5 +27,7 @@
         IEnumerable<string> NamesSuggestion(string name);
 
         Task UploadImages(string movieId, IEnumerable<string> imageUrls);
+
+        Task RemoveMovieActor(int id);
     }
 }

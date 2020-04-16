@@ -6,6 +6,8 @@
 
     public class ActorInfoViewModel : IMapFrom<MovieActor>, IHaveCustomMappings
     {
+        public int Id { get; set; }
+
         public string ActorId { get; set; }
 
         public string Name { get; set; }
