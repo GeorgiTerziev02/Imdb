@@ -25,5 +25,7 @@
         Task AddActorAsync(string movieId, string actorId);
 
         IEnumerable<string> NamesSuggestion(string name);
+
+        Task UploadImages(string movieId, IEnumerable<string> imageUrls);
     }
 }

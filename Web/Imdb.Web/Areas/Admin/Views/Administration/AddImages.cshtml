@@ -1,0 +1,14 @@
+﻿@model Imdb.Web.ViewModels.Admin.Administration.AddImagesInputViewModel
+@{
+    ViewData["Title"] = "Add Images";
+}
+
+<h1>@ViewData["Title"] to @Model.Title</h1>
+
+<form method="post" enctype="multipart/form-data" asp-area="Admin" asp-controller="Administration" asp-action="AddImages">
+    <input asp-for="@Model.Images" type="file" multiple>
+    <input asp-for="@Model.Id" type="hidden" value="@Model.Id"/>
+    <button class="btn btn-success" type="submit">Upload</button>
+</form>
+
+

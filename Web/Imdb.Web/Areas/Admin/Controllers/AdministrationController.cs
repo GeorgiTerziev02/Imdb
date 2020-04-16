@@ -1,5 +1,6 @@
 ﻿namespace Imdb.Web.Areas.Administration.Controllers
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Imdb.Common;
@@ -137,6 +138,31 @@
             model.AvailableActors = this.actorsService.GetAll<ActorsDropDownViewModel>();
 
             return this.View(model);
+        }
+
+        public IActionResult AddImages(string movieId)
+        {
+            var imagesModel = this.moviesService.GetById<AddImagesInputViewModel>(movieId);
+
+            return this.View(imagesModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddImagesAsync(AddImagesInputViewModel input)
+        {
+            var imagesUrls = new List<string>();
+            foreach (var image in input.Images)
+            {
+                var imageUrl = await this.cloudinaryService.UploudImageAsync(image);
+
+                if (imageUrl != null)
+                {
+                    imagesUrls.Add(imageUrl);
+                }
+            }
+
+            await this.moviesService.UploadImages(input.Id, imagesUrls);
+            return this.Redirect($"/Movies/ById/{input.Id}");
         }
     }
 }

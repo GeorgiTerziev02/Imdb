@@ -72,18 +72,18 @@
     <p class="small">Gross: @Model.Gross | Budget: @Model.Budget </p>
 
     <label class="font-weight-bold" asp-for="@Model.Description"></label>
-    <div class="text-info">@Model.Description</div>
+    <p class="navbar-brand">@Model.Description</p>
 
+    <hr />
     <label class="font-weight-bold" asp-for="@Model.DirectorName"></label>
     <div class="form-group"><a href="#">@Model.DirectorName</a></div>
-
+    <hr />
     <div>
         @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
         {
             <a class="btn btn-primary" asp-area="Admin" asp-controller="Administration" asp-action="AddActorsAndGenres" asp-route-id="@Model.Id">Add genres/actors</a>
         }
     </div>
-
     <label class="font-weight-bold" asp-for="@Model.Genres"></label>
 
     <div>
@@ -92,17 +92,34 @@
             <a href="#">@genre.GenreName</a>
         }
     </div>
-
+    <hr />
+    <label class="font-weight-bold" asp-for="@Model.MovieImages"></label>
+    <div>
+        @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+        {
+            <a class="btn btn-primary" asp-area="Admin" asp-controller="Administration" asp-action="AddImages" asp-route-movieId="@Model.Id">Add images</a>
+        }
+    </div>
+    <div class="row">
+        <div class="text-center">
+            @foreach (var image in Model.MovieImages)
+            {
+                <img src="@(GlobalConstants.BaseDeliveryUrl + image.ImageUrl)" height="200" width="200" />
+            }
+        </div>
+    </div>
+    <hr />
     <label class="font-weight-bold" asp-for="@Model.Actors"></label>
-    <ul>
+    <div>
         @foreach (var actor in Model.Actors)
         {
             <div class="text-center">
                 <a asp-area="" asp-controller="Actors" asp-action="ById" asp-route-id="@actor.ActorId">@actor.ActorName</a>
             </div>
         }
-    </ul>
+    </div>
 </div>
+<hr />
 
 <div>
     <h3 class="text-center">Reviews</h3>

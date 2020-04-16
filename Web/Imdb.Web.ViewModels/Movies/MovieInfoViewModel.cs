@@ -55,7 +55,9 @@
 
         public IEnumerable<int> PossibleVotes { get; set; }
 
-        // TODO: public virtual IEnumerable<MovieImage> MovieImages { get; set; }
+        [Display(Name = "More images")]
+        public IEnumerable<MovieImageViewModel> MovieImages { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Movie, MovieInfoViewModel>()

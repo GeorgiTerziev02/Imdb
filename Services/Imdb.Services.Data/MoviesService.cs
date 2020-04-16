@@ -15,11 +15,16 @@
     {
         private readonly IDeletableEntityRepository<Movie> moviesRepository;
         private readonly IRepository<MovieActor> movieActorsRepository;
+        private readonly IRepository<MovieImage> movieImagesRepository;
 
-        public MoviesService(IDeletableEntityRepository<Movie> moviesRepository, IRepository<MovieActor> movieActorsRepository)
+        public MoviesService(
+            IDeletableEntityRepository<Movie> moviesRepository,
+            IRepository<MovieActor> movieActorsRepository,
+            IRepository<MovieImage> movieImagesRepository)
         {
             this.moviesRepository = moviesRepository;
             this.movieActorsRepository = movieActorsRepository;
+            this.movieImagesRepository = movieImagesRepository;
         }
 
         public async Task AddActorAsync(string movieId, string actorId)
@@ -84,6 +89,22 @@
         public bool IsMovieIdValid(string movieId)
         {
             return this.moviesRepository.AllAsNoTracking().Any(x => x.Id == movieId);
+        }
+
+        public async Task UploadImages(string movieId, IEnumerable<string> imageUrls)
+        {
+            foreach (var url in imageUrls)
+            {
+                var movieImage = new MovieImage()
+                {
+                    MovieId = movieId,
+                    ImageUrl = url,
+                };
+
+                await this.movieImagesRepository.AddAsync(movieImage);
+            }
+
+            await this.movieImagesRepository.SaveChangesAsync();
         }
     }
 }
