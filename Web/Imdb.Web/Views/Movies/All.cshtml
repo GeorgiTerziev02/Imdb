@@ -1,10 +1,10 @@
 ﻿@model Imdb.Web.ViewModels.Movies.ListAllMoviesViewModel
 @{
-    ViewData["Title"] = "View";
+    ViewData["Title"] = "Movies";
     var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
-<h1 class="text-center">Movies</h1>
+<h1 class="text-center">@ViewData["Title"]</h1>
 
 <div class="col-md-8">
     @foreach (var movie in Model.Movies)
@@ -30,7 +30,7 @@
                     <a class="btn btn-primary my-3" asp-controller="Movies" asp-action="ById" asp-route-id="@movie.Id">View movie</a>
                     @if (this.User.Identity.IsAuthenticated)
                     {
-                        <a asp-area="" asp-controller="Watchlists" asp-action="Add" asp-route-userId="@userId" asp-route-movieId="@movie.Id"><i class="fas fa-star">Add to watchlist</i></a>
+                        <a class="btn btn-outline-warning" asp-area="User" asp-controller="Watchlists" asp-action="Add" asp-route-userId="@userId" asp-route-movieId="@movie.Id"><i class="fas fa-star">Add to watchlist</i></a>
                     }
                 </div>
             </div>

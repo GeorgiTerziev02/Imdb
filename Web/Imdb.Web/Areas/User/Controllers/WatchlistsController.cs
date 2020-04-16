@@ -36,12 +36,12 @@
 
             if (this.watchlistsService.WatchlistMovieExists(userId, movieId))
             {
-                return this.RedirectToAction("Movies", new { userId });
+                return this.Redirect($"Movies?userId={userId}");
             }
 
             await this.watchlistsService.AddToWatchlistAsync(userId, movieId);
 
-            return this.RedirectToAction("Movies", (object)userId);
+            return this.Redirect($"Movies?userId={userId}");
         }
 
         public async Task<IActionResult> Remove(string userId, string movieId)

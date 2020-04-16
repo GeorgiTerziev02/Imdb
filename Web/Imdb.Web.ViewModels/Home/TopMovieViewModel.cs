@@ -1,11 +1,9 @@
 ﻿namespace Imdb.Web.ViewModels.Home
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
-    using System.Text;
     using System.Text.RegularExpressions;
+
     using AutoMapper;
     using Imdb.Data.Models;
     using Imdb.Services.Mapping;

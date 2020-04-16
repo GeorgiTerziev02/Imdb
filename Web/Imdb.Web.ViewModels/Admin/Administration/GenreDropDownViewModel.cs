@@ -1,5 +1,4 @@
-﻿
-namespace Imdb.Web.ViewModels.Admin.Administration
+﻿namespace Imdb.Web.ViewModels.Admin.Administration
 {
     using Imdb.Data.Models;
     using Imdb.Services.Mapping;

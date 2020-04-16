@@ -30,7 +30,7 @@
             await this.genresService.AddGenreToMovie(input.GenreId, input.MovieId);
             var response = new GenreMovieResponseModel()
             {
-                GenreName = this.genresService.GetGenreName(input.GenreId), 
+                GenreName = this.genresService.GetGenreName(input.GenreId),
             };
             return response;
         }

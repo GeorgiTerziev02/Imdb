@@ -1,11 +1,10 @@
-﻿using Imdb.Data.Models;
-using Imdb.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Imdb.Web.ViewModels.Admin.Administration
+﻿namespace Imdb.Web.ViewModels.Admin.Administration
 {
+    using System.Collections.Generic;
+
+    using Imdb.Data.Models;
+    using Imdb.Services.Mapping;
+
     public class AddActorsAndGenresViewModel : IMapFrom<Movie>
     {
         public string Id { get; set; }

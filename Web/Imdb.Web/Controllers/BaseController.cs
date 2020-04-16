@@ -5,5 +5,6 @@
     public class BaseController : Controller
     {
         protected const int ItemsPerPage = 5;
+        protected const int TopMoviesCount = 3;
     }
 }

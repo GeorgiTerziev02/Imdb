@@ -54,6 +54,5 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\Dashboard\" />
-    <Folder Include="Areas\User\Views - Copy\" />
   </ItemGroup>
 </Project>

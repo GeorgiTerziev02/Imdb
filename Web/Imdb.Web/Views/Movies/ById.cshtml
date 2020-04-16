@@ -75,9 +75,16 @@
     <div class="text-info">@Model.Description</div>
 
     <label class="font-weight-bold" asp-for="@Model.DirectorName"></label>
-    <div class="form-group">@Model.DirectorName</div>
+    <div class="form-group"><a href="#">@Model.DirectorName</a></div>
 
-    <label class="font-weight-bold">Genres:</label>
+    <div>
+        @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+        {
+            <a class="btn btn-primary" asp-area="Admin" asp-controller="Administration" asp-action="AddActorsAndGenres" asp-route-id="@Model.Id">Add genres/actors</a>
+        }
+    </div>
+
+    <label class="font-weight-bold" asp-for="@Model.Genres"></label>
 
     <div>
         @foreach (var genre in this.Model.Genres)
@@ -91,7 +98,7 @@
         @foreach (var actor in Model.Actors)
         {
             <div class="text-center">
-                <a asp-area="" asp-controller="Actors" asp-action="By" asp-route-id="@actor.ActorId">@actor.ActorName</a>
+                <a asp-area="" asp-controller="Actors" asp-action="ById" asp-route-id="@actor.ActorId">@actor.ActorName</a>
             </div>
         }
     </ul>

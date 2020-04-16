@@ -41,8 +41,10 @@
 
         public double? Rating { get; set; }
 
+        [Display(Name = "Genres:")]
         public virtual IEnumerable<MovieGenreInfoViewModel> Genres { get; set; }
 
+        [Display(Name = "Actors:")]
         public virtual IEnumerable<MovieActorInfoViewModel> Actors { get; set; }
 
         public virtual IEnumerable<MovieReviewViewModel> Reviews { get; set; }

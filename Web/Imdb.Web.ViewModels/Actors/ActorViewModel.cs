@@ -1,9 +1,10 @@
 ﻿namespace Imdb.Web.ViewModels.Actors
 {
+    using System;
+
     using AutoMapper;
     using Imdb.Data.Models;
     using Imdb.Services.Mapping;
-    using System;
 
     public class ActorViewModel : IMapFrom<Actor>, IHaveCustomMappings
     {

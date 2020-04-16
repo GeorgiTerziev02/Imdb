@@ -1,12 +1,9 @@
-﻿using AutoMapper;
-using Imdb.Data.Models;
-using Imdb.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Imdb.Web.ViewModels.Admin.Administration
+﻿namespace Imdb.Web.ViewModels.Admin.Administration
 {
+    using AutoMapper;
+    using Imdb.Data.Models;
+    using Imdb.Services.Mapping;
+
     public class ActorInfoViewModel : IMapFrom<MovieActor>, IHaveCustomMappings
     {
         public string ActorId { get; set; }
