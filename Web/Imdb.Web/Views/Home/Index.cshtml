@@ -9,18 +9,6 @@
     <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
 </div>
 
-<form asp-area="" asp-controller="Movies" asp-action="Results" method="get">
-    <div class="row">
-        <div class="col-12 col-md-1"></div>
-        <div class="col-12 col-md-8">
-            <input class="form-control" id="movieTitle" name="movieTitle" type="text" placeholder="Search" aria-label="Search">
-        </div>
-        <div class="col-12 col-md-2">
-            <button class="btn btn-primary">Search</button>
-        </div>
-    </div>
-</form>
-
 <div class="text-center">
     <h3 class="display-4">Top Movies</h3>
 </div>
@@ -32,8 +20,8 @@
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="@(GlobalConstants.BaseDeliveryUrl+movie.GeneralImageUrl)" width="300" height="200" alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title">@movie.Title</h5>
-                    <p class="card-text">@movie.ShortDescription</p>
+                    <h5 class="card-title">@movie.Title @(movie.Rating)/10</h5>
+                    <p class="card-text">@movie.</p>
                     <a asp-controller="Movies" asp-action="ById" asp-route-id="@movie.Id" class="btn btn-primary">View Movie</a>
                     @if (this.User.Identity.IsAuthenticated)
                     {
@@ -45,9 +33,9 @@
     }
 </div>
 
-@section Scripts{
-    @*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
+@*@section Scripts{
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         $(document).ready(function () {
             $("#movieTitle").autocomplete({
@@ -56,4 +44,4 @@
             $(".ui-helper-hidden-accessible").remove();
         });
     </script>
-}
+    }*@

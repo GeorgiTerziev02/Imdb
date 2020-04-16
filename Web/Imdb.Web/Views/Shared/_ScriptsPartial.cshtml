@@ -1,0 +1,8 @@
+﻿<script>
+            $(document).ready(function () {
+                $("#movieTitle").autocomplete({
+                    source: '/api/moviesApi/search'
+                });
+                $(".ui-helper-hidden-accessible").remove();
+            });
+</script>

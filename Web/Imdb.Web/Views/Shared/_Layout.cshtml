@@ -37,6 +37,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="TvShows" asp-action="All" title="TvShows">Tv shows</a>
                         </li>
+                        <li class="nav-item">
+                            <partial name="_SearchBarPartial">
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -64,6 +67,7 @@
         <script src="~/lib/jquery-ui/jquery-ui.min.js" asp-append-version="true"></script>
         <script src="~/lib/moment/min/moment-with-locales.min.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
+        <partial name="_ScriptsPartial" />
     </environment>
     <environment names="Staging,Production">
         <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
@@ -73,6 +77,7 @@
         <script src="~/lib/jquery-ui/jquery-ui.min.js" asp-append-version="true"></script>
         <script src="~/lib/moment/min/moment-with-locales.min.js" asp-append-version="true"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <partial name="_ScriptsPartial" />
     </environment>
 
     @this.RenderSection("Scripts", required: false)
