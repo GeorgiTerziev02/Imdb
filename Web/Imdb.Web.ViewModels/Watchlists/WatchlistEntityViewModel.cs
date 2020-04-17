@@ -8,7 +8,7 @@
     using Imdb.Data.Models;
     using Imdb.Services.Mapping;
 
-    public class WatchlistMovieViewModel : IMapFrom<UserMovie>, IHaveCustomMappings
+    public class WatchlistEntityViewModel : IMapFrom<UserMovie>, IHaveCustomMappings
     {
         public string MovieId { get; set; }
 
@@ -22,7 +22,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<UserMovie, WatchlistMovieViewModel>()
+            configuration.CreateMap<UserMovie, WatchlistEntityViewModel>()
                 .ForMember(x => x.Rating, y => y.MapFrom(x => x.Movie.Votes.Average(z => z.Rating)));
         }
     }

@@ -4,6 +4,12 @@
 
     public class FullWatchlistViewModel
     {
-        public IEnumerable<WatchlistMovieViewModel> Movies { get; set; }
+        public IEnumerable<WatchlistEntityViewModel> Movies { get; set; }
+
+        public string Id { get; set; }
+
+        public int CurrentPage { get; set; }
+
+        public int PageCount { get; set; }
     }
 }

@@ -36,12 +36,12 @@
 
             if (this.watchlistsService.WatchlistMovieExists(userId, movieId))
             {
-                return this.Redirect($"Movies?userId={userId}");
+                return this.Redirect($"All?userId={userId}&page=1");
             }
 
             await this.watchlistsService.AddToWatchlistAsync(userId, movieId);
 
-            return this.Redirect($"Movies?userId={userId}");
+            return this.Redirect($"All?userId={userId}&page=1");
         }
 
         public async Task<IActionResult> Remove(string userId, string movieId)
@@ -66,7 +66,7 @@
             return this.RedirectToAction("Movies", new { userId });
         }
 
-        public IActionResult Movies(string userId)
+        public IActionResult All(string userId, int page = 1)
         {
             if (this.User.FindFirstValue(ClaimTypes.NameIdentifier) != userId)
             {
@@ -75,10 +75,16 @@
 
             var watchlist = new FullWatchlistViewModel()
             {
-                Movies = this.watchlistsService.GetMovies<WatchlistMovieViewModel>(userId),
+                Movies = this.watchlistsService.GetAll<WatchlistEntityViewModel>(userId, (page - 1) * ItemsPerPage, ItemsPerPage),
             };
 
-            return this.Json(watchlist);
+            var count = this.watchlistsService.GetCount(userId);
+            var pagesCount = ((count - 1) / ItemsPerPage) + 1;
+            watchlist.Id = userId;
+            watchlist.CurrentPage = page;
+            watchlist.PageCount = pagesCount;
+
+            return this.View(watchlist);
         }
 
         public IActionResult Tvshows()

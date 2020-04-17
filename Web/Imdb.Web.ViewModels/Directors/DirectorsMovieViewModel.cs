@@ -1,9 +1,10 @@
 ﻿namespace Imdb.Web.ViewModels.Directors
 {
+    using System.Linq;
+
     using AutoMapper;
     using Imdb.Data.Models;
     using Imdb.Services.Mapping;
-    using System.Linq;
 
     public class DirectorsMovieViewModel : IMapFrom<Movie>, IHaveCustomMappings
     {

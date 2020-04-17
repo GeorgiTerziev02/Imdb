@@ -1,37 +1,35 @@
-﻿@model Imdb.Web.ViewModels.Movies.ListAllMoviesViewModel
+﻿@model Imdb.Web.ViewModels.Watchlists.FullWatchlistViewModel
 @{
-    ViewData["Title"] = "Movies";
-    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+    ViewData["Title"] = "Your Watchlist";
 }
 
-<h1 class="text-center">@ViewData["Title"]</h1>
-
+<h1>@ViewData["Title"] </h1>
 <div class="col-md-8">
     @foreach (var movie in Model.Movies)
     {
         <div class="card">
             <div class="row align-items-center">
-                <div class="col-12 col-md-4"><img width="100%" height="191" src="@(GlobalConstants.BaseDeliveryUrl + movie.GeneralImageUrl)" sizes="(max-width: 660px) 100vw, 660px"></div>
+                <div class="col-12 col-md-4"><img width="100%" height="191" src="@(GlobalConstants.BaseDeliveryUrl + movie.MovieGeneralImageUrl)" sizes="(max-width: 660px) 100vw, 660px"></div>
                 <div class="col-12 col-md-8">
-                    <h3>@movie.Title</h3>
+                    <h3>@movie.MovieTitle</h3>
                     @if (movie.Rating == null)
                     {
                         movie.Rating = 0;
                     }
                     <p>Rating : @movie.Rating/10<i class="fas fa-star"></i></p>
-                    @if (movie.ReleaseDate != null)
+                    @if (movie.MovieReleaseDate != null)
                     {
-                        <p>Release date: @movie.ReleaseDate.Value.ToShortDateString()<i class="fas fa-calendar-alt"></i></p>
+                        <p>Release date: @movie.MovieReleaseDate.Value.ToShortDateString()<i class="fas fa-calendar-alt"></i></p>
                     }
                     else
                     {
                         <p>Release date: Not announced</p>
                     }
-                    <a class="btn btn-primary my-3" asp-controller="Movies" asp-action="ById" asp-route-id="@movie.Id">View movie</a>
-                    @if (this.User.Identity.IsAuthenticated)
-                    {
-                        <a class="btn btn-outline-warning" asp-area="User" asp-controller="Watchlists" asp-action="Add" asp-route-userId="@userId" asp-route-movieId="@movie.Id"><i class="fas fa-star">Add to watchlist</i></a>
-                    }
+                    <a class="btn btn-primary my-3" asp-area="" asp-controller="Movies" asp-action="ById" asp-route-id="@movie.MovieId">View</a>
+                    @*if (this.User.Identity.IsAuthenticated)
+                        {
+                            <a class="btn btn-outline-warning" asp-area="User" asp-controller="Watchlists" asp-action="Add" asp-route-userId="@userId" asp-route-movieId="@movie.Id"><i class="fas fa-star">Add to watchlist</i></a>
+                        }*@
                 </div>
             </div>
         </div>
@@ -51,9 +49,9 @@
         {
             <li class="page-item">
                 <a class="page-link"
-                   asp-area=""
-                   asp-controller="Movies"
+                   asp-controller="Watchlists"
                    asp-action="All"
+                   asp-route-userId="@Model.Id"
                    asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
             </li>
         }
@@ -63,9 +61,9 @@
             var active = i == this.Model.CurrentPage ? "active" : string.Empty;
             <li class="page-item @active">
                 <a class="page-link"
-                   asp-area=""
-                   asp-controller="Movies"
+                   asp-controller="Watchlists"
                    asp-action="All"
+                   asp-route-userId="@Model.Id"
                    asp-route-page="@i">@i</a>
             </li>
         }
@@ -80,9 +78,9 @@
         {
             <li class="page-item">
                 <a class="page-link"
-                   asp-area=""
-                   asp-controller="Movies"
+                   asp-controller="Watchlists"
                    asp-action="All"
+                   asp-route-userId="@Model.Id"
                    asp-route-page="@(Model.CurrentPage + 1)">Next</a>
             </li>
         }

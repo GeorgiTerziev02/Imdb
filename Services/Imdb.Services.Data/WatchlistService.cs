@@ -35,9 +35,9 @@
             return this.watchlistRepository.All().To<T>().ToList();
         }
 
-        public IEnumerable<T> GetMovies<T>(string userId)
+        public IEnumerable<T> GetAll<T>(string userId, int skip, int take)
         {
-            return this.watchlistRepository.All().Where(x => x.UserId == userId).To<T>().ToList();
+            return this.watchlistRepository.All().Where(x => x.UserId == userId).Skip(skip).Take(take).To<T>().ToList();
         }
 
         public async Task RemoveFromWatchlistAsync(string userId, string movieId)
@@ -56,6 +56,11 @@
         public IEnumerable<T> TvShows<T>(string userId)
         {
             return this.watchlistRepository.All().Where(x => x.UserId == userId && x.Movie.IsTvShow).To<T>().ToList();
+        }
+
+        public int GetCount(string userId)
+        {
+            return this.watchlistRepository.AllAsNoTracking().Where(x => x.UserId == userId).Count();
         }
     }
 }

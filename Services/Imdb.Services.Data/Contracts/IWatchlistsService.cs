@@ -13,6 +13,8 @@
 
         Task RemoveFromWatchlistAsync(string userId, string movieId);
 
-        IEnumerable<T> GetMovies<T>(string userId);
+        IEnumerable<T> GetAll<T>(string userId, int skip, int take);
+
+        int GetCount(string userId);
     }
 }

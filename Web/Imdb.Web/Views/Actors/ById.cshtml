@@ -4,8 +4,32 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-
-@Model.Born
-<div>
-    <img src="@(GlobalConstants.BaseDeliveryUrl+Model.ImageUrl)" />
+<div class="row">
+    <div class="col-12 col-md-4">
+        <img src="@(GlobalConstants.BaseDeliveryUrl+Model.ImageUrl)" width="100%" height="315" />
+    </div>
+    <div class="col-12 col-md-4">
+        <label class="font-weight-bolder" asp-for="@Model.Description"></label>
+        <div>
+            @Model.Description
+        </div>
+        @if (Model.Born.HasValue)
+        {
+            <label class="font-weight-bolder" asp-for="@Model.Born"></label>
+            <div>
+                @Model.Born.Value.ToShortDateString()
+            </div>
+        }
+        <label class="font-weight-bolder" asp-for="@Model.Gender"></label>
+        <div>
+            @Model.Gender.ToString()
+        </div>
+        <label class="font-weight-bolder" asp-for="@Model.Movies"></label>
+        <ul>
+            @foreach (var movie in Model.Movies.OrderByDescending(x => x.MovieRating))
+            {
+                <li><a asp-area="" asp-controller="Movies" asp-action="ById" asp-route-id="@movie.MovieId">@movie.MovieTitle</a> @movie.MovieRating/10<i class="fas fa-star"></i></li>
+            }
+        </ul>
+    </div>
 </div>
