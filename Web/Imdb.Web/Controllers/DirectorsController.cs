@@ -22,7 +22,7 @@
                 return this.BadRequest();
             }
 
-            return this.Json(director);
+            return this.View(director);
         }
     }
 }
