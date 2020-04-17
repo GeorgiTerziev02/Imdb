@@ -81,7 +81,7 @@
             return this.Json(watchlist);
         }
 
-        public IActionResult Tvshows(string id)
+        public IActionResult Tvshows()
         {
             return this.Json(string.Empty);
         }

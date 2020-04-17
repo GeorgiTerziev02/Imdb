@@ -1,0 +1,11 @@
+﻿@model Imdb.Web.ViewModels.Actors.ActorByIdViewModel
+@{
+    ViewData["Title"] = $"{Model.FirstName + " " + Model.LastName}";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@Model.Born
+<div>
+    <img src="@(GlobalConstants.BaseDeliveryUrl+Model.ImageUrl)" />
+</div>

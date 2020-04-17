@@ -117,7 +117,7 @@
             input.GeneralImageUrl = imageUrl;
             var movieId = await this.moviesService.AddMovie<AddMovieInputViewModel>(input);
 
-            return this.Redirect($"/Admin/Administration/{movieId}");
+            return this.Redirect($"/Admin/Administration/AddActorsAndGenres/{movieId}");
         }
 
         public IActionResult AddTvShow()

@@ -19,5 +19,7 @@
         public const string SuccessfullDelete = "You deleted your review!";
 
         public const string PostWarning = "You can post only 1 review every hour!";
+
+        public const string YoutubeEmbed = "https://www.youtube.com/embed/";
     }
 }

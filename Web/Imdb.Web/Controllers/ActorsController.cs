@@ -13,21 +13,30 @@
             this.actorsService = actorsService;
         }
 
-        public IActionResult All()
+        public IActionResult All(int page = 1)
         {
+            var count = this.actorsService.GetTotalCount();
+            if (page <= 0 || page > count)
+            {
+                page = 1;
+            }
+
             var actors = new AllActorsListViewModel()
             {
-                Actors = this.actorsService.GetAll<ActorViewModel>(),
+                Actors = this.actorsService.GetAll<ActorViewModel>((page - 1) * ActorsPerPage, ActorsPerPage),
             };
 
-            return this.Json(actors);
+            var pagesCount = ((count - 1) / ActorsPerPage) + 1;
+            actors.PageCount = pagesCount;
+            actors.CurrentPage = page;
+            return this.View(actors);
         }
 
         public IActionResult ById(string id)
         {
             var actor = this.actorsService.GetById<ActorByIdViewModel>(id);
 
-            return this.Json(actor);
+            return this.View(actor);
         }
     }
 }

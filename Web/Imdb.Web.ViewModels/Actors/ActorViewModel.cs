@@ -16,6 +16,8 @@
 
         public string ImageUrl { get; set; }
 
+        public int MoviesCount { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Actor, ActorViewModel>()

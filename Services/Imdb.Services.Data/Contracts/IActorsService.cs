@@ -12,10 +12,14 @@
 
         IEnumerable<T> GetAll<T>();
 
+        IEnumerable<T> GetAll<T>(int skip, int take);
+
         bool IsActorIdValid(string actorId);
 
         string GetName(string actorId);
 
         T GetById<T>(string actorId);
+
+        int GetTotalCount();
     }
 }

@@ -12,5 +12,7 @@
         Task AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description);
 
         IEnumerable<T> GetAll<T>();
+
+        T GetById<T>(string directorId);
     }
 }

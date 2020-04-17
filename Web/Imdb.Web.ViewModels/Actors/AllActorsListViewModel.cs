@@ -7,5 +7,9 @@
     public class AllActorsListViewModel
     {
         public IEnumerable<ActorViewModel> Actors { get; set; }
+
+        public int PageCount { get; set; }
+
+        public int CurrentPage { get; set; }
     }
 }

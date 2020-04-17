@@ -39,23 +39,52 @@
 
         public IEnumerable<T> GetAll<T>()
         {
-            return this.actorsRepository.AllAsNoTracking().OrderBy(x => x.FirstName).ThenBy(x => x.LastName).To<T>().ToList();
+            return this.actorsRepository
+                .AllAsNoTracking()
+                .OrderBy(x => x.FirstName)
+                .ThenBy(x => x.LastName)
+                .To<T>()
+                .ToList();
+        }
+
+        public IEnumerable<T> GetAll<T>(int skip, int take)
+        {
+            return this.actorsRepository
+                .AllAsNoTracking()
+                .OrderBy(x => x.FirstName)
+                .ThenBy(x => x.LastName)
+                .Skip(skip)
+                .Take(take)
+                .To<T>()
+                .ToList();
         }
 
         public T GetById<T>(string actorId)
         {
-            return this.actorsRepository.AllAsNoTracking().Where(x => x.Id == actorId).To<T>().FirstOrDefault();
+            return this.actorsRepository
+                .AllAsNoTracking()
+                .Where(x => x.Id == actorId)
+                .To<T>()
+                .FirstOrDefault();
         }
 
         public string GetName(string actorId)
         {
-            var actor = this.actorsRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == actorId);
+            var actor = this.actorsRepository
+                .AllAsNoTracking()
+                .FirstOrDefault(x => x.Id == actorId);
+
             if (actor == null)
             {
                 return null;
             }
 
             return actor.FirstName + " " + actor.LastName;
+        }
+
+        public int GetTotalCount()
+        {
+            return this.actorsRepository.AllAsNoTracking().Count();
         }
 
         public bool IsActorIdValid(string actorId)
