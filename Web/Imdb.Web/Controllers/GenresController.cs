@@ -34,5 +34,23 @@
             };
             return response;
         }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<ActionResult<RemoveMovieGenreResponseModel>> Delete(RemoveGenreViewModel model)
+        {
+            var id = await this.genresService.RemoveGenreFromMovie(model.Id);
+            if (id == null)
+            {
+                return this.BadRequest();
+            }
+
+            var response = new RemoveMovieGenreResponseModel()
+            {
+                Id = id.Value,
+            };
+
+            return response;
+        }
     }
 }

@@ -86,7 +86,7 @@
     <div>
         @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
         {
-            <a class="btn btn-primary" asp-area="Admin" asp-controller="Administration" asp-action="AddActorsAndGenres" asp-route-id="@Model.Id">Add genres/actors</a>
+            <a class="btn btn-primary" asp-area="Admin" asp-controller="Administration" asp-action="AddActorsAndGenres" asp-route-id="@Model.Id">Edit genres/actors</a>
         }
     </div>
     <label class="font-weight-bold" asp-for="@Model.Genres"></label>

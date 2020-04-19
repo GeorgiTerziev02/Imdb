@@ -16,7 +16,7 @@
     <ul id="genres">
         @foreach (var genre in Model.Genres)
         {
-            <li>@genre.GenreName </li>
+            <li id="@genre.Id">@genre.GenreName <a href="#" onclick="deleteGenreById('@genre.Id')"><i class="fas fa-user-times"></i></a></li>
         }
     </ul>
 </div>
@@ -27,7 +27,7 @@
         <select id="chosenGenre" asp-items="@availableGenres" class="form-control"></select>
     </div>
     <div>
-        <a href="#" onclick="addGenre('@Model.Id')">Add genre</a>
+        <a class="btn btn-primary my-3" href="#" onclick="addGenre('@Model.Id')">Add genre</a>
     </div>
 </div>
 <hr />
@@ -36,7 +36,7 @@
     <ul id="actors">
         @foreach (var actor in Model.Actors)
         {
-            <li id="@actor.Id">@actor.Name <a href="#" onclick="deleteById('@actor.Id')"><i class="fas fa-user-times"></i></a></li>
+            <li id="@actor.Id">@actor.Name <a href="#" onclick="deleteByActorId('@actor.Id')"><i class="fas fa-user-times"></i></a></li>
         }
     </ul>
 </div>
@@ -46,7 +46,7 @@
         <select id="chosenActor" asp-items="@availableActors" class="form-control"></select>
     </div>
     <div>
-        <a href="#" onclick="addActor('@Model.Id')">Add actor</a>
+        <a class="btn btn-primary my-3" href="#" onclick="addActor('@Model.Id')">Add actor</a>
     </div>
 </div>
 <hr />
@@ -76,7 +76,7 @@
             });
         }
 
-        function deleteById(id) {
+        function deleteByActorId(id) {
             var token = $("#votesForm input[name=__RequestVerificationToken]").val();
             var json = { id: parseInt(id) };
             $.ajax({
@@ -109,6 +109,22 @@
                     item.appendChild(node);
                     var element = document.getElementById("actors");
                     element.appendChild(item);
+                }
+            });
+        }
+
+        function deleteGenreById(id) {
+            var token = $("#votesForm input[name=__RequestVerificationToken]").val();
+            var json = { id: parseInt(id)};
+            $.ajax({
+                url: "/api/genres",
+                type: "DELETE",
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: { 'X-CSRF-TOKEN': token },
+                success: function (data) {
+                    $(`#${data.id}`).remove();
                 }
             });
         }

@@ -46,5 +46,19 @@
         {
             return this.movieGenreRepository.AllAsNoTracking().FirstOrDefault(x => x.GenreId == genreId && x.MovieId == movieId) != null;
         }
+
+        public async Task<int?> RemoveGenreFromMovie(int id)
+        {
+            var movieGenre = this.movieGenreRepository.All().FirstOrDefault(x => x.Id == id);
+            if (movieGenre == null)
+            {
+                return null;
+            }
+
+            this.movieGenreRepository.Delete(movieGenre);
+            await this.movieGenreRepository.SaveChangesAsync();
+
+            return id;
+        }
     }
 }

@@ -12,5 +12,7 @@
         Task AddGenreToMovie(int genreId, string movieId);
 
         string GetGenreName(int genreId);
+
+        Task<int?> RemoveGenreFromMovie(int id);
     }
 }
