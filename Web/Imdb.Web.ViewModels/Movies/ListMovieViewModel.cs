@@ -19,12 +19,12 @@
 
         public string GeneralImageUrl { get; set; }
 
-        public double? Rating { get; set; }
+        public string Rating { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Movie, ListMovieViewModel>()
-                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(z => z.Rating)));
+                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(z => z.Rating).ToString("f1")));
         }
     }
 }

@@ -16,7 +16,7 @@
 
         public string Description { get; set; }
 
-        public double Rating { get; set; }
+        public string Rating { get; set; }
 
         public string ShortDescription
         {
@@ -34,7 +34,7 @@
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Movie, TopMovieViewModel>()
-                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(x => x.Rating)));
+                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(x => x.Rating).ToString("f1")));
         }
     }
 }

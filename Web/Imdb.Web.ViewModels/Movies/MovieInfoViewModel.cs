@@ -39,7 +39,7 @@
 
         public string Trailer { get; set; }
 
-        public double? Rating { get; set; }
+        public string Rating { get; set; }
 
         [Display(Name = "Genres:")]
         public virtual IEnumerable<MovieGenreInfoViewModel> Genres { get; set; }
@@ -62,7 +62,7 @@
         {
             configuration.CreateMap<Movie, MovieInfoViewModel>()
                 .ForMember(x => x.DirectorName, y => y.MapFrom(x => x.Director.FirstName + " " + x.Director.LastName))
-                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(z => z.Rating)))
+                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(z => z.Rating).ToString("f1")))
                 .ForMember(x => x.VotesCount, y => y.MapFrom(x => x.Votes.Count()));
         }
     }

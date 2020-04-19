@@ -16,7 +16,7 @@
                     <h3>@movie.Title</h3>
                     @if (movie.Rating == null)
                     {
-                        movie.Rating = 0;
+                        movie.Rating = "0";
                     }
                     <p>Rating : @movie.Rating/10<i class="fas fa-star"></i></p>
                     @if (movie.ReleaseDate != null)

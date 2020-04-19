@@ -12,12 +12,12 @@
 
         public string Title { get; set; }
 
-        public double Rating { get; set; }
+        public string Rating { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Movie, DirectorsMovieViewModel>()
-                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(x => x.Rating)));
+                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Votes.Average(x => x.Rating).ToString("f1")));
         }
     }
 }

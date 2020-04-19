@@ -18,12 +18,12 @@
 
         public string MovieGeneralImageUrl { get; set; }
 
-        public double? Rating { get; set; }
+        public string Rating { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<UserMovie, WatchlistEntityViewModel>()
-                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Movie.Votes.Average(z => z.Rating)));
+                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Movie.Votes.Average(z => z.Rating).ToString("f1")));
         }
     }
 }

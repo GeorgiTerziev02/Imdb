@@ -63,7 +63,7 @@
 
             await this.watchlistsService.RemoveFromWatchlistAsync(userId, movieId);
 
-            return this.RedirectToAction("Movies", new { userId });
+            return this.RedirectToAction("All", new { userId });
         }
 
         public IActionResult All(string userId, int page = 1)

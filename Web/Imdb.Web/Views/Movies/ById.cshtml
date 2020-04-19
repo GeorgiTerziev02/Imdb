@@ -13,7 +13,7 @@
     }
     if (Model.Rating == null)
     {
-        Model.Rating = 0;
+        Model.Rating = "0";
     }
     var votes = Model.PossibleVotes.Select(x => new SelectListItem(x.ToString(), x.ToString()));
     var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -220,7 +220,7 @@
                 headers: { 'X-CSRF-TOKEN': token },
                 success: function (data) {
                     $("#votesCount").html(data.votesCount);
-                    $("#rating").html(data.rating);
+                    $("#rating").html(data.rating.toPrecision(2));
                     $("#userVote").html(data.userVote);
                 }
             });
