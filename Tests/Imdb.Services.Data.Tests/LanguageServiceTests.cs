@@ -14,19 +14,28 @@
 
     public class LanguageServiceTests
     {
+        private DbContextOptionsBuilder<ApplicationDbContext> options;
+        private EfRepository<Language> repository;
+        private LanguageService service;
+
+        public LanguageServiceTests()
+        {
+            this.options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            this.repository = new EfRepository<Language>(new ApplicationDbContext(this.options.Options));
+            this.service = new LanguageService(this.repository);
+            AutoMapperConfig.RegisterMappings(typeof(LanguageTestModel).Assembly);
+        }
+
         [Fact]
         public async Task AddLanguageShouldWorkCorrectly()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var repository = new EfRepository<Language>(new ApplicationDbContext(options.Options));
-            var service = new LanguageService(repository);
             var expected = 3;
 
-            await service.AddLanguage("a");
-            await service.AddLanguage("ab");
-            await service.AddLanguage("ac");
-            var actual = repository.AllAsNoTracking().Count();
+            await this.service.AddLanguage("a");
+            await this.service.AddLanguage("ab");
+            await this.service.AddLanguage("ac");
+            var actual = this.repository.AllAsNoTracking().Count();
 
             Assert.Equal(expected, actual);
         }
@@ -35,18 +44,13 @@
         public async Task GetAllReturnsExpectedCount()
         {
             var expected = 100;
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var repository = new EfRepository<Language>(new ApplicationDbContext(options.Options));
-            var service = new LanguageService(repository);
 
-            for (int i = 0; i < expected; i++)
+            for (int i = 0; i < 100; i++)
             {
-                await service.AddLanguage($"{i}");
+                await this.service.AddLanguage($"{i}");
             }
 
-            AutoMapperConfig.RegisterMappings(typeof(LanguageTestModel).Assembly);
-            var languages = service.GetAll<LanguageTestModel>();
+            var languages = this.service.GetAll<LanguageTestModel>();
 
             Assert.Equal(expected, languages.Count());
         }
@@ -54,20 +58,14 @@
         [Fact]
         public async Task GetAllOrdersLanguages()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var repository = new EfRepository<Language>(new ApplicationDbContext(options.Options));
-            var service = new LanguageService(repository);
-
             for (int i = 25; i >= 0; i--)
             {
                 var name = (char)(i + 97);
 
-                await service.AddLanguage(name.ToString());
+                await this.service.AddLanguage(name.ToString());
             }
 
-            AutoMapperConfig.RegisterMappings(typeof(LanguageTestModel).Assembly);
-            var languages = service.GetAll<LanguageTestModel>().ToList();
+            var languages = this.service.GetAll<LanguageTestModel>().ToList();
             var firstLangName = languages[0].Name;
             var thirdLangName = languages[2].Name;
             var lastLangName = languages[25].Name;

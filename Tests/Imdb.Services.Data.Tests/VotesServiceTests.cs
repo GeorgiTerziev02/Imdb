@@ -11,20 +11,27 @@
 
     public class VotesServiceTests
     {
+        private DbContextOptionsBuilder<ApplicationDbContext> options;
+        private EfRepository<Vote> repository;
+        private VotesService service;
+
+        public VotesServiceTests()
+        {
+            this.options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            this.repository = new EfRepository<Vote>(new ApplicationDbContext(this.options.Options));
+            this.service = new VotesService(this.repository);
+        }
+
         [Fact]
         public async Task HundredVotesShouldCountOnce()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var repository = new EfRepository<Vote>(new ApplicationDbContext(options.Options));
-            var service = new VotesService(repository);
-
             for (int i = 1; i <= 100; i++)
             {
-                await service.VoteAsync("1", "1", i % 11);
+                await this.service.VoteAsync("1", "1", i % 11);
             }
 
-            var votesCount = service.MovieVotesCount("1");
+            var votesCount = this.service.MovieVotesCount("1");
             Assert.Equal(1, votesCount);
         }
 
@@ -32,13 +39,9 @@
         public async Task GetUserVoteShouldWorkCorrectly()
         {
             var expected = 5;
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var repository = new EfRepository<Vote>(new ApplicationDbContext(options.Options));
-            var service = new VotesService(repository);
 
-            await service.VoteAsync("1", "1", 5);
-            var actual = service.GetUserRatingForMovie("1", "1");
+            await this.service.VoteAsync("1", "1", 5);
+            var actual = this.service.GetUserRatingForMovie("1", "1");
 
             Assert.Equal(expected, actual);
         }
@@ -47,15 +50,11 @@
         public async Task UserShouldBeAbleToChangeVote()
         {
             var expected = 8;
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var repository = new EfRepository<Vote>(new ApplicationDbContext(options.Options));
-            var service = new VotesService(repository);
 
-            await service.VoteAsync("1", "1", 5);
-            await service.VoteAsync("1", "1", 8);
+            await this.service.VoteAsync("1", "1", 5);
+            await this.service.VoteAsync("1", "1", 8);
 
-            var actualVote = service.GetUserRatingForMovie("1", "1");
+            var actualVote = this.service.GetUserRatingForMovie("1", "1");
             Assert.Equal(expected, actualVote);
         }
 
@@ -70,16 +69,11 @@
         {
             double expectedRating = (firstRating + secondRating + thirdRating) / 3.0;
 
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var repository = new EfRepository<Vote>(new ApplicationDbContext(options.Options));
-            var service = new VotesService(repository);
+            await this.service.VoteAsync("1", "2", firstRating);
+            await this.service.VoteAsync("2", "2", secondRating);
+            await this.service.VoteAsync("3", "2", thirdRating);
 
-            await service.VoteAsync("1", "2", firstRating);
-            await service.VoteAsync("2", "2", secondRating);
-            await service.VoteAsync("3", "2", thirdRating);
-
-            var actualRating = service.MovieRating("2");
+            var actualRating = this.service.MovieRating("2");
 
             Assert.Equal(expectedRating, actualRating);
         }
@@ -88,18 +82,14 @@
         public async Task MovieVotesCountShouldWorkCorrectly()
         {
             var expected = 2;
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var repository = new EfRepository<Vote>(new ApplicationDbContext(options.Options));
-            var service = new VotesService(repository);
 
             for (int i = 0; i < 100; i++)
             {
-                await service.VoteAsync("1", "1", i % 11);
-                await service.VoteAsync("2", "1", (i + 5) % 11);
+                await this.service.VoteAsync("1", "1", i % 11);
+                await this.service.VoteAsync("2", "1", (i + 5) % 11);
             }
 
-            var actual = service.MovieVotesCount("1");
+            var actual = this.service.MovieVotesCount("1");
 
             Assert.Equal(expected, actual);
         }
@@ -110,13 +100,8 @@
         [InlineData("2")]
         public async Task GetUserVoteShouldReturnNull(string userId)
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var repository = new EfRepository<Vote>(new ApplicationDbContext(options.Options));
-            var service = new VotesService(repository);
-
-            await service.VoteAsync("1", "1", 10);
-            var actual = service.GetUserRatingForMovie(userId, "1");
+            await this.service.VoteAsync("1", "1", 10);
+            var actual = this.service.GetUserRatingForMovie(userId, "1");
 
             Assert.Null(actual);
         }

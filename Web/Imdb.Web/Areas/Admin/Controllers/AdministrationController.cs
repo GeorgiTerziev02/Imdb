@@ -85,9 +85,9 @@
                 imageUrl = GlobalConstants.DefaulProfilePicture;
             }
 
-            await this.actorsService.AddAsync(input.FirstName, input.LastName, input.Gender, input.Born, imageUrl, input.Description);
+            var actorId = await this.actorsService.AddAsync(input.FirstName, input.LastName, input.Gender, input.Born, imageUrl, input.Description);
 
-            return this.Redirect("/Home/Index");
+            return this.Redirect($"/Actors/{actorId}");
         }
 
         public IActionResult AddMovie()

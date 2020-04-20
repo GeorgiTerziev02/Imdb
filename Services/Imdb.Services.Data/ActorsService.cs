@@ -21,7 +21,7 @@
             this.actorsRepository = actorsRepository;
         }
 
-        public async Task AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description)
+        public async Task<string> AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description)
         {
             var actor = new Actor()
             {
@@ -35,6 +35,8 @@
 
             await this.actorsRepository.AddAsync(actor);
             await this.actorsRepository.SaveChangesAsync();
+
+            return actor.Id;
         }
 
         public IEnumerable<T> GetAll<T>()
