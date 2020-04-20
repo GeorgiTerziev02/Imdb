@@ -16,9 +16,9 @@
 
     public class DirectorsServiceTests
     {
-        private DbContextOptionsBuilder<ApplicationDbContext> options;
-        private EfDeletableEntityRepository<Director> repository;
-        private DirectorsService service;
+        private readonly DbContextOptionsBuilder<ApplicationDbContext> options;
+        private readonly EfDeletableEntityRepository<Director> repository;
+        private readonly DirectorsService service;
 
         public DirectorsServiceTests()
         {
