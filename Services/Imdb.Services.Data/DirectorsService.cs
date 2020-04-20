@@ -19,7 +19,7 @@
             this.directorsRepository = directorsRepository;
         }
 
-        public async Task AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description)
+        public async Task<string> AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description)
         {
             var director = new Director()
             {
@@ -33,6 +33,8 @@
 
             await this.directorsRepository.AddAsync(director);
             await this.directorsRepository.SaveChangesAsync();
+
+            return director.Id;
         }
 
         public IEnumerable<T> GetAll<T>()

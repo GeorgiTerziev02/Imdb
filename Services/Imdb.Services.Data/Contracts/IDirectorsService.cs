@@ -9,7 +9,7 @@
 
     public interface IDirectorsService
     {
-        Task AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description);
+        Task<string> AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description);
 
         IEnumerable<T> GetAll<T>();
 
