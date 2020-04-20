@@ -36,6 +36,11 @@
         {
             var actor = this.actorsService.GetById<ActorByIdViewModel>(id);
 
+            if (actor == null)
+            {
+                return this.NotFound();
+            }
+
             return this.View(actor);
         }
     }
