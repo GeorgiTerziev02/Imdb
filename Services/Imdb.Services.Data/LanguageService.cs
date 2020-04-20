@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Imdb.Data.Common.Repositories;
     using Imdb.Data.Models;
@@ -15,6 +16,17 @@
         public LanguageService(IRepository<Language> languagesRepository)
         {
             this.languagesRepository = languagesRepository;
+        }
+
+        public async Task AddLanguage(string name)
+        {
+            var lang = new Language()
+            {
+                Name = name,
+            };
+
+            await this.languagesRepository.AddAsync(lang);
+            await this.languagesRepository.SaveChangesAsync();
         }
 
         public IEnumerable<T> GetAll<T>()
