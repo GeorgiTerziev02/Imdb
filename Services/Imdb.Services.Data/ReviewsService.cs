@@ -17,7 +17,7 @@
             this.reviewsRepository = reviewsRepository;
         }
 
-        public async Task AddAsync(string userId, string movieId, string content)
+        public async Task<string> AddAsync(string userId, string movieId, string content)
         {
             var review = new Review()
             {
@@ -28,6 +28,8 @@
 
             await this.reviewsRepository.AddAsync(review);
             await this.reviewsRepository.SaveChangesAsync();
+
+            return review.Id;
         }
 
         public bool ContainsReviewById(string reviewId)
@@ -52,6 +54,11 @@
             }
 
             return true;
+        }
+
+        public int UsersReviews(string userId)
+        {
+            return this.reviewsRepository.AllAsNoTracking().Where(x => x.UserId == userId).Count();
         }
 
         public async Task<string> RemoveById(string reviewId)

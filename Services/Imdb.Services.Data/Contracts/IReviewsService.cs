@@ -5,12 +5,14 @@
 
     public interface IReviewsService
     {
-        Task AddAsync(string userId, string movieId, string content);
+        Task<string> AddAsync(string userId, string movieId, string content);
 
         bool ContainsReviewById(string reviewId);
 
         Task<string> RemoveById(string reviewId);
 
         bool HasPermissionToPost(string userId);
+
+        int UsersReviews(string userId);
     }
 }
