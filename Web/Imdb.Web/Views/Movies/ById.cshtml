@@ -63,6 +63,10 @@
                 <div>Rating: <span class="font-weight-bold" id="rating">@Model.Rating</span>/10</div>
                 <div>(Total votes: <span id="votesCount">@Model.VotesCount</span>)</div>
             </div>
+            @if (this.User.Identity.IsAuthenticated)
+            {
+                <a class="btn btn-outline-warning" asp-area="User" asp-controller="Watchlists" asp-action="Add" asp-route-userId="@userId" asp-route-movieId="@Model.Id"><i class="fas fa-star">Add to watchlist</i></a>
+            }
         </div>
         @if (!string.IsNullOrWhiteSpace(Model.Trailer))
         {
