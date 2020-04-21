@@ -12,10 +12,47 @@
     public class WatchlistService : IWatchlistsService
     {
         private readonly IRepository<UserMovie> watchlistRepository;
+        private readonly IDeletableEntityRepository<Movie> moviesRepository;
 
-        public WatchlistService(IRepository<UserMovie> watchlistRepository)
+        public WatchlistService(
+            IRepository<UserMovie> watchlistRepository,
+            IDeletableEntityRepository<Movie> moviesRepository)
         {
             this.watchlistRepository = watchlistRepository;
+            this.moviesRepository = moviesRepository;
+        }
+
+        public static int MostFrequent(int[] arr, int length)
+        {
+            Dictionary<int, int> kvp = new Dictionary<int, int>();
+
+            for (int i = 0; i < length; i++)
+            {
+                int key = arr[i];
+                if (kvp.ContainsKey(key))
+                {
+                    int freq = kvp[key];
+                    freq++;
+                    kvp[key] = freq;
+                }
+                else
+                {
+                    kvp.Add(key, 1);
+                }
+            }
+
+            int minCount = 0, result = -1;
+
+            foreach (KeyValuePair<int, int> pair in kvp)
+            {
+                if (minCount < pair.Value)
+                {
+                    result = pair.Key;
+                    minCount = pair.Value;
+                }
+            }
+
+            return result;
         }
 
         public async Task AddToWatchlistAsync(string userId, string movieId)
@@ -61,6 +98,36 @@
         public int GetCount(string userId)
         {
             return this.watchlistRepository.AllAsNoTracking().Where(x => x.UserId == userId).Count();
+        }
+
+        public int MostWatchedGenreId(string userId)
+        {
+            var genresIds = this.watchlistRepository
+                .AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .SelectMany(x => x.Movie.Genres.Select(x => x.GenreId)).ToArray();
+
+            var length = genresIds.Length;
+
+            return MostFrequent(genresIds, length);
+        }
+
+        public IEnumerable<T> Recommend<T>(string userId, int genreId, int count)
+        {
+            var notToRecommend = this.watchlistRepository
+                .AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Select(x => x.MovieId)
+                .ToList();
+
+            return this.moviesRepository
+                .AllAsNoTracking()
+                .Where(x => x.Genres.Any(y => y.GenreId == genreId))
+                .Where(x => !notToRecommend.Contains(x.Id))
+                .OrderByDescending(x => x.Votes.Average(y => y.Rating))
+                .Take(count)
+                .To<T>()
+                .ToList();
         }
     }
 }

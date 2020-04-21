@@ -16,5 +16,9 @@
         IEnumerable<T> GetAll<T>(string userId, int skip, int take);
 
         int GetCount(string userId);
+
+        int MostWatchedGenreId(string userId);
+
+        IEnumerable<T> Recommend<T>(string userId, int genreId, int count);
     }
 }
