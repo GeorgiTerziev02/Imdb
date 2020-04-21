@@ -3,16 +3,19 @@
     ViewData["Title"] = "Results";
 }
 
-<div class="row">
+<div class="row d-flex justify-content-center">
     <div class="col col-md-4">
         @if (Model.Results.Count() == 0)
         {
             <h2>No results ;(</h2>
-            <h4>Search again or find other amazing movies</h4>
-            <a class="btn btn-primary my-3" asp-area="" asp-controller="Movies" asp-action="All">Movies</a>
+            <h4>
+                Search again or find other amazing movies here: <a class="btn btn-primary my-3" asp-area="" asp-controller="Movies" asp-action="All">Movies</a>
+            </h4>
         }
         else
         {
+            <h2>Results</h2>
+            <br />
             @foreach (var movie in Model.Results)
             {
                 <a asp-area="" asp-controller="Movies" asp-action="ById" asp-route-id="@movie.Id">
@@ -34,5 +37,10 @@
                 <br />
             }
         }
+    </div>
+    <div class="col col-md-3">
+    </div>
+    <div class="col col-md-3">
+        <vc:recommended></vc:recommended>
     </div>
 </div>
