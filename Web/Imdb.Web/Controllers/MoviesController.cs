@@ -58,19 +58,24 @@
             }
 
             // TODO: Add user review picture
-            movie.PossibleVotes = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            movie.PossibleVotes = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
             return this.View(movie);
         }
 
         public IActionResult Results(string movieTitle)
         {
+            if (string.IsNullOrWhiteSpace(movieTitle))
+            {
+                return this.Redirect("/");
+            }
+
             var movies = new SearchListViewModel()
             {
                 Results = this.moviesService.Find<SearchMovieViewModel>(movieTitle),
             };
 
-            return this.Json(movies);
+            return this.View(movies);
         }
     }
 }

@@ -73,7 +73,7 @@
                 url = uploadResult.Uri.AbsoluteUri;
             }
 
-            url = url.Replace(GlobalConstants.BaseDeliveryUrl, string.Empty);
+            url = url.Replace(GlobalConstants.BaseDeliveryImageUrl, string.Empty);
 
             return url;
         }
