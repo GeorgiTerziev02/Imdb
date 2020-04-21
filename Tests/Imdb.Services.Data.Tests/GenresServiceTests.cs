@@ -1,17 +1,24 @@
 ﻿namespace Imdb.Services.Data.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
+    using Imdb.Data;
     using Imdb.Data.Common.Repositories;
     using Imdb.Data.Models;
+    using Imdb.Data.Repositories;
+    using Imdb.Services.Data.Tests.TestModels.GenresServie;
+    using Imdb.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
     using Moq;
     using Xunit;
 
     public class GenresServiceTests
     {
-        private Mock<IRepository<Genre>> genresRepository;
-        private Mock<IRepository<MovieGenre>> movieGenresRepository;
+        private readonly Mock<IRepository<Genre>> genresRepository;
+        private readonly Mock<IRepository<MovieGenre>> movieGenresRepository;
 
         public GenresServiceTests()
         {
@@ -102,6 +109,99 @@
                 this.genresRepository.Object, this.movieGenresRepository.Object);
 
             var result = genresService.GetGenreName(genreId);
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetAllShouldWorkCorrectly()
+        {
+            this.genresRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(new List<Genre>()
+                {
+                     new Genre() { Id = 1, Name = "one", },
+                     new Genre() { Id = 2, Name = "two", },
+                     new Genre() { Id = 3, Name = "three", },
+                }.AsQueryable<Genre>);
+
+            var genresService = new GenresService(
+                this.genresRepository.Object, this.movieGenresRepository.Object);
+            var expectedCount = 3;
+
+            AutoMapperConfig.RegisterMappings(typeof(GenreAllTestModel).Assembly);
+            var genres = genresService.GetAll<GenreAllTestModel>();
+
+            Assert.Equal(expectedCount, genres.Count());
+        }
+
+        [Fact]
+        public void GetAllShouldReturnEmptyList()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var repository = new EfRepository<Genre>(new ApplicationDbContext(options.Options));
+            var service = new GenresService(repository, this.movieGenresRepository.Object);
+
+            AutoMapperConfig.RegisterMappings(typeof(GenreAllTestModel).Assembly);
+            var genres = service.GetAll<GenreAllTestModel>();
+
+            Assert.Empty(genres);
+        }
+
+        [Fact]
+        public async Task AddGenreToMovieShouldWorkCorrectly()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var repository = new EfRepository<MovieGenre>(new ApplicationDbContext(options.Options));
+            var service = new GenresService(this.genresRepository.Object, repository);
+            var expectedCount = 2;
+
+            await service.AddGenreToMovie(1, "1");
+            await service.AddGenreToMovie(2, "2");
+            var actualCount = await repository.AllAsNoTracking().CountAsync();
+
+            Assert.Equal(expectedCount, actualCount);
+        }
+
+        [Fact]
+        public async Task RemoveGenreFromMovieShouldWorkCorrectly()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var repository = new EfRepository<MovieGenre>(new ApplicationDbContext(options.Options));
+            var service = new GenresService(this.genresRepository.Object, repository);
+            var expectedCount = 1;
+            var expectedId = 1;
+
+            await repository.AddAsync(new MovieGenre { Id = 1, MovieId = "1", GenreId = 1 });
+            await repository.AddAsync(new MovieGenre { Id = 2, MovieId = "111", GenreId = 11 });
+            await repository.SaveChangesAsync();
+
+            var returnedId = await service.RemoveGenreFromMovie(1);
+            var actualCount = await repository.AllAsNoTracking().CountAsync();
+
+            Assert.Equal(expectedCount, actualCount);
+            Assert.Equal(expectedId, returnedId);
+        }
+
+        [Theory]
+        [InlineData(100)]
+        [InlineData(0)]
+        [InlineData(-10)]
+        public async Task RemoveGenreFromMovieShouldReturnNull(int id)
+        {
+            this.movieGenresRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(new List<MovieGenre>()
+                {
+                     new MovieGenre() { Id = 1 },
+                     new MovieGenre() { Id = 2 },
+                     new MovieGenre() { Id = 3 },
+                }.AsQueryable<MovieGenre>);
+
+            var genresService = new GenresService(
+                this.genresRepository.Object, this.movieGenresRepository.Object);
+            var result = await genresService.RemoveGenreFromMovie(id);
+
             Assert.Null(result);
         }
     }
