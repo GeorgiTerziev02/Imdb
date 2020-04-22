@@ -7,5 +7,9 @@
     public class ListAllTvShowsViewModel
     {
         public IEnumerable<ListTvShowViewModel> TvShows { get; set; }
+
+        public int CurrentPage { get; set; }
+
+        public int PageCount { get; set; }
     }
 }

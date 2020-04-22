@@ -16,7 +16,7 @@
         public IActionResult All(int page = 1)
         {
             var count = this.actorsService.GetTotalCount();
-            if (page <= 0 || page > count)
+            if (page <= 0 || page > (((count - 1) / ActorsPerPage) + 1))
             {
                 page = 1;
             }

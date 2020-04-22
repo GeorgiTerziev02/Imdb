@@ -20,7 +20,6 @@
             this.actorsService = actorsService;
         }
 
-        // TODO: try out httpDelete
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<ActorResponseModel>> Post(ActorInputModel input)

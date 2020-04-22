@@ -21,7 +21,7 @@
         public IActionResult All(int page = 1)
         {
             var count = this.moviesService.GetTotalCount();
-            if (page <= 0 || page > count)
+            if (page <= 0 || page > (((count - 1) / ItemsPerPage) + 1))
             {
                 page = 1;
             }

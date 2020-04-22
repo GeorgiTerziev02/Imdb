@@ -19,7 +19,6 @@
             this.reviewsService = reviewsService;
         }
 
-        // TODO: User can post review once every hour
         [HttpPost]
         public async Task<IActionResult> Add(AddReviewInputViewModel input)
         {

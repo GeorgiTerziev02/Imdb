@@ -46,11 +46,11 @@
                     recommendedList.Entities = this.watchlistsService.Recommend<RecommendEntityViewModel>(userId, mostPopularGenreId, Count);
                 }
 
-                if (recommendedList.Entities.Count() == 0)
-                {
-                    recommendedList.Entities =
-                        this.moviesService.GetTopMovies<RecommendEntityViewModel>(Count);
-                }
+                //if (recommendedList.Entities.Count() == 0)
+                //{
+                //    recommendedList.Entities =
+                //        this.moviesService.GetTopMovies<RecommendEntityViewModel>(Count);
+                //}
             }
 
             return this.View(recommendedList);

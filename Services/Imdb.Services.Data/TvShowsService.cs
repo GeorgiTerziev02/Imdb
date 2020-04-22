@@ -18,13 +18,23 @@
             this.tvshowsRepository = tvshowsRepository;
         }
 
-        public IEnumerable<T> GetAll<T>()
+        public IEnumerable<T> GetAll<T>(int skip, int take)
         {
             return this.tvshowsRepository
                 .All()
                 .Where(x => x.IsTvShow)
+                .Skip(skip)
+                .Take(take)
                 .To<T>()
                 .ToList();
+        }
+
+        public int GetCount()
+        {
+            return this.tvshowsRepository
+                .AllAsNoTracking()
+                .Where(x => x.IsTvShow)
+                .Count();
         }
     }
 }

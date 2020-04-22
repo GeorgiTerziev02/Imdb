@@ -68,6 +68,12 @@
 
         public IActionResult All(string userId, int page = 1)
         {
+            var count = this.watchlistsService.GetCount(userId);
+            if (page <= 0 || page > (((count - 1) / ItemsPerPage) + 1))
+            {
+                page = 1;
+            }
+
             if (this.User.FindFirstValue(ClaimTypes.NameIdentifier) != userId)
             {
                 return this.BadRequest();
@@ -78,7 +84,6 @@
                 Movies = this.watchlistsService.GetAll<WatchlistEntityViewModel>(userId, (page - 1) * ItemsPerPage, ItemsPerPage),
             };
 
-            var count = this.watchlistsService.GetCount(userId);
             var pagesCount = ((count - 1) / ItemsPerPage) + 1;
             watchlist.Id = userId;
             watchlist.CurrentPage = page;
