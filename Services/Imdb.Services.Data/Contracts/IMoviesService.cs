@@ -1,5 +1,6 @@
 ﻿namespace Imdb.Services.Data.Contracts
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -29,5 +30,16 @@
         Task UploadImages(string movieId, IEnumerable<string> imageUrls);
 
         Task RemoveMovieActor(int id);
+
+        Task<string> AddTvShowAsync(
+            string title,
+            string description,
+            TimeSpan? duration,
+            DateTime? releaseDate,
+            int? episodesCount,
+            int languageId,
+            string directorId,
+            string generalImageUrl,
+            string trailer);
     }
 }

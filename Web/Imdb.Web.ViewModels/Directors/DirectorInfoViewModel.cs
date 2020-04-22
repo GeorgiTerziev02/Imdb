@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using System.ComponentModel.DataAnnotations;
     using Imdb.Data.Models;
     using Imdb.Data.Models.Enumerations;
     using Imdb.Services.Mapping;
@@ -23,6 +23,7 @@
 
         public string Description { get; set; }
 
+        [Display(Name = "Movies and TvShows")]
         public virtual IEnumerable<DirectorsMovieViewModel> Movies { get; set; }
     }
 }

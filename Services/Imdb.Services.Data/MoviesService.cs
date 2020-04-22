@@ -1,5 +1,6 @@
 ﻿namespace Imdb.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -79,7 +80,7 @@
 
         public IEnumerable<T> GetTopMovies<T>(int count)
         {
-            return this.moviesRepository.All().OrderByDescending(x => x.Votes.Average(y => y.Rating)).ThenByDescending(x => x.Votes.Count()).Take(count).To<T>().ToList();
+            return this.moviesRepository.AllAsNoTracking().Where(x => !x.IsTvShow).OrderByDescending(x => x.Votes.Average(y => y.Rating)).ThenByDescending(x => x.Votes.Count()).Take(count).To<T>().ToList();
         }
 
         public int GetTotalCount()
@@ -116,6 +117,37 @@
                 this.movieActorsRepository.Delete(movieActor);
                 await this.movieActorsRepository.SaveChangesAsync();
             }
+        }
+
+        public async Task<string> AddTvShowAsync(
+            string title,
+            string description,
+            TimeSpan? duration,
+            DateTime? releaseDate,
+            int? episodesCount,
+            int languageId,
+            string directorId,
+            string generalImageUrl,
+            string trailer)
+        {
+            var tvshow = new Movie()
+            {
+                Title = title,
+                Description = description,
+                Duration = duration,
+                ReleaseDate = releaseDate,
+                EpisodesCount = episodesCount,
+                LanguageId = languageId,
+                DirectorId = directorId,
+                GeneralImageUrl = generalImageUrl,
+                Trailer = trailer.Replace(GlobalConstants.YoutubeEmbed, string.Empty),
+                IsTvShow = true,
+            };
+
+            await this.moviesRepository.AddAsync(tvshow);
+            await this.moviesRepository.SaveChangesAsync();
+
+            return tvshow.Id;
         }
     }
 }

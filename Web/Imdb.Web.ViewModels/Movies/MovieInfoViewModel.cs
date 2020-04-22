@@ -34,8 +34,12 @@
         [Display(Name = "Director's name")]
         public string DirectorName { get; set; }
 
+        public int? EpisodesCount { get; set; }
+
         [Display(Name = "Image")]
         public string GeneralImageUrl { get; set; }
+
+        public bool IsTvShow { get; set; }
 
         public string Trailer { get; set; }
 

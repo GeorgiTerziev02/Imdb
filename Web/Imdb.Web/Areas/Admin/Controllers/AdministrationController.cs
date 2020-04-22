@@ -122,13 +122,42 @@
 
         public IActionResult AddTvShow()
         {
-            return this.View();
+            var viewModel = new AddTvShowInputViewModel()
+            {
+                Languages = this.languageService.GetAll<LanguageDropDownViewModel>(),
+                Directors = this.directorsService.GetAll<DirectorDropDownViewModel>(),
+            };
+
+            return this.View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult AddTvShow(AddTvShowInputViewModel input)
+        public async Task<IActionResult> AddTvShow(AddTvShowInputViewModel input)
         {
-            return this.Redirect("/Home/Index");
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(input);
+            }
+
+            var imageUrl = await this.cloudinaryService.UploudImageAsync(input.Image);
+            if (imageUrl == null)
+            {
+                imageUrl = GlobalConstants.NoImagePicture;
+            }
+
+            input.GeneralImageUrl = imageUrl;
+            var tvshowId = await this.moviesService.AddTvShowAsync(
+                input.Title,
+                input.Description,
+                input.Duration,
+                input.ReleaseDate,
+                input.EpisodesCount,
+                input.LanguageId,
+                input.DirectorId,
+                input.GeneralImageUrl,
+                input.Trailer);
+
+            return this.Redirect($"/Admin/Administration/AddActorsAndGenres/{tvshowId}");
         }
 
         public IActionResult AddActorsAndGenres(string id)

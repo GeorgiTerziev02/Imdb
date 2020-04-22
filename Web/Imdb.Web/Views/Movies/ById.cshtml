@@ -80,7 +80,14 @@
 
     <h1 class="text-center">@Model.Title</h1>
     <p class="small">@Model.LanguageName | @releaseDate | @Model.Duration </p>
-    <p class="small">Gross: @Model.Gross | Budget: @Model.Budget </p>
+    @if (Model.IsTvShow)
+    {
+        <p class="small">Episodes: @Model.EpisodesCount</p>
+    }
+    else
+    {
+        <p class="small">Gross: @Model.Gross | Budget: @Model.Budget </p>
+    }
 
     <label class="font-weight-bold" asp-for="@Model.Description"></label>
     <div class="form-group text-break">@Model.Description</div>
