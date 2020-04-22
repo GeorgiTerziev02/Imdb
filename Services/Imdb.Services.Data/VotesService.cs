@@ -18,7 +18,9 @@
 
         public async Task VoteAsync(string userId, string movieId, int rating)
         {
-            var vote = this.votesRepository.All().FirstOrDefault(x => x.UserId == userId && x.MovieId == movieId);
+            var vote = this.votesRepository
+                .All()
+                .FirstOrDefault(x => x.UserId == userId && x.MovieId == movieId);
 
             if (vote == null)
             {
@@ -37,17 +39,25 @@
 
         public double MovieRating(string movieId)
         {
-            return this.votesRepository.AllAsNoTracking().Where(x => x.MovieId == movieId).Average(x => x.Rating);
+            return this.votesRepository
+                .AllAsNoTracking()
+                .Where(x => x.MovieId == movieId)
+                .Average(x => x.Rating);
         }
 
         public int MovieVotesCount(string movieId)
         {
-            return this.votesRepository.AllAsNoTracking().Where(x => x.MovieId == movieId).Count();
+            return this.votesRepository
+                .AllAsNoTracking()
+                .Where(x => x.MovieId == movieId)
+                .Count();
         }
 
         public int? GetUserRatingForMovie(string userId, string movieId)
         {
-            return this.votesRepository.AllAsNoTracking().FirstOrDefault(x => x.UserId == userId && x.MovieId == movieId)?.Rating;
+            return this.votesRepository
+                .AllAsNoTracking()
+                .FirstOrDefault(x => x.UserId == userId && x.MovieId == movieId)?.Rating;
         }
     }
 }

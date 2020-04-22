@@ -32,6 +32,7 @@
             {
                 GenreName = this.genresService.GetGenreName(input.GenreId),
             };
+
             return response;
         }
 

@@ -23,7 +23,8 @@
 
             var actors = new AllActorsListViewModel()
             {
-                Actors = this.actorsService.GetAll<ActorViewModel>((page - 1) * ActorsPerPage, ActorsPerPage),
+                Actors = this.actorsService
+                    .GetAll<ActorViewModel>((page - 1) * ActorsPerPage, ActorsPerPage),
             };
 
             var pagesCount = ((count - 1) / ActorsPerPage) + 1;

@@ -22,12 +22,18 @@
 
         public IEnumerable<T> GetAll<T>()
         {
-            return this.genresRepository.AllAsNoTracking().OrderBy(x => x.Name).To<T>().ToList();
+            return this.genresRepository
+                .AllAsNoTracking()
+                .OrderBy(x => x.Name)
+                .To<T>()
+                .ToList();
         }
 
         public string GetGenreName(int genreId)
         {
-            return this.genresRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == genreId)?.Name;
+            return this.genresRepository
+                .AllAsNoTracking()
+                .FirstOrDefault(x => x.Id == genreId)?.Name;
         }
 
         public async Task AddGenreToMovie(int genreId, string movieId)
@@ -44,12 +50,17 @@
 
         public bool MovieContainsGenre(int genreId, string movieId)
         {
-            return this.movieGenreRepository.AllAsNoTracking().FirstOrDefault(x => x.GenreId == genreId && x.MovieId == movieId) != null;
+            return this.movieGenreRepository
+                .AllAsNoTracking()
+                .FirstOrDefault(x => x.GenreId == genreId && x.MovieId == movieId) != null;
         }
 
         public async Task<int?> RemoveGenreFromMovie(int id)
         {
-            var movieGenre = this.movieGenreRepository.All().FirstOrDefault(x => x.Id == id);
+            var movieGenre = this.movieGenreRepository
+                .All()
+                .FirstOrDefault(x => x.Id == id);
+
             if (movieGenre == null)
             {
                 return null;

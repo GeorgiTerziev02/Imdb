@@ -5,8 +5,6 @@
 
     public interface ITvShowsService
     {
-        T GetById<T>(string id);
-
         IEnumerable<T> GetAll<T>();
     }
 }

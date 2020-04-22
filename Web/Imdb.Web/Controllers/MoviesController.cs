@@ -28,7 +28,8 @@
 
             var allMovies = new ListAllMoviesViewModel
             {
-                Movies = this.moviesService.GetAll<ListMovieViewModel>((page - 1) * ItemsPerPage, ItemsPerPage),
+                Movies = this.moviesService
+                            .GetAll<ListMovieViewModel>((page - 1) * ItemsPerPage, ItemsPerPage),
             };
 
             var pagesCount = ((count - 1) / ItemsPerPage) + 1;

@@ -18,12 +18,15 @@
 
         public string MovieGeneralImageUrl { get; set; }
 
+        public bool IsTvShow { get; set; }
+
         public string Rating { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<UserMovie, WatchlistEntityViewModel>()
-                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Movie.Votes.Average(z => z.Rating).ToString("f1")));
+                .ForMember(x => x.Rating, y => y.MapFrom(x => x.Movie.Votes.Average(z => z.Rating).ToString("f1")))
+                .ForMember(x => x.IsTvShow, y => y.MapFrom(x => x.Movie.IsTvShow));
         }
     }
 }

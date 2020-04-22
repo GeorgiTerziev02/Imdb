@@ -22,8 +22,10 @@
         {
             IndexViewModel topMovie = new IndexViewModel
             {
-                TopMovies = this.moviesService.GetTopMovies<TopMovieViewModel>(TopMoviesCount),
-                BornToday = this.actorsService.GetBornToday<BornTodayActorViewModel>(ActorsBornToday),
+                TopMovies = this.moviesService
+                                .GetTopMovies<TopMovieViewModel>(TopMoviesCount),
+                BornToday = this.actorsService
+                                .GetBornToday<BornTodayActorViewModel>(ActorsBornToday),
             };
             return this.View(topMovie);
         }

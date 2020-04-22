@@ -34,12 +34,17 @@
 
         public bool ContainsReviewById(string reviewId)
         {
-            return this.reviewsRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == reviewId) != null;
+            return this.reviewsRepository
+                .AllAsNoTracking()
+                .FirstOrDefault(x => x.Id == reviewId) != null;
         }
 
         public bool HasPermissionToPost(string userId)
         {
-            var lastReview = this.reviewsRepository.AllAsNoTracking().OrderByDescending(x => x.CreatedOn).FirstOrDefault(x => x.UserId == userId);
+            var lastReview = this.reviewsRepository
+                .AllAsNoTracking()
+                .OrderByDescending(x => x.CreatedOn)
+                .FirstOrDefault(x => x.UserId == userId);
 
             if (lastReview == null)
             {
@@ -58,12 +63,18 @@
 
         public int UsersReviews(string userId)
         {
-            return this.reviewsRepository.AllAsNoTracking().Where(x => x.UserId == userId).Count();
+            return this.reviewsRepository
+                .AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Count();
         }
 
         public async Task<string> RemoveById(string reviewId)
         {
-            var review = this.reviewsRepository.All().First(x => x.Id == reviewId);
+            var review = this.reviewsRepository
+                .All()
+                .First(x => x.Id == reviewId);
+
             this.reviewsRepository.Delete(review);
             await this.reviewsRepository.SaveChangesAsync();
 

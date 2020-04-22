@@ -39,12 +39,21 @@
 
         public IEnumerable<T> GetAll<T>()
         {
-            return this.directorsRepository.AllAsNoTracking().OrderBy(x => x.FirstName).ThenBy(x => x.LastName).To<T>().ToList();
+            return this.directorsRepository
+                .AllAsNoTracking()
+                .OrderBy(x => x.FirstName)
+                .ThenBy(x => x.LastName)
+                .To<T>()
+                .ToList();
         }
 
         public T GetById<T>(string directorId)
         {
-            return this.directorsRepository.AllAsNoTracking().Where(x => x.Id == directorId).To<T>().FirstOrDefault();
+            return this.directorsRepository
+                .AllAsNoTracking()
+                .Where(x => x.Id == directorId)
+                .To<T>()
+                .FirstOrDefault();
         }
     }
 }

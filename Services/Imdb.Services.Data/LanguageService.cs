@@ -31,7 +31,11 @@
 
         public IEnumerable<T> GetAll<T>()
         {
-            return this.languagesRepository.AllAsNoTracking().OrderBy(x => x.Name).To<T>().ToList();
+            return this.languagesRepository
+                .AllAsNoTracking()
+                .OrderBy(x => x.Name)
+                .To<T>()
+                .ToList();
         }
     }
 }

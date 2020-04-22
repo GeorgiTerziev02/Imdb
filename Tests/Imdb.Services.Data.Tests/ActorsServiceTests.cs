@@ -15,9 +15,9 @@
 
     public class ActorsServiceTests
     {
-        private DbContextOptionsBuilder<ApplicationDbContext> options;
-        private EfDeletableEntityRepository<Actor> repository;
-        private ActorsService service;
+        private readonly DbContextOptionsBuilder<ApplicationDbContext> options;
+        private readonly EfDeletableEntityRepository<Actor> repository;
+        private readonly ActorsService service;
 
         public ActorsServiceTests()
         {

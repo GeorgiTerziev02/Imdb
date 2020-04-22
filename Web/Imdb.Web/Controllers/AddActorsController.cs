@@ -42,6 +42,7 @@
 
             await this.moviesService.AddActorAsync(input.MovieId, input.ActorId);
             var actorName = this.actorsService.GetName(input.ActorId);
+
             var response = new ActorResponseModel()
             {
                 Name = actorName,

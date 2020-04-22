@@ -10,7 +10,6 @@
     using Imdb.Data.Models;
     using Imdb.Services.Data.Contracts;
     using Imdb.Services.Mapping;
-    using Microsoft.EntityFrameworkCore;
 
     public class MoviesService : IMoviesService
     {
@@ -45,6 +44,7 @@
             var newMovie = AutoMapperConfig.MapperInstance.Map<Movie>(model);
             newMovie.IsTvShow = false;
             newMovie.Trailer = newMovie.Trailer.Replace(GlobalConstants.YoutubeEmbed, string.Empty);
+
             await this.moviesRepository.AddAsync(newMovie);
             await this.moviesRepository.SaveChangesAsync();
 
@@ -53,44 +53,76 @@
 
         public bool ContainsActor(string movieId, string actorId)
         {
-            return this.movieActorsRepository.AllAsNoTracking()
-                .Where(x => x.ActorId == actorId && x.MovieId == movieId).FirstOrDefault() != null;
+            return this.movieActorsRepository
+                .AllAsNoTracking()
+                .Where(x => x.ActorId == actorId && x.MovieId == movieId)
+                .FirstOrDefault() != null;
         }
 
         public IEnumerable<T> Find<T>(string name)
         {
-            return this.moviesRepository.AllAsNoTracking().Where(x => x.Title.StartsWith(name)).To<T>().ToList();
+            return this.moviesRepository
+                .AllAsNoTracking()
+                .Where(x => x.Title.StartsWith(name))
+                .To<T>()
+                .ToList();
         }
 
         public IEnumerable<string> NamesSuggestion(string name)
         {
-            return this.moviesRepository.AllAsNoTracking().Where(x => x.Title.StartsWith(name))
-                .Select(x => x.Title).ToList();
+            return this.moviesRepository
+                .AllAsNoTracking()
+                .Where(x => x.Title.StartsWith(name))
+                .Select(x => x.Title)
+                .ToList();
         }
 
         public IEnumerable<T> GetAll<T>(int skip, int itemsPerPage)
         {
-            return this.moviesRepository.All().OrderBy(x => x.Title).Skip(skip).Take(itemsPerPage).To<T>().ToList();
+            return this.moviesRepository
+                .All()
+                .Where(x => !x.IsTvShow)
+                .OrderBy(x => x.Title)
+                .Skip(skip)
+                .Take(itemsPerPage)
+                .To<T>()
+                .ToList();
         }
 
         public T GetById<T>(string id)
         {
-            return this.moviesRepository.All().Where(x => x.Id == id).To<T>().FirstOrDefault();
+            return this.moviesRepository
+                .All()
+                .Where(x => x.Id == id)
+                .To<T>()
+                .FirstOrDefault();
         }
 
         public IEnumerable<T> GetTopMovies<T>(int count)
         {
-            return this.moviesRepository.AllAsNoTracking().Where(x => !x.IsTvShow).OrderByDescending(x => x.Votes.Average(y => y.Rating)).ThenByDescending(x => x.Votes.Count()).Take(count).To<T>().ToList();
+            return this.moviesRepository
+                .AllAsNoTracking()
+                .Where(x => !x.IsTvShow)
+                .OrderByDescending(x => x.Votes.Average(y => y.Rating))
+                .ThenByDescending(x => x.Votes.Count())
+                .Take(count)
+                .To<T>()
+                .ToList();
         }
 
         public int GetTotalCount()
         {
-            return this.moviesRepository.AllAsNoTracking().Count();
+            return this.moviesRepository
+                .AllAsNoTracking()
+                .Where(x => !x.IsTvShow)
+                .Count();
         }
 
         public bool IsMovieIdValid(string movieId)
         {
-            return this.moviesRepository.AllAsNoTracking().Any(x => x.Id == movieId);
+            return this.moviesRepository
+                .AllAsNoTracking()
+                .Any(x => x.Id == movieId);
         }
 
         public async Task UploadImages(string movieId, IEnumerable<string> imageUrls)
@@ -111,7 +143,10 @@
 
         public async Task RemoveMovieActor(int id)
         {
-            var movieActor = this.movieActorsRepository.All().FirstOrDefault(x => x.Id == id);
+            var movieActor = this.movieActorsRepository
+                .All()
+                .FirstOrDefault(x => x.Id == id);
+
             if (movieActor != null)
             {
                 this.movieActorsRepository.Delete(movieActor);

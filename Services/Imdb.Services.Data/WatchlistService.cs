@@ -67,19 +67,22 @@
             await this.watchlistRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<T> GetFullWatchlist<T>(string userId)
-        {
-            return this.watchlistRepository.All().To<T>().ToList();
-        }
-
         public IEnumerable<T> GetAll<T>(string userId, int skip, int take)
         {
-            return this.watchlistRepository.All().Where(x => x.UserId == userId).Skip(skip).Take(take).To<T>().ToList();
+            return this.watchlistRepository
+                .All()
+                .Where(x => x.UserId == userId)
+                .Skip(skip)
+                .Take(take)
+                .To<T>()
+                .ToList();
         }
 
         public async Task RemoveFromWatchlistAsync(string userId, string movieId)
         {
-            var userMoive = this.watchlistRepository.All().FirstOrDefault(x => x.UserId == userId && x.MovieId == movieId);
+            var userMoive = this.watchlistRepository
+                .All()
+                .FirstOrDefault(x => x.UserId == userId && x.MovieId == movieId);
 
             this.watchlistRepository.Delete(userMoive);
             await this.watchlistRepository.SaveChangesAsync();
@@ -87,17 +90,26 @@
 
         public bool WatchlistMovieExists(string userId, string movieId)
         {
-            return this.watchlistRepository.AllAsNoTracking().Any(x => x.UserId == userId && x.MovieId == movieId);
+            return this.watchlistRepository
+                .AllAsNoTracking()
+                .Any(x => x.UserId == userId && x.MovieId == movieId);
         }
 
         public IEnumerable<T> TvShows<T>(string userId)
         {
-            return this.watchlistRepository.All().Where(x => x.UserId == userId && x.Movie.IsTvShow).To<T>().ToList();
+            return this.watchlistRepository
+                .All()
+                .Where(x => x.UserId == userId && x.Movie.IsTvShow)
+                .To<T>()
+                .ToList();
         }
 
         public int GetCount(string userId)
         {
-            return this.watchlistRepository.AllAsNoTracking().Where(x => x.UserId == userId).Count();
+            return this.watchlistRepository
+                .AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Count();
         }
 
         public int MostWatchedGenreId(string userId)
@@ -105,7 +117,8 @@
             var genresIds = this.watchlistRepository
                 .AllAsNoTracking()
                 .Where(x => x.UserId == userId)
-                .SelectMany(x => x.Movie.Genres.Select(x => x.GenreId)).ToArray();
+                .SelectMany(x => x.Movie.Genres.Select(x => x.GenreId))
+                .ToArray();
 
             var length = genresIds.Length;
 

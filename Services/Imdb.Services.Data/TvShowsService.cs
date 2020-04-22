@@ -20,12 +20,11 @@
 
         public IEnumerable<T> GetAll<T>()
         {
-            return this.tvshowsRepository.All().Where(x => x.IsTvShow).To<T>().ToList();
-        }
-
-        public T GetById<T>(string id)
-        {
-            return this.tvshowsRepository.All().Where(x => x.IsTvShow).Where(x => x.Id == id).To<T>().FirstOrDefault();
+            return this.tvshowsRepository
+                .All()
+                .Where(x => x.IsTvShow)
+                .To<T>()
+                .ToList();
         }
     }
 }

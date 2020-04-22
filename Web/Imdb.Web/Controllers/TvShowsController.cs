@@ -26,17 +26,5 @@
             };
             return this.Json(tvshows);
         }
-
-        public IActionResult ById(string id)
-        {
-            var tvshow = this.tvshowsService.GetById<TvShowInfoViewModel>(id);
-
-            if (tvshow == null)
-            {
-                // TODO: 4040
-            }
-
-            return this.Json(tvshow);
-        }
     }
 }

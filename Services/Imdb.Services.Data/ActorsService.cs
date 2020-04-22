@@ -100,12 +100,16 @@
 
         public int GetTotalCount()
         {
-            return this.actorsRepository.AllAsNoTracking().Count();
+            return this.actorsRepository
+                .AllAsNoTracking()
+                .Count();
         }
 
         public bool IsActorIdValid(string actorId)
         {
-            return this.actorsRepository.AllAsNoTracking().FirstOrDefault(x => x.Id == actorId) != null;
+            return this.actorsRepository
+                .AllAsNoTracking()
+                .FirstOrDefault(x => x.Id == actorId) != null;
         }
     }
 }
