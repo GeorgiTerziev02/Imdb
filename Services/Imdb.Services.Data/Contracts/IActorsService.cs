@@ -21,5 +21,7 @@
         T GetById<T>(string actorId);
 
         int GetTotalCount();
+
+        IEnumerable<T> GetBornToday<T>(int actorsBornToday);
     }
 }

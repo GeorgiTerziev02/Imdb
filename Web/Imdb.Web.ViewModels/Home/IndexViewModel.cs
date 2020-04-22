@@ -5,5 +5,7 @@
     public class IndexViewModel
     {
         public IEnumerable<TopMovieViewModel> TopMovies { get; set; }
+
+        public IEnumerable<BornTodayActorViewModel> BornToday { get; set; }
     }
 }

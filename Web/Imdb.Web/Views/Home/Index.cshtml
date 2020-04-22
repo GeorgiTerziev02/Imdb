@@ -9,10 +9,11 @@
     <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
 </div>
 
+
+
 <div class="text-center">
     <h3 class="display-4">Top Movies</h3>
 </div>
-
 <div class="text-center row">
     @foreach (var movie in Model.TopMovies)
     {
@@ -34,15 +35,23 @@
     }
 </div>
 
-@*@section Scripts{
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("#movieTitle").autocomplete({
-                source: 'api/moviesApi/search'
-            });
-            $(".ui-helper-hidden-accessible").remove();
-        });
-    </script>
-    }*@
+<hr />
+
+<div class="text-center">
+    <h3 class="display-4">Born Today</h3>
+</div>
+<div class="text-center row">
+    @foreach (var actor in Model.BornToday)
+    {
+        <div class="col-md-4">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="@(GlobalConstants.ReducedBaseDeliveryImageUrl+actor.ImageUrl)" width="300" height="200" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@(actor.FirstName+" "+actor.LastName)</h5>
+                    <p class="card-text">@actor.Born.Value.ToShortDateString()</p>
+                    <a asp-controller="Actors" asp-action="ById" asp-route-id="@actor.Id" class="btn btn-primary">View Actor</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

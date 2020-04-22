@@ -27,6 +27,7 @@
             this.service = new ActorsService(this.repository);
             AutoMapperConfig.RegisterMappings(typeof(AllActorViewModel).Assembly);
             AutoMapperConfig.RegisterMappings(typeof(ActorByIdTestModel).Assembly);
+            AutoMapperConfig.RegisterMappings(typeof(BornTodayTestModel).Assembly);
         }
 
         [Fact]
@@ -209,6 +210,42 @@
             var actors = this.service.GetAll<AllActorViewModel>(10, 5).ToList();
 
             Assert.Equal(expectedCount, actors.Count());
+        }
+
+        [Fact]
+        public async Task GetBornTodayShouldWorkCorrectly()
+        {
+            var expectedCount = 1;
+
+            await this.service.AddAsync("b", "b", Gender.Male, DateTime.UtcNow, "f", "fff");
+            var result = this.service.GetBornToday<BornTodayTestModel>(1);
+            var actualCount = result.Count();
+
+            Assert.Equal(expectedCount, actualCount);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task BornTodayShouldReturnEmptyList()
+        {
+            await this.service.AddAsync("b", "b", Gender.Male, DateTime.UtcNow.AddDays(-100), "f", "fff");
+            var result = this.service.GetBornToday<BornTodayTestModel>(1);
+
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task BornTodayShouldReturnCorrectCount()
+        {
+            var expectedCount = 2;
+
+            await this.service.AddAsync("b", "b", Gender.Male, DateTime.UtcNow, "f", "fff");
+            await this.service.AddAsync("b", "b", Gender.Male, DateTime.UtcNow, "f", "fff");
+            await this.service.AddAsync("b", "b", Gender.Male, DateTime.UtcNow, "f", "fff");
+            var result = this.service.GetBornToday<BornTodayTestModel>(2);
+            var actualCount = result.Count();
+
+            Assert.Equal(expectedCount, actualCount);
         }
     }
 }

@@ -10,10 +10,12 @@
     public class HomeController : BaseController
     {
         private readonly IMoviesService moviesService;
+        private readonly IActorsService actorsService;
 
-        public HomeController(IMoviesService moviesService)
+        public HomeController(IMoviesService moviesService, IActorsService actorsService)
         {
             this.moviesService = moviesService;
+            this.actorsService = actorsService;
         }
 
         public IActionResult Index()
@@ -21,6 +23,7 @@
             IndexViewModel topMovie = new IndexViewModel
             {
                 TopMovies = this.moviesService.GetTopMovies<TopMovieViewModel>(TopMoviesCount),
+                BornToday = this.actorsService.GetBornToday<BornTodayActorViewModel>(ActorsBornToday),
             };
             return this.View(topMovie);
         }

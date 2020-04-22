@@ -61,6 +61,20 @@
                 .ToList();
         }
 
+        public IEnumerable<T> GetBornToday<T>(int actorsBornToday)
+        {
+            var result = this.actorsRepository
+                .AllAsNoTracking()
+                .Where(x => x.Born.HasValue)
+                .Where(x => x.Born.Value.Month == DateTime.UtcNow.Month)
+                .Where(x => x.Born.Value.Day == DateTime.UtcNow.Day)
+                .Take(actorsBornToday)
+                .To<T>()
+                .ToList();
+
+            return result;
+        }
+
         public T GetById<T>(string actorId)
         {
             return this.actorsRepository
