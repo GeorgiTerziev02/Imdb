@@ -13,7 +13,7 @@
 
         T GetById<T>(string id);
 
-        IEnumerable<T> GetAll<T>(int page, int itemsPerPage);
+        IEnumerable<T> GetAll<T>(int page, int itemsPerPage, string sorting);
 
         bool IsMovieIdValid(string movieId);
 

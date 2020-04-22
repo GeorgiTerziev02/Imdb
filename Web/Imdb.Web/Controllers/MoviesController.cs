@@ -1,6 +1,5 @@
 ﻿namespace Imdb.Web.Controllers
 {
-    using System.Collections.Generic;
     using System.Security.Claims;
 
     using Imdb.Services.Data.Contracts;
@@ -18,7 +17,7 @@
             this.votesService = votesService;
         }
 
-        public IActionResult All(int page = 1)
+        public IActionResult All(string sorting, int page = 1)
         {
             var count = this.moviesService.GetTotalCount();
             if (page <= 0 || page > (((count - 1) / ItemsPerPage) + 1))
@@ -29,12 +28,18 @@
             var allMovies = new ListAllMoviesViewModel
             {
                 Movies = this.moviesService
-                            .GetAll<ListMovieViewModel>((page - 1) * ItemsPerPage, ItemsPerPage),
+                       .GetAll<ListMovieViewModel>((page - 1) * ItemsPerPage, ItemsPerPage, sorting),
             };
+
+            this.ViewData["TitleSortParm"] = string.IsNullOrEmpty(sorting) ? "name_desc" : string.Empty;
+            this.ViewData["ReleaseDateSortParm"] = sorting == "Date" ? "date_desc" : "Date";
+            this.ViewData["RatingSortParm"] = sorting == "Rating" ? "rating_desc" : "Rating";
 
             var pagesCount = ((count - 1) / ItemsPerPage) + 1;
             allMovies.PageCount = pagesCount;
             allMovies.CurrentPage = page;
+            allMovies.CurrentSorting = sorting;
+
             return this.View(allMovies);
         }
 

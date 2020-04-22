@@ -77,12 +77,35 @@
                 .ToList();
         }
 
-        public IEnumerable<T> GetAll<T>(int skip, int itemsPerPage)
+        public IEnumerable<T> GetAll<T>(int skip, int itemsPerPage, string sorting)
         {
-            return this.moviesRepository
+            var movies = this.moviesRepository
                 .All()
-                .Where(x => !x.IsTvShow)
-                .OrderBy(x => x.Title)
+                .Where(x => !x.IsTvShow);
+
+            switch (sorting)
+            {
+                case "name_desc":
+                    movies = movies.OrderByDescending(m => m.Title);
+                    break;
+                case "Date":
+                    movies = movies.OrderBy(m => m.ReleaseDate);
+                    break;
+                case "date_desc":
+                    movies = movies.OrderByDescending(m => m.ReleaseDate);
+                    break;
+                case "rating_desc":
+                    movies = movies.OrderByDescending(m => m.Votes.Average(x => x.Rating));
+                    break;
+                case "Rating":
+                    movies = movies.OrderBy(m => m.Votes.Average(x => x.Rating));
+                    break;
+                default:
+                    movies = movies.OrderBy(m => m.Title);
+                    break;
+            }
+
+            return movies
                 .Skip(skip)
                 .Take(itemsPerPage)
                 .To<T>()
