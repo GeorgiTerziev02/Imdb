@@ -67,11 +67,35 @@
             await this.watchlistRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<T> GetAll<T>(string userId, int skip, int take)
+        public IEnumerable<T> GetAll<T>(string userId, int skip, int take, string sorting)
         {
-            return this.watchlistRepository
+            var watchlist = this.watchlistRepository
                 .All()
-                .Where(x => x.UserId == userId)
+                .Where(x => x.UserId == userId);
+
+            switch (sorting)
+            {
+                case "name_desc":
+                    watchlist = watchlist.OrderByDescending(m => m.Movie.Title);
+                    break;
+                case "Date":
+                    watchlist = watchlist.OrderBy(m => m.Movie.ReleaseDate);
+                    break;
+                case "date_desc":
+                    watchlist = watchlist.OrderByDescending(m => m.Movie.ReleaseDate);
+                    break;
+                case "rating_desc":
+                    watchlist = watchlist.OrderByDescending(m => m.Movie.Votes.Average(x => x.Rating));
+                    break;
+                case "Rating":
+                    watchlist = watchlist.OrderBy(m => m.Movie.Votes.Average(x => x.Rating));
+                    break;
+                default:
+                    watchlist = watchlist.OrderBy(m => m.Movie.Title);
+                    break;
+            }
+
+            return watchlist
                 .Skip(skip)
                 .Take(take)
                 .To<T>()

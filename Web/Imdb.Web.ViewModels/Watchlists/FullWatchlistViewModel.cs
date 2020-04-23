@@ -11,5 +11,7 @@
         public int CurrentPage { get; set; }
 
         public int PageCount { get; set; }
+
+        public string CurrentSorting { get; set; }
     }
 }

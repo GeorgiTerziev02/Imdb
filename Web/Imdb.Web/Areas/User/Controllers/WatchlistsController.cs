@@ -66,7 +66,7 @@
             return this.RedirectToAction("All", new { userId });
         }
 
-        public IActionResult All(string userId, int page = 1)
+        public IActionResult All(string userId, string sorting, int page = 1)
         {
             var count = this.watchlistsService.GetCount(userId);
             if (page <= 0 || page > (((count - 1) / ItemsPerPage) + 1))
@@ -81,13 +81,20 @@
 
             var watchlist = new FullWatchlistViewModel()
             {
-                Movies = this.watchlistsService.GetAll<WatchlistEntityViewModel>(userId, (page - 1) * ItemsPerPage, ItemsPerPage),
+                Movies = this.watchlistsService
+                        .GetAll<WatchlistEntityViewModel>(
+                        userId, (page - 1) * ItemsPerPage, ItemsPerPage, sorting),
             };
+
+            this.ViewData["TitleSortParm"] = string.IsNullOrEmpty(sorting) ? "name_desc" : string.Empty;
+            this.ViewData["ReleaseDateSortParm"] = sorting == "Date" ? "date_desc" : "Date";
+            this.ViewData["RatingSortParm"] = sorting == "Rating" ? "rating_desc" : "Rating";
 
             var pagesCount = ((count - 1) / ItemsPerPage) + 1;
             watchlist.Id = userId;
             watchlist.CurrentPage = page;
             watchlist.PageCount = pagesCount;
+            watchlist.CurrentSorting = sorting;
 
             return this.View(watchlist);
         }

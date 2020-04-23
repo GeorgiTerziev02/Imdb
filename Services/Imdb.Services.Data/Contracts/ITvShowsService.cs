@@ -5,7 +5,7 @@
 
     public interface ITvShowsService
     {
-        IEnumerable<T> GetAll<T>(int skip, int take);
+        IEnumerable<T> GetAll<T>(int skip, int take, string sorting);
 
         int GetCount();
     }

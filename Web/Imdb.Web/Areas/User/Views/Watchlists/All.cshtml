@@ -4,6 +4,19 @@
 }
 
 <h1>@ViewData["Title"] </h1>
+<ul class="nav">
+    <li class="nav-link font-weight-bold">Sort by: </li>
+    <li class="nav-link">
+        <a asp-controller="Watchlists" asp-action="All" asp-route-userId="@Model.Id" asp-route-sorting="@ViewData["TitleSortParm"]" asp-route-page="@Model.CurrentPage">Title</a>
+    </li>
+    <li class="nav-link">
+        <a asp-controller="Watchlists" asp-action="All" asp-route-userId="@Model.Id" asp-route-sorting="@ViewData["ReleaseDateSortParm"]" asp-route-page="@Model.CurrentPage">Release date</a>
+    </li>
+    <li class="nav-link">
+        <a asp-controller="Watchlists" asp-action="All" asp-route-userId="@Model.Id" asp-route-sorting="@ViewData["RatingSortParm"]" asp-route-page="@Model.CurrentPage">Rating</a>
+    </li>
+</ul>
+<br />
 <div class="row">
     <div class="col col-md-8">
         @if (Model.Movies.Count() == 0)
@@ -63,6 +76,7 @@
                    asp-controller="Watchlists"
                    asp-action="All"
                    asp-route-userId="@Model.Id"
+                   asp-route-sorting="@Model.CurrentSorting"
                    asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
             </li>
         }
@@ -75,6 +89,7 @@
                    asp-controller="Watchlists"
                    asp-action="All"
                    asp-route-userId="@Model.Id"
+                   asp-route-sorting="@Model.CurrentSorting"
                    asp-route-page="@i">@i</a>
             </li>
         }
@@ -92,6 +107,7 @@
                    asp-controller="Watchlists"
                    asp-action="All"
                    asp-route-userId="@Model.Id"
+                   asp-route-sorting="@Model.CurrentSorting"
                    asp-route-page="@(Model.CurrentPage + 1)">Next</a>
             </li>
         }

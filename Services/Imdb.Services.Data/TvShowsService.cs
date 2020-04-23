@@ -18,11 +18,23 @@
             this.tvshowsRepository = tvshowsRepository;
         }
 
-        public IEnumerable<T> GetAll<T>(int skip, int take)
+        public IEnumerable<T> GetAll<T>(int skip, int take, string sorting)
         {
-            return this.tvshowsRepository
-                .All()
-                .Where(x => x.IsTvShow)
+            var tvshows = this.tvshowsRepository
+                    .All()
+                    .Where(x => x.IsTvShow);
+
+            tvshows = sorting switch
+            {
+                "name_desc" => tvshows.OrderByDescending(m => m.Title),
+                "Date" => tvshows.OrderBy(m => m.ReleaseDate),
+                "date_desc" => tvshows.OrderByDescending(m => m.ReleaseDate),
+                "rating_desc" => tvshows.OrderByDescending(m => m.Votes.Average(x => x.Rating)),
+                "Rating" => tvshows.OrderBy(m => m.Votes.Average(x => x.Rating)),
+                _ => tvshows.OrderBy(m => m.Title),
+            };
+
+            return tvshows
                 .Skip(skip)
                 .Take(take)
                 .To<T>()
