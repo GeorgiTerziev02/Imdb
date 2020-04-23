@@ -20,6 +20,7 @@
         private readonly EfDeletableEntityRepository<Director> repository;
         private readonly DirectorsService service;
 
+        // These test fail unexpectedly sometimes run them again
         public DirectorsServiceTests()
         {
             this.options = new DbContextOptionsBuilder<ApplicationDbContext>()
