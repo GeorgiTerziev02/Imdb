@@ -73,28 +73,15 @@
                 .All()
                 .Where(x => x.UserId == userId);
 
-            switch (sorting)
+            watchlist = sorting switch
             {
-                case "name_desc":
-                    watchlist = watchlist.OrderByDescending(m => m.Movie.Title);
-                    break;
-                case "Date":
-                    watchlist = watchlist.OrderBy(m => m.Movie.ReleaseDate);
-                    break;
-                case "date_desc":
-                    watchlist = watchlist.OrderByDescending(m => m.Movie.ReleaseDate);
-                    break;
-                case "rating_desc":
-                    watchlist = watchlist.OrderByDescending(m => m.Movie.Votes.Average(x => x.Rating));
-                    break;
-                case "Rating":
-                    watchlist = watchlist.OrderBy(m => m.Movie.Votes.Average(x => x.Rating));
-                    break;
-                default:
-                    watchlist = watchlist.OrderBy(m => m.Movie.Title);
-                    break;
-            }
-
+                "name_desc" => watchlist.OrderByDescending(m => m.Movie.Title),
+                "Date" => watchlist.OrderBy(m => m.Movie.ReleaseDate),
+                "date_desc" => watchlist.OrderByDescending(m => m.Movie.ReleaseDate),
+                "rating_desc" => watchlist.OrderByDescending(m => m.Movie.Votes.Average(x => x.Rating)),
+                "Rating" => watchlist.OrderBy(m => m.Movie.Votes.Average(x => x.Rating)),
+                _ => watchlist.OrderBy(m => m.Movie.Title),
+            };
             return watchlist
                 .Skip(skip)
                 .Take(take)

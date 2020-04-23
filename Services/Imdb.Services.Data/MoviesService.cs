@@ -83,28 +83,16 @@
                 .All()
                 .Where(x => !x.IsTvShow);
 
-            switch (sorting)
+            movies = sorting switch
             {
-                case "name_desc":
-                    movies = movies.OrderByDescending(m => m.Title);
-                    break;
-                case "Date":
-                    movies = movies.OrderBy(m => m.ReleaseDate);
-                    break;
-                case "date_desc":
-                    movies = movies.OrderByDescending(m => m.ReleaseDate);
-                    break;
-                case "rating_desc":
-                    movies = movies.OrderByDescending(m => m.Votes.Average(x => x.Rating));
-                    break;
-                case "Rating":
-                    movies = movies.OrderBy(m => m.Votes.Average(x => x.Rating));
-                    break;
-                default:
-                    movies = movies.OrderBy(m => m.Title);
-                    break;
-            }
-
+                "name_desc" => movies.OrderByDescending(m => m.Title),
+                "Date" => movies.OrderBy(m => m.ReleaseDate),
+                "date_desc" => movies.OrderByDescending(m => m.ReleaseDate),
+                "rating_desc" => movies.OrderByDescending(
+                    m => m.Votes.Average(x => x.Rating)).ThenByDescending(m => m.Votes.Count()),
+                "Rating" => movies.OrderBy(m => m.Votes.Average(x => x.Rating)).ThenBy(m => m.Votes.Count()),
+                _ => movies.OrderBy(m => m.Title),
+            };
             return movies
                 .Skip(skip)
                 .Take(itemsPerPage)
