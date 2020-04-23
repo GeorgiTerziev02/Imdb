@@ -39,18 +39,18 @@
                 if (mostPopularGenreId == -1)
                 {
                     recommendedList.Entities =
-                        this.moviesService.GetTopMovies<RecommendEntityViewModel>(Count);
+                        this.moviesService.GetTop<RecommendEntityViewModel>(Count);
                 }
                 else
                 {
                     recommendedList.Entities = this.watchlistsService.Recommend<RecommendEntityViewModel>(userId, mostPopularGenreId, Count);
                 }
 
-                //if (recommendedList.Entities.Count() == 0)
-                //{
-                //    recommendedList.Entities =
-                //        this.moviesService.GetTopMovies<RecommendEntityViewModel>(Count);
-                //}
+                if (recommendedList.Entities.Count() == 0)
+                {
+                    recommendedList.Entities =
+                        this.watchlistsService.RandomRecommend<RecommendEntityViewModel>(userId, Count);
+                }
             }
 
             return this.View(recommendedList);

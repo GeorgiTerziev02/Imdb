@@ -207,5 +207,16 @@
 
             return tvshow.Id;
         }
+
+        public IEnumerable<T> GetTop<T>(int count)
+        {
+            return this.moviesRepository
+                .AllAsNoTracking()
+                .OrderByDescending(x => x.Votes.Average(y => y.Rating))
+                .ThenByDescending(x => x.Votes.Count())
+                .Take(count)
+                .To<T>()
+                .ToList();
+        }
     }
 }

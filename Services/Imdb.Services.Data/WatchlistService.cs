@@ -166,5 +166,23 @@
                 .To<T>()
                 .ToList();
         }
+
+        // TODO: Random recommend and has nothing random.... nice
+        public IEnumerable<T> RandomRecommend<T>(string userId, int count)
+        {
+            var notToRecommend = this.watchlistRepository
+                .AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Select(x => x.MovieId)
+                .ToList();
+
+            return this.moviesRepository
+                .AllAsNoTracking()
+                .Where(x => !notToRecommend.Contains(x.Id))
+                .OrderByDescending(x => x.Votes.Average(y => y.Rating))
+                .Take(count)
+                .To<T>()
+                .ToList();
+        }
     }
 }

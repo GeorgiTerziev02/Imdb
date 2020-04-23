@@ -1,8 +1,6 @@
 ﻿namespace Imdb.Services.Data.Contracts
 {
-    using System;
     using System.Collections.Generic;
-    using System.Text;
     using System.Threading.Tasks;
 
     public interface IWatchlistsService
@@ -20,5 +18,7 @@
         int MostWatchedGenreId(string userId);
 
         IEnumerable<T> Recommend<T>(string userId, int genreId, int count);
+
+        IEnumerable<T> RandomRecommend<T>(string userId, int count);
     }
 }

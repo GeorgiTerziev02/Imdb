@@ -41,5 +41,7 @@
             string directorId,
             string generalImageUrl,
             string trailer);
+
+        IEnumerable<T> GetTop<T>(int count);
     }
 }
