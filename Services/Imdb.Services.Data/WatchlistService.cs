@@ -106,15 +106,6 @@
                 .Any(x => x.UserId == userId && x.MovieId == movieId);
         }
 
-        public IEnumerable<T> TvShows<T>(string userId)
-        {
-            return this.watchlistRepository
-                .All()
-                .Where(x => x.UserId == userId && x.Movie.IsTvShow)
-                .To<T>()
-                .ToList();
-        }
-
         public int GetCount(string userId)
         {
             return this.watchlistRepository
