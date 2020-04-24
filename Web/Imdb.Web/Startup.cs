@@ -87,7 +87,6 @@
 
             // Application services
             services.AddTransient<IEmailSender, SendGridEmailSender>();
-            services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ICloudinaryService, CloudinaryService>();
             services.AddTransient<IDirectorsService, DirectorsService>();
             services.AddTransient<IMoviesService, MoviesService>();

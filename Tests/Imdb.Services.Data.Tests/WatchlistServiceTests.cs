@@ -480,7 +480,8 @@
                                         new MovieGenre() { GenreId = 2 },
                                     },
                                 },
-                            },                    }.AsQueryable<UserMovie>());
+                            },
+                    }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var actual = service.MostWatchedGenreId("3");
