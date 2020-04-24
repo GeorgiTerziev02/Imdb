@@ -107,7 +107,7 @@
     <div>
         @foreach (var genre in this.Model.Genres)
         {
-            <a href="#">@genre.GenreName</a>
+            <a asp-area="" asp-controller="Movies" asp-action="ByGenre" asp-route-genreId="@genre.GenreId">@genre.GenreName</a>
         }
     </div>
     <hr />

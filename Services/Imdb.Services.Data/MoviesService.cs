@@ -206,5 +206,15 @@
                 .To<T>()
                 .ToList();
         }
+
+        // TODO: Test
+        public IEnumerable<T> GetByGenreId<T>(int genreId)
+        {
+            return this.moviesRepository
+                .AllAsNoTracking()
+                .Where(x => x.Genres.Any(y => y.GenreId == genreId))
+                .To<T>()
+                .ToList();
+        }
     }
 }

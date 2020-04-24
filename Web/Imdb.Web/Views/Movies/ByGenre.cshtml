@@ -1,0 +1,42 @@
+﻿@model Imdb.Web.ViewModels.Movies.ListMoviesViewModel
+@{
+    ViewData["Title"] = "ByGenre";
+}
+
+<h1>@Model.GenreName movies and tvshows</h1>
+
+<div class="row">
+
+    @if (Model.Movies.Count() == 0)
+    {
+        <h4>
+            No movies and tvshows from this genres. Find other here <a class="btn btn-primary my-3" asp-area="" asp-controller="Movies" asp-action="All">Movies</a>
+        </h4>
+    }
+    else
+    {
+        <br />
+        @foreach (var movie in Model.Movies)
+        {<div class="col col-md-4">
+                <a asp-area="" asp-controller="Movies" asp-action="ById" asp-route-id="@movie.Id">
+                    <div class="media text-center border">
+                        <img src="@(GlobalConstants.ReducedBaseDeliveryImageUrl + movie.GeneralImageUrl)" height="64" width="64" class="mr-3">
+                        <div class="media-body">
+                            <h5 class="mt-0">@movie.Title</h5>
+                            @if (movie.IsTvShow)
+                            {
+                                <small>TvShow</small>
+                            }
+                            else
+                            {
+                                <small>Movie</small>
+                            }
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <br />
+        }
+    }
+</div>
+

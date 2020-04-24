@@ -854,6 +854,49 @@
             Assert.Equal(expectedSecondTitle, movies[1].Title);
         }
 
+        [Fact]
+        public void GetByGenreIdShouldWorkCorrectly()
+        {
+            var expectedCount = 3;
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(new List<Movie>()
+                {
+                    new Movie() { Id = "1", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 1, } } },
+                    new Movie() { Id = "2", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 2, }, new MovieGenre() { GenreId = 1, } } },
+                    new Movie() { Id = "4", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 2, } } },
+                    new Movie() { Id = "3", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 1, } } },
+                }.AsQueryable<Movie>());
+            var moviesService = new MoviesService(
+                this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
+
+            var result = moviesService.GetByGenreId<MovieByGenreTestModel>(1);
+            var actualCount = result.Count();
+
+            Assert.Equal(expectedCount, actualCount);
+        }
+
+        [Theory]
+        [InlineData(3)]
+        [InlineData(0)]
+        [InlineData(33330)]
+        public void GetByGenreIdShouldReturnEmpty(int id)
+        {
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(new List<Movie>()
+                {
+                    new Movie() { Id = "1", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 1, } } },
+                    new Movie() { Id = "2", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 1, } } },
+                    new Movie() { Id = "4", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 2, } } },
+                    new Movie() { Id = "3", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 1, } } },
+                }.AsQueryable<Movie>());
+            var moviesService = new MoviesService(
+                this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
+
+            var result = moviesService.GetByGenreId<MovieByGenreTestModel>(id);
+
+            Assert.Empty(result);
+        }
+
         public void Dispose()
         {
             this.movieRepository.Object.Dispose();

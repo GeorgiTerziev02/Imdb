@@ -43,5 +43,7 @@
             string trailer);
 
         IEnumerable<T> GetTop<T>(int count);
+
+        IEnumerable<T> GetByGenreId<T>(int genreId);
     }
 }

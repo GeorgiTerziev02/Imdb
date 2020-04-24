@@ -10,11 +10,13 @@
     {
         private readonly IMoviesService moviesService;
         private readonly IVotesService votesService;
+        private readonly IGenresService genresService;
 
-        public MoviesController(IMoviesService moviesService, IVotesService votesService)
+        public MoviesController(IMoviesService moviesService, IVotesService votesService, IGenresService genresService)
         {
             this.moviesService = moviesService;
             this.votesService = votesService;
+            this.genresService = genresService;
         }
 
         public IActionResult All(string sorting, int page = 1)
@@ -67,6 +69,24 @@
             movie.PossibleVotes = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
             return this.View(movie);
+        }
+
+        public IActionResult ByGenre(int genreId)
+        {
+            var genreName = this.genresService.GetGenreName(genreId);
+
+            if (genreName == null)
+            {
+                return this.BadRequest();
+            }
+
+            var movies = new ListMoviesViewModel()
+            {
+                GenreName = genreName,
+                Movies = this.moviesService.GetByGenreId<MovieByGenreViewModel>(genreId),
+            };
+
+            return this.View(movies);
         }
 
         public IActionResult Results(string movieTitle)
