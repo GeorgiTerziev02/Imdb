@@ -69,6 +69,14 @@
             {
                 <a class="btn btn-outline-warning" asp-area="User" asp-controller="Watchlists" asp-action="Add" asp-route-userId="@userId" asp-route-movieId="@Model.Id"><i class="fas fa-star">Add to watchlist</i></a>
             }
+            @if (isAdmin)
+            {
+                <form asp-area="Admin" asp-controller="Administration" asp-action="DeleteById" method="post" onclick="return confirm('Are you sure you want to delete this movie: @Model.Title!')">
+                    <input type="hidden" id="movieId" name="movieId" value="@Model.Id"/>
+                    <button class="btn-danger" type="submit">Delete</button>
+                </form>
+                <a class="btn btn-primary" asp-area="Admin" asp-controller="Administration" asp-action="Edit" asp-route-movieId="@Model.Id">Edit</a>
+            }
         </div>
         @if (!string.IsNullOrWhiteSpace(Model.Trailer))
         {

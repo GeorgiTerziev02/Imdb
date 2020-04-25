@@ -45,5 +45,11 @@
         IEnumerable<T> GetTop<T>(int count);
 
         IEnumerable<T> GetByGenreId<T>(int genreId);
+
+        Task DeleteByIdAsync(string movieId);
+
+        T GetMovieToEdit<T>(string movieId);
+
+        Task EditMovieAsync(string id, string title, string description, long? gross, decimal? budget, string directorId, int languageId, string duration, DateTime? releaseDate, string trailer);
     }
 }

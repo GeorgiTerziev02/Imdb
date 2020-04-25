@@ -26,6 +26,11 @@
         [Authorize]
         public async Task<ActionResult<MovieVoteResponseModel>> Post(MovieVoteInputModel input)
         {
+            if (input == null)
+            {
+                return this.BadRequest();
+            }
+
             var userId = this.userManager.GetUserId(this.User);
             await this.votesService.VoteAsync(userId, input.MovieId, input.Rating);
             var response = new MovieVoteResponseModel()

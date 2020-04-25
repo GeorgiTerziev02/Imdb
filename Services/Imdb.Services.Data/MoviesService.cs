@@ -224,5 +224,59 @@
                 .To<T>()
                 .ToList();
         }
+
+        public async Task DeleteByIdAsync(string movieId)
+        {
+            var movie = this.moviesRepository
+                .All()
+                .FirstOrDefault(x => x.Id == movieId);
+
+            this.moviesRepository.Delete(movie);
+            await this.moviesRepository.SaveChangesAsync();
+        }
+
+        public T GetMovieToEdit<T>(string movieId)
+        {
+            return this.moviesRepository
+                .All()
+                .Where(x => x.Id == movieId)
+                .To<T>()
+                .FirstOrDefault();
+        }
+
+        public async Task EditMovieAsync(
+            string id,
+            string title,
+            string description,
+            long? gross,
+            decimal? budget,
+            string directorId,
+            int languageId,
+            string duration,
+            DateTime? releaseDate,
+            string trailer)
+        {
+            var movie = this.moviesRepository
+                .All()
+                .FirstOrDefault(x => x.Id == id);
+
+            if (trailer.Contains(GlobalConstants.YoutubeEmbed))
+            {
+                trailer = trailer.Replace(GlobalConstants.YoutubeEmbed, string.Empty);
+            }
+
+            movie.Title = title;
+            movie.Description = description;
+            movie.Gross = gross;
+            movie.Budget = budget;
+            movie.DirectorId = directorId;
+            movie.LanguageId = languageId;
+            movie.Duration = TimeSpan.Parse(duration);
+            movie.ReleaseDate = releaseDate;
+            movie.Trailer = trailer;
+
+            this.moviesRepository.Update(movie);
+            await this.moviesRepository.SaveChangesAsync();
+        }
     }
 }

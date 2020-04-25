@@ -1,0 +1,62 @@
+﻿@model Imdb.Web.ViewModels.Admin.Administration.EditMovieInputViewModel
+@{
+    ViewData["Title"] = "Edit";
+    var languages = Model.Languages.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+    var directors = Model.Directors.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+}
+
+<h1>Edit</h1>
+
+<form asp-area="Admin" asp-controller="Administration" asp-action="EditMovie" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" id="id" name="id" value="@Model.Id" /> 
+    <div class="form-group">
+        <label asp-for="@Model.Title"></label>
+        <input asp-for="@Model.Title" class="form-control" value="@Model.Title" />
+        <span asp-validation-for="@Model.Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Description"></label>
+        <textarea asp-for="@Model.Description" class="form-control" value="@Model.Description"></textarea>
+        <span asp-validation-for="@Model.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Duration"></label>
+        <input asp-for="@Model.Duration" class="form-control" value="@Model.Duration"/>
+        <span asp-validation-for="@Model.Duration" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Gross"></label>
+        <input asp-for="@Model.Gross" class="form-control" value="@Model.Gross"/>
+        <span asp-validation-for="@Model.Gross" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Budget"></label>
+        <input asp-for="@Model.Budget" class="form-control" value="@Model.Budget"/>
+        <span asp-validation-for="@Model.Budget" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.ReleaseDate"></label>
+        <input asp-for="@Model.ReleaseDate" class="form-control" value="@Model.ReleaseDate"/>
+        <span asp-validation-for="@Model.ReleaseDate" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="@Model.LanguageId"></label>
+        <select asp-for="@Model.LanguageId" asp-items="@languages" class="form-control"></select>
+        <span asp-validation-for="LanguageId" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="@Model.DirectorId"></label>
+        <select asp-for="@Model.DirectorId" asp-items="@directors" class="form-control" selected="@Model.DirectorId"></select>
+        <span asp-validation-for="DirectorId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Trailer"></label>
+        <input asp-for="@Model.Trailer" class="form-control" value="@Model.Trailer"/>
+        <span asp-validation-for="@Model.Trailer" class="text-danger"></span>
+    </div>
+    <hr />
+    <button type="submit" class="btn btn-primary">Edit</button>
+</form>

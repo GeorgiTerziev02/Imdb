@@ -193,5 +193,60 @@
             await this.moviesService.UploadImages(input.Id, imagesUrls);
             return this.Redirect($"/Movies/ById/{input.Id}");
         }
+
+        public IActionResult Edit(string movieId)
+        {
+            if (!this.moviesService.IsMovieIdValid(movieId))
+            {
+                return this.BadRequest();
+            }
+
+            var movie = this.moviesService.GetMovieToEdit<EditMovieInputViewModel>(movieId);
+            movie.Directors = this.directorsService.GetAll<DirectorDropDownViewModel>();
+            movie.Languages = this.languageService.GetAll<LanguageDropDownViewModel>();
+
+            return this.View(movie);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditMovie(EditMovieInputViewModel editModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(editModel);
+            }
+
+            if (!this.moviesService.IsMovieIdValid(editModel.Id))
+            {
+                return this.BadRequest();
+            }
+
+            await this.moviesService.EditMovieAsync(
+                editModel.Id,
+                editModel.Title,
+                editModel.Description,
+                editModel.Gross,
+                editModel.Budget,
+                editModel.DirectorId,
+                editModel.LanguageId,
+                editModel.Duration,
+                editModel.ReleaseDate,
+                editModel.Trailer);
+
+            return this.Redirect($"/Movies/ById/{editModel.Id}");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteById(string movieId)
+        {
+            if (!this.moviesService.IsMovieIdValid(movieId))
+            {
+                return this.BadRequest();
+            }
+
+            await this.moviesService.DeleteByIdAsync(movieId);
+
+            return this.Redirect("/Movies/All");
+        }
     }
 }
