@@ -43,7 +43,10 @@
         {
             var newMovie = AutoMapperConfig.MapperInstance.Map<Movie>(model);
             newMovie.IsTvShow = false;
-            newMovie.Trailer = newMovie.Trailer.Replace(GlobalConstants.YoutubeEmbed, string.Empty);
+            if (newMovie.Trailer != null)
+            {
+                newMovie.Trailer = newMovie.Trailer.Replace(GlobalConstants.YoutubeEmbed, string.Empty);
+            }
 
             await this.moviesRepository.AddAsync(newMovie);
             await this.moviesRepository.SaveChangesAsync();
@@ -176,6 +179,11 @@
             string generalImageUrl,
             string trailer)
         {
+            if (trailer != null)
+            {
+                trailer = trailer.Replace(GlobalConstants.YoutubeEmbed, string.Empty);
+            }
+
             var tvshow = new Movie()
             {
                 Title = title,
@@ -186,7 +194,7 @@
                 LanguageId = languageId,
                 DirectorId = directorId,
                 GeneralImageUrl = generalImageUrl,
-                Trailer = trailer.Replace(GlobalConstants.YoutubeEmbed, string.Empty),
+                Trailer = trailer,
                 IsTvShow = true,
             };
 
