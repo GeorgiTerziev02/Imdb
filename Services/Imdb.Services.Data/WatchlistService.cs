@@ -8,6 +8,7 @@
     using Imdb.Data.Models;
     using Imdb.Services.Data.Contracts;
     using Imdb.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
 
     public class WatchlistService : IWatchlistsService
     {
@@ -67,26 +68,59 @@
             await this.watchlistRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<T> GetAll<T>(string userId, int skip, int take, string sorting)
+        public async Task<IEnumerable<T>> GetAll<T>(string userId, int skip, int take, string sorting)
         {
-            var watchlist = this.watchlistRepository
-                .All()
-                .Where(x => x.UserId == userId);
-
-            watchlist = sorting switch
+            return sorting switch
             {
-                "name_desc" => watchlist.OrderByDescending(m => m.Movie.Title),
-                "Date" => watchlist.OrderBy(m => m.Movie.ReleaseDate),
-                "date_desc" => watchlist.OrderByDescending(m => m.Movie.ReleaseDate),
-                "rating_desc" => watchlist.OrderByDescending(m => m.Movie.Votes.Average(x => x.Rating)),
-                "Rating" => watchlist.OrderBy(m => m.Movie.Votes.Average(x => x.Rating)),
-                _ => watchlist.OrderBy(m => m.Movie.Title),
+                "name_desc" => await this.watchlistRepository
+                                   .All()
+                                   .Where(x => x.UserId == userId)
+                                   .OrderByDescending(x => x.Movie.Title)
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
+                "Date" => await this.watchlistRepository
+                                   .All()
+                                   .Where(x => x.UserId == userId)
+                                   .OrderBy(x => x.Movie.ReleaseDate)
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
+                "date_desc" => await this.watchlistRepository
+                                   .All()
+                                   .Where(x => x.UserId == userId)
+                                   .OrderByDescending(x => x.Movie.ReleaseDate)
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
+                "rating_desc" => await this.watchlistRepository
+                                   .All()
+                                   .Where(x => x.UserId == userId)
+                                   .OrderByDescending(x => x.Movie.Votes.Average(x => x.Rating))
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
+                "Rating" => await this.watchlistRepository
+                                   .All()
+                                   .Where(x => x.UserId == userId)
+                                   .OrderBy(x => x.Movie.Votes.Average(x => x.Rating))
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
+                _ => await this.watchlistRepository
+                                   .All()
+                                   .Where(x => x.UserId == userId)
+                                   .OrderBy(x => x.Movie.Title)
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
             };
-            return watchlist
-                .Skip(skip)
-                .Take(take)
-                .To<T>()
-                .ToList();
         }
 
         public async Task RemoveFromWatchlistAsync(string userId, string movieId)
@@ -99,68 +133,68 @@
             await this.watchlistRepository.SaveChangesAsync();
         }
 
-        public bool WatchlistMovieExists(string userId, string movieId)
+        public async Task<bool> WatchlistMovieExists(string userId, string movieId)
         {
-            return this.watchlistRepository
+            return await this.watchlistRepository
                 .AllAsNoTracking()
-                .Any(x => x.UserId == userId && x.MovieId == movieId);
+                .AnyAsync(x => x.UserId == userId && x.MovieId == movieId);
         }
 
-        public int GetCount(string userId)
+        public async Task<int> GetCount(string userId)
         {
-            return this.watchlistRepository
+            return await this.watchlistRepository
                 .AllAsNoTracking()
                 .Where(x => x.UserId == userId)
-                .Count();
+                .CountAsync();
         }
 
-        public int MostWatchedGenreId(string userId)
+        public async Task<int> MostWatchedGenreId(string userId)
         {
-            var genresIds = this.watchlistRepository
+            var genresIds = await this.watchlistRepository
                 .AllAsNoTracking()
                 .Where(x => x.UserId == userId)
                 .SelectMany(x => x.Movie.Genres.Select(x => x.GenreId))
-                .ToArray();
+                .ToArrayAsync();
 
             var length = genresIds.Length;
 
             return MostFrequent(genresIds, length);
         }
 
-        public IEnumerable<T> Recommend<T>(string userId, int genreId, int count)
+        public async Task<IEnumerable<T>> Recommend<T>(string userId, int genreId, int count)
         {
-            var notToRecommend = this.watchlistRepository
+            var notToRecommend = await this.watchlistRepository
                 .AllAsNoTracking()
                 .Where(x => x.UserId == userId)
                 .Select(x => x.MovieId)
-                .ToList();
+                .ToListAsync();
 
-            return this.moviesRepository
+            return await this.moviesRepository
                 .AllAsNoTracking()
                 .Where(x => x.Genres.Any(y => y.GenreId == genreId))
                 .Where(x => !notToRecommend.Contains(x.Id))
                 .OrderByDescending(x => x.Votes.Average(y => y.Rating))
                 .Take(count)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
 
         // TODO: Random recommend and has nothing random.... nice
-        public IEnumerable<T> RandomRecommend<T>(string userId, int count)
+        public async Task<IEnumerable<T>> RandomRecommend<T>(string userId, int count)
         {
-            var notToRecommend = this.watchlistRepository
+            var notToRecommend = await this.watchlistRepository
                 .AllAsNoTracking()
                 .Where(x => x.UserId == userId)
                 .Select(x => x.MovieId)
-                .ToList();
+                .ToListAsync();
 
-            return this.moviesRepository
+            return await this.moviesRepository
                 .AllAsNoTracking()
                 .Where(x => !notToRecommend.Contains(x.Id))
                 .OrderByDescending(x => x.Votes.Average(y => y.Rating))
                 .Take(count)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
     }
 }

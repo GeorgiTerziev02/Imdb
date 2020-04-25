@@ -29,12 +29,12 @@
                 return this.BadRequest();
             }
 
-            if (!this.moviesService.IsMovieIdValid(movieId))
+            if (!(await this.moviesService.IsMovieIdValid(movieId)))
             {
                 return this.BadRequest();
             }
 
-            if (this.watchlistsService.WatchlistMovieExists(userId, movieId))
+            if (await this.watchlistsService.WatchlistMovieExists(userId, movieId))
             {
                 return this.Redirect($"All?userId={userId}&page=1");
             }
@@ -51,12 +51,12 @@
                 return this.BadRequest();
             }
 
-            if (!this.moviesService.IsMovieIdValid(movieId))
+            if (!(await this.moviesService.IsMovieIdValid(movieId)))
             {
                 return this.BadRequest();
             }
 
-            if (!this.watchlistsService.WatchlistMovieExists(userId, movieId))
+            if (!(await this.watchlistsService.WatchlistMovieExists(userId, movieId)))
             {
                 return this.BadRequest();
             }
@@ -66,9 +66,9 @@
             return this.RedirectToAction("All", new { userId });
         }
 
-        public IActionResult All(string userId, string sorting, int page = 1)
+        public async Task<IActionResult> AllAsync(string userId, string sorting, int page = 1)
         {
-            var count = this.watchlistsService.GetCount(userId);
+            var count = await this.watchlistsService.GetCount(userId);
             if (page <= 0 || page > (((count - 1) / ItemsPerPage) + 1))
             {
                 page = 1;
@@ -81,7 +81,7 @@
 
             var watchlist = new FullWatchlistViewModel()
             {
-                Movies = this.watchlistsService
+                Movies = await this.watchlistsService
                         .GetAll<WatchlistEntityViewModel>(
                         userId, (page - 1) * ItemsPerPage, ItemsPerPage, sorting),
             };

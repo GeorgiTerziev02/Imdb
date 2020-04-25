@@ -85,7 +85,7 @@
         [Theory]
         [InlineData("pop", "fff")]
         [InlineData("1", "2")]
-        public void MovieContainsActorShouldReturnTrue(string movieId, string actorId)
+        public async Task MovieContainsActorShouldReturnTrueAsync(string movieId, string actorId)
         {
             this.movieActorRepository.Setup(x => x.AllAsNoTracking())
                     .Returns(new List<MovieActor>()
@@ -96,7 +96,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var result = movieService.ContainsActor(movieId, actorId);
+            var result = await movieService.ContainsActor(movieId, actorId);
 
             Assert.True(result);
         }
@@ -108,7 +108,7 @@
         [InlineData(null, null)]
         [InlineData("", "")]
         [InlineData("", "dfs")]
-        public void MovieContainsActorShouldReturnFalse(string movieId, string actorId)
+        public async Task MovieContainsActorShouldReturnFalseAsync(string movieId, string actorId)
         {
             this.movieActorRepository.Setup(x => x.AllAsNoTracking())
                     .Returns(new List<MovieActor>()
@@ -119,7 +119,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var result = movieService.ContainsActor(movieId, actorId);
+            var result = await movieService.ContainsActor(movieId, actorId);
 
             Assert.False(result);
         }
@@ -132,7 +132,7 @@
         [InlineData("mo")]
         [InlineData("m")]
         [InlineData("momo")]
-        public void FindShouldWorkCorrectly(string word)
+        public async Task FindShouldWorkCorrectlyAsync(string word)
         {
             int expectedCount = 1;
             this.movieRepository.Setup(x => x.AllAsNoTracking())
@@ -145,7 +145,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var suggestions = movieService.Find<FindMovieTestModel>(word);
+            var suggestions = await movieService.Find<FindMovieTestModel>(word);
             var actualCount = suggestions.Count();
 
             Assert.Equal(expectedCount, actualCount);
@@ -156,7 +156,7 @@
         [InlineData("1z")]
         [InlineData("zddv")]
         [InlineData("rewrgegege")]
-        public void FindShouldReturnEmpty(string word)
+        public async Task FindShouldReturnEmptyAsync(string word)
         {
             this.movieRepository.Setup(x => x.AllAsNoTracking())
                     .Returns(new List<Movie>()
@@ -168,7 +168,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var suggestions = movieService.Find<FindMovieTestModel>(word);
+            var suggestions = await movieService.Find<FindMovieTestModel>(word);
 
             Assert.Empty(suggestions);
         }
@@ -184,7 +184,7 @@
         [InlineData("mo")]
         [InlineData("mom")]
         [InlineData("momo")]
-        public void NameSuggestionShouldWorkCorrectly(string word)
+        public async Task NameSuggestionShouldWorkCorrectlyAsync(string word)
         {
             int expectedCount = 1;
             this.movieRepository.Setup(x => x.AllAsNoTracking())
@@ -197,7 +197,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var suggestions = movieService.NamesSuggestion(word);
+            var suggestions = await movieService.NamesSuggestion(word);
             var actualCount = suggestions.Count();
 
             Assert.Equal(expectedCount, actualCount);
@@ -208,7 +208,7 @@
         [InlineData("z")]
         [InlineData("zdvdvdfvdv")]
         [InlineData("rewergergergegege")]
-        public void NameSuggestionShouldReturnEmpty(string word)
+        public async Task NameSuggestionShouldReturnEmptyAsync(string word)
         {
             this.movieRepository.Setup(x => x.AllAsNoTracking())
                     .Returns(new List<Movie>()
@@ -220,7 +220,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var suggestions = movieService.NamesSuggestion(word);
+            var suggestions = await movieService.NamesSuggestion(word);
 
             Assert.Empty(suggestions);
         }
@@ -230,7 +230,7 @@
         [InlineData("a")]
         [InlineData(null)]
         [InlineData("")]
-        public void GetAllShouldWorkCorrectly(string sorting)
+        public async Task GetAllShouldWorkCorrectlyAsync(string sorting)
         {
             var expectedTitle = "a";
             var expectedSecondTitle = "c";
@@ -246,7 +246,7 @@
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = moviesService.GetAll<GetAllMovieTestModel>(0, 2, sorting).ToList();
+            var movies = (await moviesService.GetAll<GetAllMovieTestModel>(0, 2, sorting)).ToList();
             var actualCount = movies.Count();
 
             Assert.Equal(expectedCount, actualCount);
@@ -255,7 +255,7 @@
         }
 
         [Fact]
-        public void GetAllShouldReturnOnlyMovies()
+        public async Task GetAllShouldReturnOnlyMoviesAsync()
         {
             var expectedCount = 1;
             this.movieRepository.Setup(x => x.All())
@@ -269,7 +269,7 @@
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = moviesService.GetAll<GetAllMovieTestModel>(0, 2, string.Empty).ToList();
+            var movies = (await moviesService.GetAll<GetAllMovieTestModel>(0, 2, string.Empty)).ToList();
             var actualCount = movies.Count();
 
             Assert.Equal(expectedCount, actualCount);
@@ -278,7 +278,7 @@
         [Theory]
         [InlineData(4)]
         [InlineData(343)]
-        public void GetAllShouldReturnLessThanWanted(int take)
+        public async Task GetAllShouldReturnLessThanWantedAsync(int take)
         {
             var expectedCount = 2;
             this.movieRepository.Setup(x => x.All())
@@ -291,7 +291,7 @@
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = moviesService.GetAll<GetAllMovieTestModel>(0, take, string.Empty).ToList();
+            var movies = (await moviesService.GetAll<GetAllMovieTestModel>(0, take, string.Empty)).ToList();
             var actualCount = movies.Count();
             var result = actualCount < take;
 
@@ -300,7 +300,7 @@
         }
 
         [Fact]
-        public void GetAllShouldOrderByTitleDesc()
+        public async Task GetAllShouldOrderByTitleDescAsync()
         {
             var expectedTitle = "d";
             var expectedSecondTitle = "c";
@@ -315,14 +315,14 @@
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = moviesService.GetAll<GetAllMovieTestModel>(0, 2, "name_desc").ToList();
+            var movies = (await moviesService.GetAll<GetAllMovieTestModel>(0, 2, "name_desc")).ToList();
 
             Assert.Equal(expectedTitle, movies[0].Title);
             Assert.Equal(expectedSecondTitle, movies[1].Title);
         }
 
         [Fact]
-        public void GetAllShouldOrderByReleaseDate()
+        public async Task GetAllShouldOrderByReleaseDateAsync()
         {
             var expectedTitle = "d";
             var expectedSecondTitle = "c";
@@ -337,14 +337,14 @@
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = moviesService.GetAll<GetAllMovieTestModel>(0, 2, "Date").ToList();
+            var movies = (await moviesService.GetAll<GetAllMovieTestModel>(0, 2, "Date")).ToList();
 
             Assert.Equal(expectedTitle, movies[0].Title);
             Assert.Equal(expectedSecondTitle, movies[1].Title);
         }
 
         [Fact]
-        public void GetAllShouldOrderByReleaseDateDesc()
+        public async Task GetAllShouldOrderByReleaseDateDesc()
         {
             var expectedTitle = "d";
             var expectedSecondTitle = "c";
@@ -359,14 +359,14 @@
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = moviesService.GetAll<GetAllMovieTestModel>(0, 2, "date_desc").ToList();
+            var movies = (await moviesService.GetAll<GetAllMovieTestModel>(0, 2, "date_desc")).ToList();
 
             Assert.Equal(expectedTitle, movies[0].Title);
             Assert.Equal(expectedSecondTitle, movies[1].Title);
         }
 
         [Fact]
-        public void GetAllShouldOrderByRating()
+        public async Task GetAllShouldOrderByRatingAsync()
         {
             var expectedTitle = "d";
             var expectedSecondTitle = "c";
@@ -381,14 +381,14 @@
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = moviesService.GetAll<GetAllMovieTestModel>(0, 2, "Rating").ToList();
+            var movies = (await moviesService.GetAll<GetAllMovieTestModel>(0, 2, "Rating")).ToList();
 
             Assert.Equal(expectedTitle, movies[0].Title);
             Assert.Equal(expectedSecondTitle, movies[1].Title);
         }
 
         [Fact]
-        public void GetAllShouldOrderByRatingDesc()
+        public async Task GetAllShouldOrderByRatingDescAsync()
         {
             var expectedTitle = "d";
             var expectedSecondTitle = "c";
@@ -403,7 +403,7 @@
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = moviesService.GetAll<GetAllMovieTestModel>(0, 2, "rating_desc").ToList();
+            var movies = (await moviesService.GetAll<GetAllMovieTestModel>(0, 2, "rating_desc")).ToList();
 
             Assert.Equal(expectedTitle, movies[0].Title);
             Assert.Equal(expectedSecondTitle, movies[1].Title);
@@ -413,7 +413,7 @@
         [InlineData("4")]
         [InlineData("5")]
         [InlineData("6")]
-        public void GetByIdShouldWorkCorrectly(string id)
+        public async Task GetByIdShouldWorkCorrectlyAsync(string id)
         {
             AutoMapperConfig.RegisterMappings(typeof(MovieByIdTestModel).Assembly);
             this.movieRepository.Setup(x => x.All())
@@ -426,7 +426,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var result = movieService.GetById<MovieByIdTestModel>(id);
+            var result = await movieService.GetById<MovieByIdTestModel>(id);
             Assert.Equal(id, result.Id);
         }
 
@@ -476,7 +476,7 @@
         [InlineData(1)]
         [InlineData(5)]
         [InlineData(10)]
-        public void GetTopMoviesShouldReturnEmpty(int count)
+        public async Task GetTopMoviesShouldReturnEmptyAsync(int count)
         {
             this.movieRepository.Setup(x => x.AllAsNoTracking())
                 .Returns(new List<Movie>()
@@ -490,13 +490,13 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = movieService.GetTopMovies<TopMovieTestModel>(count);
+            var movies = await movieService.GetTopMovies<TopMovieTestModel>(count);
 
             Assert.Empty(movies);
         }
 
         [Fact]
-        public void GetTopMoviesShouldReturnOrderedList()
+        public async Task GetTopMoviesShouldReturnOrderedListAsync()
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "d";
@@ -512,14 +512,14 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = movieService.GetTopMovies<TopMovieTestModel>(2).ToList();
+            var movies = (await movieService.GetTopMovies<TopMovieTestModel>(2)).ToList();
 
             Assert.Equal(expectedTitle, movies[0].Title);
             Assert.Equal(expectedSecondTitle, movies[1].Title);
         }
 
         [Fact]
-        public void GetTopMovieShouldOrderByVotesCount()
+        public async Task GetTopMovieShouldOrderByVotesCountAsync()
         {
             var expectedTitle = "a";
             this.movieRepository.Setup(x => x.AllAsNoTracking())
@@ -541,13 +541,13 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = movieService.GetTopMovies<TopMovieTestModel>(1).ToList();
+            var movies = (await movieService.GetTopMovies<TopMovieTestModel>(1)).ToList();
 
             Assert.Equal(expectedTitle, movies[0].Title);
         }
 
         [Fact]
-        public void GetTotalCountShouldWorkCorrectly()
+        public async Task GetTotalCountShouldWorkCorrectlyAsync()
         {
             int expectedCount = 3;
             this.movieRepository.Setup(x => x.AllAsNoTracking())
@@ -560,12 +560,12 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var actualCount = movieService.GetTotalCount();
+            var actualCount = await movieService.GetTotalCount();
             Assert.Equal(expectedCount, actualCount);
         }
 
         [Fact]
-        public void GetTotalCountShouldReturnZero()
+        public async Task GetTotalCountShouldReturnZeroAsync()
         {
             int expectedCount = 0;
             this.movieRepository.Setup(x => x.AllAsNoTracking())
@@ -578,7 +578,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var actualCount = movieService.GetTotalCount();
+            var actualCount = await movieService.GetTotalCount();
             Assert.Equal(expectedCount, actualCount);
         }
 
@@ -586,7 +586,7 @@
         [InlineData("1")]
         [InlineData("2")]
         [InlineData("3")]
-        public void IsMovieValidShouldReturnTrue(string id)
+        public async Task IsMovieValidShouldReturnTrueAsync(string id)
         {
             this.movieRepository.Setup(x => x.AllAsNoTracking())
                     .Returns(new List<Movie>()
@@ -598,7 +598,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var result = movieService.IsMovieIdValid(id);
+            var result = await movieService.IsMovieIdValid(id);
             Assert.True(result);
         }
 
@@ -606,7 +606,7 @@
         [InlineData("")]
         [InlineData("gdgsdgsgsg")]
         [InlineData(null)]
-        public void IsMovieValidShouldReturnFalse(string id)
+        public async Task IsMovieValidShouldReturnFalseAsync(string id)
         {
             this.movieRepository.Setup(x => x.AllAsNoTracking())
                     .Returns(new List<Movie>()
@@ -618,7 +618,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var result = movieService.IsMovieIdValid(id);
+            var result = await movieService.IsMovieIdValid(id);
             Assert.False(result);
         }
 
@@ -715,7 +715,7 @@
         }
 
         [Fact]
-        public void GetTopShouldWorkCorrectly()
+        public async Task GetTopShouldWorkCorrectlyAsync()
         {
             var expectedCount = 2;
             var expectedTitle = "a";
@@ -745,7 +745,7 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = movieService.GetTop<GetTopTestModel>(2).ToList();
+            var movies = (await movieService.GetTop<GetTopTestModel>(2)).ToList();
             var actualCount = movies.Count();
 
             Assert.Equal(expectedCount, actualCount);
@@ -754,7 +754,7 @@
         }
 
         [Fact]
-        public void GetTopShouldReturnTvShows()
+        public async Task GetTopShouldReturnTvShowsAsync()
         {
             var expectedCount = 2;
             this.movieRepository.Setup(x => x.AllAsNoTracking())
@@ -776,14 +776,14 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = movieService.GetTop<GetTopTestModel>(2).ToList();
+            var movies = (await movieService.GetTop<GetTopTestModel>(2)).ToList();
             var actualCount = movies.Count();
 
             Assert.Equal(expectedCount, actualCount);
         }
 
         [Fact]
-        public void GetTopShouldOrderByRating()
+        public async Task GetTopShouldOrderByRatingAsync()
         {
             var expectedTitle = "c";
             var expectedSecondTitle = "a";
@@ -812,14 +812,14 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = movieService.GetTop<GetTopTestModel>(2).ToList();
+            var movies = (await movieService.GetTop<GetTopTestModel>(2)).ToList();
 
             Assert.Equal(expectedTitle, movies[0].Title);
             Assert.Equal(expectedSecondTitle, movies[1].Title);
         }
 
         [Fact]
-        public void GetTopShouldOrderByVotesCount()
+        public async Task GetTopShouldOrderByVotesCountAsync()
         {
             var expectedTitle = "c";
             var expectedSecondTitle = "a";
@@ -848,14 +848,14 @@
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = movieService.GetTop<GetTopTestModel>(2).ToList();
+            var movies = (await movieService.GetTop<GetTopTestModel>(2)).ToList();
 
             Assert.Equal(expectedTitle, movies[0].Title);
             Assert.Equal(expectedSecondTitle, movies[1].Title);
         }
 
         [Fact]
-        public void GetByGenreIdShouldWorkCorrectly()
+        public async Task GetByGenreIdShouldWorkCorrectlyAsync()
         {
             var expectedCount = 3;
             this.movieRepository.Setup(x => x.AllAsNoTracking())
@@ -869,7 +869,7 @@
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var result = moviesService.GetByGenreId<MovieByGenreTestModel>(1);
+            var result = await moviesService.GetByGenreId<MovieByGenreTestModel>(1);
             var actualCount = result.Count();
 
             Assert.Equal(expectedCount, actualCount);
@@ -879,7 +879,7 @@
         [InlineData(3)]
         [InlineData(0)]
         [InlineData(33330)]
-        public void GetByGenreIdShouldReturnEmpty(int id)
+        public async Task GetByGenreIdShouldReturnEmptyAsync(int id)
         {
             this.movieRepository.Setup(x => x.AllAsNoTracking())
                 .Returns(new List<Movie>()
@@ -892,7 +892,7 @@
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var result = moviesService.GetByGenreId<MovieByGenreTestModel>(id);
+            var result = await moviesService.GetByGenreId<MovieByGenreTestModel>(id);
 
             Assert.Empty(result);
         }

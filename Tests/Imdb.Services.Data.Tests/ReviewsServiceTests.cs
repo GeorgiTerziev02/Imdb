@@ -29,7 +29,7 @@
             var expected = 1;
 
             await this.service.AddAsync("1", "2", "fsdfsfs");
-            var actual = this.service.UsersReviews("1");
+            var actual = await this.service.UsersReviews("1");
 
             Assert.Equal(expected, actual);
         }
@@ -38,7 +38,7 @@
         public async Task ContainsReviewByIdShouldReturnTrue()
         {
             var id = await this.service.AddAsync("1", "1", "sffsf");
-            var result = this.service.ContainsReviewById(id);
+            var result = await this.service.ContainsReviewById(id);
 
             Assert.True(result);
         }
@@ -50,7 +50,7 @@
         public async Task ContainsReviewByIdShouldReturnFalse(string searchedId)
         {
             var id = await this.service.AddAsync("1", "1", "sffsf");
-            var result = this.service.ContainsReviewById(searchedId);
+            var result = await this.service.ContainsReviewById(searchedId);
 
             Assert.False(result);
         }
@@ -64,7 +64,7 @@
             await this.service.AddAsync("1", "1", "fsdfsdfsdfsfsfs");
             await this.service.AddAsync("1", "2", "fsdfsdfsdfsfsfs");
 
-            var count = this.service.UsersReviews("1");
+            var count = await this.service.UsersReviews("1");
             Assert.Equal(expected, count);
         }
 
@@ -75,7 +75,7 @@
             var createdId = await this.service.AddAsync("1", movieId, "dfsfafasfsfs");
             var deletedId = await this.service.RemoveById(createdId);
 
-            var contains = this.service.ContainsReviewById(createdId);
+            var contains = await this.service.ContainsReviewById(createdId);
 
             Assert.False(contains);
         }
@@ -94,15 +94,15 @@
         public async Task PermissionShouldReturnFalse()
         {
             await this.service.AddAsync("1", "2", "fdsdfsfsfs");
-            var result = this.service.HasPermissionToPost("1");
+            var result = await this.service.HasPermissionToPost("1");
 
             Assert.False(result);
         }
 
         [Fact]
-        public void PermissionShouldReturnTrue()
+        public async Task PermissionShouldReturnTrueAsync()
         {
-            var result = this.service.HasPermissionToPost("1");
+            var result = await this.service.HasPermissionToPost("1");
 
             Assert.True(result);
         }

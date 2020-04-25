@@ -1,5 +1,7 @@
 ﻿namespace Imdb.Web.Controllers
 {
+    using System.Threading.Tasks;
+
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.ViewModels.Actors;
     using Microsoft.AspNetCore.Mvc;
@@ -13,9 +15,9 @@
             this.actorsService = actorsService;
         }
 
-        public IActionResult All(int page = 1)
+        public async Task<IActionResult> All(int page = 1)
         {
-            var count = this.actorsService.GetTotalCount();
+            var count = await this.actorsService.GetTotalCount();
             if (page <= 0 || page > (((count - 1) / ActorsPerPage) + 1))
             {
                 page = 1;
@@ -23,7 +25,7 @@
 
             var actors = new AllActorsListViewModel()
             {
-                Actors = this.actorsService
+                Actors = await this.actorsService
                     .GetAll<ActorViewModel>((page - 1) * ActorsPerPage, ActorsPerPage),
             };
 
@@ -33,9 +35,9 @@
             return this.View(actors);
         }
 
-        public IActionResult ById(string id)
+        public async Task<IActionResult> ById(string id)
         {
-            var actor = this.actorsService.GetById<ActorByIdViewModel>(id);
+            var actor = await this.actorsService.GetById<ActorByIdViewModel>(id);
 
             if (actor == null)
             {

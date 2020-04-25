@@ -1,5 +1,7 @@
 ﻿namespace Imdb.Web.Controllers
 {
+    using System.Threading.Tasks;
+
     using Imdb.Services.Data.Contracts;
     using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +18,10 @@
 
         [HttpGet("search")]
         [Produces("application/json")]
-        public IActionResult Search(string word)
+        public async Task<IActionResult> SearchAsync(string word)
         {
             string term = this.HttpContext.Request.Query["term"].ToString();
-            var suggestions = this.moviesService.NamesSuggestion(term);
+            var suggestions = await this.moviesService.NamesSuggestion(term);
             return this.Ok(suggestions);
         }
     }

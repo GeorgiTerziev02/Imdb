@@ -90,12 +90,12 @@
             return this.Redirect($"/Actors/{actorId}");
         }
 
-        public IActionResult AddMovie()
+        public async Task<IActionResult> AddMovie()
         {
             var viewModel = new AddMovieInputViewModel()
             {
-                Languages = this.languageService.GetAll<LanguageDropDownViewModel>(),
-                Directors = this.directorsService.GetAll<DirectorDropDownViewModel>(),
+                Languages = await this.languageService.GetAll<LanguageDropDownViewModel>(),
+                Directors = await this.directorsService.GetAll<DirectorDropDownViewModel>(),
             };
             return this.View(viewModel);
         }
@@ -120,12 +120,12 @@
             return this.Redirect($"/Admin/Administration/AddActorsAndGenres/{movieId}");
         }
 
-        public IActionResult AddTvShow()
+        public async Task<IActionResult> AddTvShow()
         {
             var viewModel = new AddTvShowInputViewModel()
             {
-                Languages = this.languageService.GetAll<LanguageDropDownViewModel>(),
-                Directors = this.directorsService.GetAll<DirectorDropDownViewModel>(),
+                Languages = await this.languageService.GetAll<LanguageDropDownViewModel>(),
+                Directors = await this.directorsService.GetAll<DirectorDropDownViewModel>(),
             };
 
             return this.View(viewModel);
@@ -160,18 +160,18 @@
             return this.Redirect($"/Admin/Administration/AddActorsAndGenres/{tvshowId}");
         }
 
-        public IActionResult AddActorsAndGenres(string id)
+        public async Task<IActionResult> AddActorsAndGenres(string id)
         {
-            var model = this.moviesService.GetById<AddActorsAndGenresViewModel>(id);
-            model.AvailableGenres = this.genresService.GetAll<GenreDropDownViewModel>();
-            model.AvailableActors = this.actorsService.GetAll<ActorsDropDownViewModel>();
+            var model = await this.moviesService.GetById<AddActorsAndGenresViewModel>(id);
+            model.AvailableGenres = await this.genresService.GetAll<GenreDropDownViewModel>();
+            model.AvailableActors = await this.actorsService.GetAll<ActorsDropDownViewModel>();
 
             return this.View(model);
         }
 
-        public IActionResult AddImages(string movieId)
+        public async Task<IActionResult> AddImagesAsync(string movieId)
         {
-            var imagesModel = this.moviesService.GetById<AddImagesInputViewModel>(movieId);
+            var imagesModel = await this.moviesService.GetById<AddImagesInputViewModel>(movieId);
 
             return this.View(imagesModel);
         }
@@ -194,16 +194,16 @@
             return this.Redirect($"/Movies/ById/{input.Id}");
         }
 
-        public IActionResult Edit(string movieId)
+        public async Task<IActionResult> Edit(string movieId)
         {
-            if (!this.moviesService.IsMovieIdValid(movieId))
+            if (!(await this.moviesService.IsMovieIdValid(movieId)))
             {
                 return this.BadRequest();
             }
 
-            var movie = this.moviesService.GetMovieToEdit<EditMovieInputViewModel>(movieId);
-            movie.Directors = this.directorsService.GetAll<DirectorDropDownViewModel>();
-            movie.Languages = this.languageService.GetAll<LanguageDropDownViewModel>();
+            var movie = await this.moviesService.GetMovieToEdit<EditMovieInputViewModel>(movieId);
+            movie.Directors = await this.directorsService.GetAll<DirectorDropDownViewModel>();
+            movie.Languages = await this.languageService.GetAll<LanguageDropDownViewModel>();
 
             return this.View(movie);
         }
@@ -216,7 +216,7 @@
                 return this.View(editModel);
             }
 
-            if (!this.moviesService.IsMovieIdValid(editModel.Id))
+            if (!(await this.moviesService.IsMovieIdValid(editModel.Id)))
             {
                 return this.BadRequest();
             }
@@ -239,7 +239,7 @@
         [HttpPost]
         public async Task<IActionResult> DeleteById(string movieId)
         {
-            if (!this.moviesService.IsMovieIdValid(movieId))
+            if (!(await this.moviesService.IsMovieIdValid(movieId)))
             {
                 return this.BadRequest();
             }

@@ -6,10 +6,10 @@
     {
         Task VoteAsync(string userId, string movieId, int rating);
 
-        int MovieVotesCount(string movieId);
+        Task<int> MovieVotesCount(string movieId);
 
-        double MovieRating(string movieId);
+        Task<double> MovieRating(string movieId);
 
-        int? GetUserRatingForMovie(string userId, string movieId);
+        Task<int?> GetUserRatingForMovie(string userId, string movieId);
     }
 }

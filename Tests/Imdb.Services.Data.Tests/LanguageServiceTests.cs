@@ -50,7 +50,7 @@
                 await this.service.AddLanguage($"{i}");
             }
 
-            var languages = this.service.GetAll<LanguageTestModel>();
+            var languages = await this.service.GetAll<LanguageTestModel>();
 
             Assert.Equal(expected, languages.Count());
         }
@@ -65,7 +65,7 @@
                 await this.service.AddLanguage(name.ToString());
             }
 
-            var languages = this.service.GetAll<LanguageTestModel>().ToList();
+            var languages = (await this.service.GetAll<LanguageTestModel>()).ToList();
             var firstLangName = languages[0].Name;
             var thirdLangName = languages[2].Name;
             var lastLangName = languages[25].Name;

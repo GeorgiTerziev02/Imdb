@@ -11,6 +11,7 @@
     using Imdb.Data.Models.Enumerations;
     using Imdb.Services.Data.Contracts;
     using Imdb.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
 
     public class ActorsService : IActorsService
     {
@@ -39,56 +40,56 @@
             return actor.Id;
         }
 
-        public IEnumerable<T> GetAll<T>()
+        public async Task<IEnumerable<T>> GetAll<T>()
         {
-            return this.actorsRepository
+            return await this.actorsRepository
                 .AllAsNoTracking()
                 .OrderBy(x => x.FirstName)
                 .ThenBy(x => x.LastName)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<T> GetAll<T>(int skip, int take)
+        public async Task<IEnumerable<T>> GetAll<T>(int skip, int take)
         {
-            return this.actorsRepository
+            return await this.actorsRepository
                 .AllAsNoTracking()
                 .OrderBy(x => x.FirstName)
                 .ThenBy(x => x.LastName)
                 .Skip(skip)
                 .Take(take)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<T> GetBornToday<T>(int actorsBornToday)
+        public async Task<IEnumerable<T>> GetBornToday<T>(int actorsBornToday)
         {
-            var result = this.actorsRepository
+            var result = await this.actorsRepository
                 .AllAsNoTracking()
                 .Where(x => x.Born.HasValue)
                 .Where(x => x.Born.Value.Month == DateTime.UtcNow.Month)
                 .Where(x => x.Born.Value.Day == DateTime.UtcNow.Day)
                 .Take(actorsBornToday)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
 
             return result;
         }
 
-        public T GetById<T>(string actorId)
+        public async Task<T> GetById<T>(string actorId)
         {
-            return this.actorsRepository
+            return await this.actorsRepository
                 .AllAsNoTracking()
                 .Where(x => x.Id == actorId)
                 .To<T>()
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public string GetName(string actorId)
+        public async Task<string> GetName(string actorId)
         {
-            var actor = this.actorsRepository
+            var actor = await this.actorsRepository
                 .AllAsNoTracking()
-                .FirstOrDefault(x => x.Id == actorId);
+                .FirstOrDefaultAsync(x => x.Id == actorId);
 
             if (actor == null)
             {
@@ -98,18 +99,18 @@
             return actor.FirstName + " " + actor.LastName;
         }
 
-        public int GetTotalCount()
+        public async Task<int> GetTotalCount()
         {
-            return this.actorsRepository
+            return await this.actorsRepository
                 .AllAsNoTracking()
-                .Count();
+                .CountAsync();
         }
 
-        public bool IsActorIdValid(string actorId)
+        public async Task<bool> IsActorIdValid(string actorId)
         {
-            return this.actorsRepository
+            return (await this.actorsRepository
                 .AllAsNoTracking()
-                .FirstOrDefault(x => x.Id == actorId) != null;
+                .FirstOrDefaultAsync(x => x.Id == actorId)) != null;
         }
     }
 }

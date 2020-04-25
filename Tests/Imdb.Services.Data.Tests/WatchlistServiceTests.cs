@@ -66,7 +66,7 @@
         }
 
         [Fact]
-        public void GetAllShouldWorkCorrectly()
+        public async Task GetAllShouldWorkCorrectlyAsync()
         {
             var expectedCount = 2;
             this.watchlistsRepository.Setup(x => x.All())
@@ -78,7 +78,7 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.GetAll<GetAllMovieTestModel>("2", 0, 2, "Name");
+            var result = await service.GetAll<GetAllMovieTestModel>("2", 0, 2, "Name");
             var actualCount = result.Count();
 
             Assert.Equal(expectedCount, actualCount);
@@ -88,7 +88,7 @@
         [InlineData("")]
         [InlineData("rerwtwtw")]
         [InlineData(null)]
-        public void GetAllShouldWorkReturnEmpty(string userId)
+        public async Task GetAllShouldWorkReturnEmptyAsync(string userId)
         {
             this.watchlistsRepository.Setup(x => x.All())
                     .Returns(new List<UserMovie>()
@@ -99,13 +99,13 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.GetAll<GetAllMovieTestModel>(userId, 0, 2, "Name");
+            var result = await service.GetAll<GetAllMovieTestModel>(userId, 0, 2, "Name");
 
             Assert.Empty(result);
         }
 
         [Fact]
-        public void GetAllShouldOrderByNameDesc()
+        public async Task GetAllShouldOrderByNameDescAsync()
         {
             var expectedTitle = "p";
             var expectedSecondTitle = "d";
@@ -119,14 +119,14 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.GetAll<GetAllMovieTestModel>("2", 0, 3, "name_desc").ToList();
+            var result = (await service.GetAll<GetAllMovieTestModel>("2", 0, 3, "name_desc")).ToList();
 
             Assert.Equal(result[0].MovieTitle, expectedTitle);
             Assert.Equal(result[1].MovieTitle, expectedSecondTitle);
         }
 
         [Fact]
-        public void GetAllShouldOrderByReleaseDate()
+        public async Task GetAllShouldOrderByReleaseDateAsync()
         {
             var expectedTitle = "c";
             var expectedSecondTitle = "b";
@@ -171,14 +171,14 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.GetAll<GetAllMovieTestModel>("2", 0, 3, "Date").ToList();
+            var result = (await service.GetAll<GetAllMovieTestModel>("2", 0, 3, "Date")).ToList();
 
             Assert.Equal(result[0].MovieTitle, expectedTitle);
             Assert.Equal(result[1].MovieTitle, expectedSecondTitle);
         }
 
         [Fact]
-        public void GetAllShouldOrderByReleaseDateDesc()
+        public async Task GetAllShouldOrderByReleaseDateDescAsync()
         {
             var expectedTitle = "a";
             var expectedSecondTitle = "b";
@@ -223,14 +223,14 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.GetAll<GetAllMovieTestModel>("2", 0, 3, "date_desc").ToList();
+            var result = (await service.GetAll<GetAllMovieTestModel>("2", 0, 3, "date_desc")).ToList();
 
             Assert.Equal(result[0].MovieTitle, expectedTitle);
             Assert.Equal(result[1].MovieTitle, expectedSecondTitle);
         }
 
         [Fact]
-        public void GetAllShouldOrderByRating()
+        public async Task GetAllShouldOrderByRatingAsync()
         {
             var expectedTitle = "a";
             var expectedSecondTitle = "c";
@@ -284,14 +284,14 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.GetAll<GetAllMovieTestModel>("2", 0, 3, "Rating").ToList();
+            var result = (await service.GetAll<GetAllMovieTestModel>("2", 0, 3, "Rating")).ToList();
 
             Assert.Equal(result[0].MovieTitle, expectedTitle);
             Assert.Equal(result[1].MovieTitle, expectedSecondTitle);
         }
 
         [Fact]
-        public void GetAllShouldOrderByRatingDesc()
+        public async Task GetAllShouldOrderByRatingDescAsync()
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "c";
@@ -345,7 +345,7 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.GetAll<GetAllMovieTestModel>("2", 0, 3, "rating_desc").ToList();
+            var result = (await service.GetAll<GetAllMovieTestModel>("2", 0, 3, "rating_desc")).ToList();
 
             Assert.Equal(result[0].MovieTitle, expectedTitle);
             Assert.Equal(result[1].MovieTitle, expectedSecondTitle);
@@ -374,7 +374,7 @@
         [InlineData("1", "a")]
         [InlineData("2", "b")]
         [InlineData("3", "c")]
-        public void WatchlistMovieExistsShouldReturnTrue(string userId, string movieId)
+        public async Task WatchlistMovieExistsShouldReturnTrueAsync(string userId, string movieId)
         {
             this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
                     .Returns(new List<UserMovie>()
@@ -385,7 +385,7 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.WatchlistMovieExists(userId, movieId);
+            var result = await service.WatchlistMovieExists(userId, movieId);
 
             Assert.True(result);
         }
@@ -396,7 +396,7 @@
         [InlineData("3", "a")]
         [InlineData("", "")]
         [InlineData("", null)]
-        public void WatchlistMovieExistsShouldReturnFalse(string userId, string movieId)
+        public async Task WatchlistMovieExistsShouldReturnFalseAsync(string userId, string movieId)
         {
             this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
                     .Returns(new List<UserMovie>()
@@ -407,13 +407,13 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.WatchlistMovieExists(userId, movieId);
+            var result = await service.WatchlistMovieExists(userId, movieId);
 
             Assert.False(result);
         }
 
         [Fact]
-        public void GetCountShouldWorkCorrectly()
+        public async Task GetCountShouldWorkCorrectlyAsync()
         {
             var expectedCount = 2;
             this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
@@ -425,13 +425,13 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var actualCount = service.GetCount("2");
+            var actualCount = await service.GetCount("2");
 
             Assert.Equal(expectedCount, actualCount);
         }
 
         [Fact]
-        public void GetCountShouldReturnZero()
+        public async Task GetCountShouldReturnZeroAsync()
         {
             var expectedCount = 0;
             this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
@@ -443,13 +443,13 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var actualCount = service.GetCount("2");
+            var actualCount = await service.GetCount("2");
 
             Assert.Equal(expectedCount, actualCount);
         }
 
         [Fact]
-        public void GetMostWatchGenreIdShouldWorkCorrectly()
+        public async Task GetMostWatchGenreIdShouldWorkCorrectlyAsync()
         {
             var expected = 1;
             this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
@@ -484,13 +484,13 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var actual = service.MostWatchedGenreId("3");
+            var actual = await service.MostWatchedGenreId("3");
 
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void GetMostWatchGenreIdShouldReturnMinusOne()
+        public async Task GetMostWatchGenreIdShouldReturnMinusOneAsync()
         {
             var expected = -1;
             this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
@@ -502,13 +502,13 @@
                     }.AsQueryable<UserMovie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var actual = service.MostWatchedGenreId("2");
+            var actual = await service.MostWatchedGenreId("2");
 
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void RecommendShouldWorkCorrectly()
+        public async Task RecommendShouldWorkCorrectlyAsync()
         {
             var expectedCount = 2;
             this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
@@ -584,7 +584,7 @@
                     }.AsQueryable<Movie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.Recommend<RecommendMovieTestModel>("2", 1, 2).ToList();
+            var result = (await service.Recommend<RecommendMovieTestModel>("2", 1, 2)).ToList();
             var actualCount = result.Count();
 
             Assert.Equal(expectedCount, actualCount);
@@ -592,7 +592,7 @@
         }
 
         [Fact]
-        public void RecommendShouldNotRecommendSameMoviesAndReturnEmptyList()
+        public async Task RecommendShouldNotRecommendSameMoviesAndReturnEmptyListAsync()
         {
             this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
                     .Returns(new List<UserMovie>()
@@ -669,13 +669,13 @@
                     }.AsQueryable<Movie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.Recommend<RecommendMovieTestModel>("2", 1, 2).ToList();
+            var result = (await service.Recommend<RecommendMovieTestModel>("2", 1, 2)).ToList();
 
             Assert.Empty(result);
         }
 
         [Fact]
-        public void RandomRecommendShouldWorkCorrectly()
+        public async Task RandomRecommendShouldWorkCorrectlyAsync()
         {
             var expectedCount = 1;
             this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
@@ -726,7 +726,7 @@
                     }.AsQueryable<Movie>());
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
-            var result = service.RandomRecommend<RecommendMovieTestModel>("2", 2).ToList();
+            var result = (await service.RandomRecommend<RecommendMovieTestModel>("2", 2)).ToList();
             var actualCount = result.Count();
 
             Assert.Equal(expectedCount, actualCount);

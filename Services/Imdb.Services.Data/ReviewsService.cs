@@ -7,6 +7,7 @@
     using Imdb.Data.Common.Repositories;
     using Imdb.Data.Models;
     using Imdb.Services.Data.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     public class ReviewsService : IReviewsService
     {
@@ -32,19 +33,19 @@
             return review.Id;
         }
 
-        public bool ContainsReviewById(string reviewId)
+        public async Task<bool> ContainsReviewById(string reviewId)
         {
-            return this.reviewsRepository
+            return (await this.reviewsRepository
                 .AllAsNoTracking()
-                .FirstOrDefault(x => x.Id == reviewId) != null;
+                .FirstOrDefaultAsync(x => x.Id == reviewId)) != null;
         }
 
-        public bool HasPermissionToPost(string userId)
+        public async Task<bool> HasPermissionToPost(string userId)
         {
-            var lastReview = this.reviewsRepository
+            var lastReview = await this.reviewsRepository
                 .AllAsNoTracking()
                 .OrderByDescending(x => x.CreatedOn)
-                .FirstOrDefault(x => x.UserId == userId);
+                .FirstOrDefaultAsync(x => x.UserId == userId);
 
             if (lastReview == null)
             {
@@ -61,12 +62,12 @@
             return true;
         }
 
-        public int UsersReviews(string userId)
+        public async Task<int> UsersReviews(string userId)
         {
-            return this.reviewsRepository
+            return await this.reviewsRepository
                 .AllAsNoTracking()
                 .Where(x => x.UserId == userId)
-                .Count();
+                .CountAsync();
         }
 
         public async Task<string> RemoveById(string reviewId)

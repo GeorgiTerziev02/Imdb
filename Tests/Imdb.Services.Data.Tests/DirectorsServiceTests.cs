@@ -49,7 +49,7 @@
             var expectedLastName = "rwrw";
 
             var id = await this.service.AddAsync("ewew", "rwrw", Gender.Male, DateTime.Now, "fsdfs", "fdff");
-            var result = this.service.GetById<DirectorByIdTestModel>(id);
+            var result = await this.service.GetById<DirectorByIdTestModel>(id);
 
             Assert.Equal(id, result.Id);
             Assert.Equal(expectedFirstName, result.FirstName);
@@ -64,7 +64,7 @@
         {
             await this.service.AddAsync("ewew", "rwrw", Gender.Male, DateTime.Now, "fsdfs", "fdff");
 
-            var result = this.service.GetById<DirectorByIdTestModel>(id);
+            var result = await this.service.GetById<DirectorByIdTestModel>(id);
 
             Assert.Null(result);
         }
@@ -79,16 +79,16 @@
                 await this.service.AddAsync("ewew", "rwrw", Gender.Male, DateTime.Now, "fsdfs", "fdff");
             }
 
-            var directors = this.service.GetAll<AllDirectorTestModel>();
+            var directors = await this.service.GetAll<AllDirectorTestModel>();
             var actualCount = directors.Count();
 
             Assert.Equal(expectedCount, actualCount);
         }
 
         [Fact]
-        public void GetAllShouldReturnEmptyList()
+        public async Task GetAllShouldReturnEmptyList()
         {
-            var directors = this.service.GetAll<AllDirectorTestModel>();
+            var directors = await this.service.GetAll<AllDirectorTestModel>();
             Assert.Empty(directors);
         }
 
@@ -101,7 +101,7 @@
             await this.service.AddAsync("a", "c", Gender.Male, DateTime.UtcNow, "feee", "fffeee");
             await this.service.AddAsync("a", "b", Gender.Male, DateTime.UtcNow, "feee", "fffeee");
 
-            var directors = this.service.GetAll<AllDirectorTestModel>().ToList();
+            var directors = (await this.service.GetAll<AllDirectorTestModel>()).ToList();
 
             Assert.Equal(expectedFirstName, directors[0].FirstName);
             Assert.Equal(expectedOtherFirstName, directors[0].LastName);

@@ -1,6 +1,7 @@
 ﻿namespace Imdb.Web.Controllers
 {
     using System.Diagnostics;
+    using System.Threading.Tasks;
 
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.ViewModels;
@@ -18,13 +19,13 @@
             this.actorsService = actorsService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             IndexViewModel topMovie = new IndexViewModel
             {
-                TopMovies = this.moviesService
+                TopMovies = await this.moviesService
                                 .GetTopMovies<TopMovieViewModel>(TopMoviesCount),
-                BornToday = this.actorsService
+                BornToday = await this.actorsService
                                 .GetBornToday<BornTodayActorViewModel>(ActorsBornToday),
             };
             return this.View(topMovie);

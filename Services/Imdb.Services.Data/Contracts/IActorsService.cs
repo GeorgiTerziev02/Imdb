@@ -10,18 +10,18 @@
     {
         Task<string> AddAsync(string firstName, string lastName, Gender gender, DateTime? born, string imageUrl, string description);
 
-        IEnumerable<T> GetAll<T>();
+        Task<IEnumerable<T>> GetAll<T>();
 
-        IEnumerable<T> GetAll<T>(int skip, int take);
+        Task<IEnumerable<T>> GetAll<T>(int skip, int take);
 
-        bool IsActorIdValid(string actorId);
+        Task<bool> IsActorIdValid(string actorId);
 
-        string GetName(string actorId);
+        Task<string> GetName(string actorId);
 
-        T GetById<T>(string actorId);
+        Task<T> GetById<T>(string actorId);
 
-        int GetTotalCount();
+        Task<int> GetTotalCount();
 
-        IEnumerable<T> GetBornToday<T>(int actorsBornToday);
+        Task<IEnumerable<T>> GetBornToday<T>(int actorsBornToday);
     }
 }

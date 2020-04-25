@@ -8,6 +8,7 @@
     using Imdb.Data.Models;
     using Imdb.Services.Data.Contracts;
     using Imdb.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
 
     public class LanguageService : ILanguageService
     {
@@ -29,13 +30,13 @@
             await this.languagesRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<T> GetAll<T>()
+        public async Task<IEnumerable<T>> GetAll<T>()
         {
-            return this.languagesRepository
+            return await this.languagesRepository
                 .AllAsNoTracking()
                 .OrderBy(x => x.Name)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
     }
 }

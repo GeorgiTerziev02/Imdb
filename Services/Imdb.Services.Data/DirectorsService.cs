@@ -9,6 +9,7 @@
     using Imdb.Data.Models;
     using Imdb.Data.Models.Enumerations;
     using Imdb.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
 
     public class DirectorsService : IDirectorsService
     {
@@ -37,23 +38,23 @@
             return director.Id;
         }
 
-        public IEnumerable<T> GetAll<T>()
+        public async Task<IEnumerable<T>> GetAll<T>()
         {
-            return this.directorsRepository
+            return await this.directorsRepository
                 .AllAsNoTracking()
                 .OrderBy(x => x.FirstName)
                 .ThenBy(x => x.LastName)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
 
-        public T GetById<T>(string directorId)
+        public async Task<T> GetById<T>(string directorId)
         {
-            return this.directorsRepository
+            return await this.directorsRepository
                 .AllAsNoTracking()
                 .Where(x => x.Id == directorId)
                 .To<T>()
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
     }
 }

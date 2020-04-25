@@ -3,11 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Imdb.Data.Common.Repositories;
     using Imdb.Data.Models;
     using Imdb.Services.Data.Contracts;
     using Imdb.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
 
     public class TvShowsService : ITvShowsService
     {
@@ -18,35 +20,67 @@
             this.tvshowsRepository = tvshowsRepository;
         }
 
-        public IEnumerable<T> GetAll<T>(int skip, int take, string sorting)
+        public async Task<IEnumerable<T>> GetAll<T>(int skip, int take, string sorting)
         {
-            var tvshows = this.tvshowsRepository
-                    .All()
-                    .Where(x => x.IsTvShow);
-
-            tvshows = sorting switch
+            return sorting switch
             {
-                "name_desc" => tvshows.OrderByDescending(m => m.Title),
-                "Date" => tvshows.OrderBy(m => m.ReleaseDate),
-                "date_desc" => tvshows.OrderByDescending(m => m.ReleaseDate),
-                "rating_desc" => tvshows.OrderByDescending(m => m.Votes.Average(x => x.Rating)),
-                "Rating" => tvshows.OrderBy(m => m.Votes.Average(x => x.Rating)),
-                _ => tvshows.OrderBy(m => m.Title),
+                "name_desc" => await this.tvshowsRepository
+                                   .All()
+                                   .Where(x => x.IsTvShow)
+                                   .OrderByDescending(x => x.Title)
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
+                "Date" => await this.tvshowsRepository
+                                   .All()
+                                   .Where(x => x.IsTvShow)
+                                   .OrderBy(x => x.ReleaseDate)
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
+                "date_desc" => await this.tvshowsRepository
+                                   .All()
+                                   .Where(x => x.IsTvShow)
+                                   .OrderByDescending(x => x.ReleaseDate)
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
+                "rating_desc" => await this.tvshowsRepository
+                                   .All()
+                                   .Where(x => x.IsTvShow)
+                                   .OrderByDescending(x => x.Votes.Average(x => x.Rating))
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
+                "Rating" => await this.tvshowsRepository
+                                   .All()
+                                   .Where(x => x.IsTvShow)
+                                   .OrderBy(x => x.Votes.Average(x => x.Rating))
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
+                _ => await this.tvshowsRepository
+                                   .All()
+                                   .Where(x => x.IsTvShow)
+                                   .OrderBy(x => x.Title)
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .To<T>()
+                                   .ToListAsync(),
             };
-
-            return tvshows
-                .Skip(skip)
-                .Take(take)
-                .To<T>()
-                .ToList();
         }
 
-        public int GetCount()
+        public async Task<int> GetCount()
         {
-            return this.tvshowsRepository
+            return await this.tvshowsRepository
                 .AllAsNoTracking()
                 .Where(x => x.IsTvShow)
-                .Count();
+                .CountAsync();
         }
     }
 }

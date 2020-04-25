@@ -6,6 +6,7 @@
     using Imdb.Data.Common.Repositories;
     using Imdb.Data.Models;
     using Imdb.Services.Data.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     public class VotesService : IVotesService
     {
@@ -37,27 +38,27 @@
             await this.votesRepository.SaveChangesAsync();
         }
 
-        public double MovieRating(string movieId)
+        public async Task<double> MovieRating(string movieId)
         {
-            return this.votesRepository
+            return await this.votesRepository
                 .AllAsNoTracking()
                 .Where(x => x.MovieId == movieId)
-                .Average(x => x.Rating);
+                .AverageAsync(x => x.Rating);
         }
 
-        public int MovieVotesCount(string movieId)
+        public async Task<int> MovieVotesCount(string movieId)
         {
-            return this.votesRepository
+            return await this.votesRepository
                 .AllAsNoTracking()
                 .Where(x => x.MovieId == movieId)
-                .Count();
+                .CountAsync();
         }
 
-        public int? GetUserRatingForMovie(string userId, string movieId)
+        public async Task<int?> GetUserRatingForMovie(string userId, string movieId)
         {
-            return this.votesRepository
+            return (await this.votesRepository
                 .AllAsNoTracking()
-                .FirstOrDefault(x => x.UserId == userId && x.MovieId == movieId)?.Rating;
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieId))?.Rating;
         }
     }
 }

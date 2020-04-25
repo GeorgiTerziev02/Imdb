@@ -34,7 +34,7 @@
 
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (!this.reviewsService.HasPermissionToPost(userId))
+            if (!(await this.reviewsService.HasPermissionToPost(userId)))
             {
                 this.TempData["Warning"] = GlobalConstants.PostWarning;
                 return this.Redirect($"/Movies/ById/{input.MovieId}");
@@ -54,7 +54,7 @@
                 return this.BadRequest();
             }
 
-            if (!this.reviewsService.ContainsReviewById(reviewId))
+            if (!(await this.reviewsService.ContainsReviewById(reviewId)))
             {
                 return this.BadRequest();
             }

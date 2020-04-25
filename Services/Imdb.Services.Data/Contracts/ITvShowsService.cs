@@ -1,12 +1,12 @@
 ﻿namespace Imdb.Services.Data.Contracts
 {
     using System.Collections.Generic;
-    using System.Text;
+    using System.Threading.Tasks;
 
     public interface ITvShowsService
     {
-        IEnumerable<T> GetAll<T>(int skip, int take, string sorting);
+        Task<IEnumerable<T>> GetAll<T>(int skip, int take, string sorting);
 
-        int GetCount();
+        Task<int> GetCount();
     }
 }

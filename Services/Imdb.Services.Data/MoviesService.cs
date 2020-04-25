@@ -10,6 +10,7 @@
     using Imdb.Data.Models;
     using Imdb.Services.Data.Contracts;
     using Imdb.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
 
     public class MoviesService : IMoviesService
     {
@@ -54,89 +55,123 @@
             return newMovie.Id;
         }
 
-        public bool ContainsActor(string movieId, string actorId)
+        public async Task<bool> ContainsActor(string movieId, string actorId)
         {
-            return this.movieActorsRepository
+            return (await this.movieActorsRepository
                 .AllAsNoTracking()
                 .Where(x => x.ActorId == actorId && x.MovieId == movieId)
-                .FirstOrDefault() != null;
+                .FirstOrDefaultAsync()) != null;
         }
 
-        public IEnumerable<T> Find<T>(string name)
+        public async Task<IEnumerable<T>> Find<T>(string name)
         {
-            return this.moviesRepository
+            return await this.moviesRepository
                 .AllAsNoTracking()
                 .Where(x => x.Title.StartsWith(name))
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<string> NamesSuggestion(string name)
+        public async Task<IEnumerable<string>> NamesSuggestion(string name)
         {
-            return this.moviesRepository
+            return await this.moviesRepository
                 .AllAsNoTracking()
                 .Where(x => x.Title.StartsWith(name))
                 .Select(x => x.Title)
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<T> GetAll<T>(int skip, int itemsPerPage, string sorting)
+        public async Task<IEnumerable<T>> GetAll<T>(int skip, int itemsPerPage, string sorting)
         {
-            var movies = this.moviesRepository
-                .All()
-                .Where(x => !x.IsTvShow);
-
-            movies = sorting switch
+            return sorting switch
             {
-                "name_desc" => movies.OrderByDescending(m => m.Title),
-                "Date" => movies.OrderBy(m => m.ReleaseDate),
-                "date_desc" => movies.OrderByDescending(m => m.ReleaseDate),
-                "rating_desc" => movies.OrderByDescending(
-                    m => m.Votes.Average(x => x.Rating)).ThenByDescending(m => m.Votes.Count()),
-                "Rating" => movies.OrderBy(m => m.Votes.Average(x => x.Rating)).ThenBy(m => m.Votes.Count()),
-                _ => movies.OrderBy(m => m.Title),
-            };
-            return movies
+                "name_desc" => await this.moviesRepository
+                .All()
+                .Where(x => !x.IsTvShow)
+                .OrderByDescending(m => m.Title)
                 .Skip(skip)
                 .Take(itemsPerPage)
                 .To<T>()
-                .ToList();
+                .ToListAsync(),
+                "Date" => await this.moviesRepository
+                .All()
+                .Where(x => !x.IsTvShow)
+                .OrderBy(m => m.ReleaseDate)
+                .Skip(skip)
+                .Take(itemsPerPage)
+                .To<T>()
+                .ToListAsync(),
+                "date_desc" => await this.moviesRepository
+                .All()
+                .Where(x => !x.IsTvShow)
+                .OrderByDescending(m => m.ReleaseDate)
+                .Skip(skip)
+                .Take(itemsPerPage)
+                .To<T>()
+                .ToListAsync(),
+                "rating_desc" => await this.moviesRepository
+                .All()
+                .Where(x => !x.IsTvShow)
+                .OrderByDescending(m => m.Votes.Average(x => x.Rating))
+                .ThenByDescending(m => m.Votes.Count())
+                .Skip(skip)
+                .Take(itemsPerPage)
+                .To<T>()
+                .ToListAsync(),
+                "Rating" => await this.moviesRepository
+                .All()
+                .Where(x => !x.IsTvShow)
+                .OrderBy(m => m.Votes.Average(x => x.Rating))
+                .ThenBy(m => m.Votes.Count())
+                .Skip(skip)
+                .Take(itemsPerPage)
+                .To<T>()
+                .ToListAsync(),
+                _ => await this.moviesRepository
+                .All()
+                .Where(x => !x.IsTvShow)
+                .OrderBy(m => m.Title)
+                .Skip(skip)
+                .Take(itemsPerPage)
+                .To<T>()
+                .ToListAsync(),
+            };
         }
 
-        public T GetById<T>(string id)
+        public async Task<T> GetById<T>(string id)
         {
-            return this.moviesRepository
+            return await this.moviesRepository
                 .All()
                 .Where(x => x.Id == id)
                 .To<T>()
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public IEnumerable<T> GetTopMovies<T>(int count)
+        public async Task<IEnumerable<T>> GetTopMovies<T>(int count)
         {
-            return this.moviesRepository
+            return await this.moviesRepository
                 .AllAsNoTracking()
                 .Where(x => !x.IsTvShow)
                 .OrderByDescending(x => x.Votes.Average(y => y.Rating))
                 .ThenByDescending(x => x.Votes.Count())
                 .Take(count)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
 
-        public int GetTotalCount()
+        public async Task<int> GetTotalCount()
         {
-            return this.moviesRepository
+            return await this.moviesRepository
                 .AllAsNoTracking()
                 .Where(x => !x.IsTvShow)
-                .Count();
+                .CountAsync();
         }
 
-        public bool IsMovieIdValid(string movieId)
+        public async Task<bool> IsMovieIdValid(string movieId)
         {
-            return this.moviesRepository
+            return await this.moviesRepository
                 .AllAsNoTracking()
-                .Any(x => x.Id == movieId);
+                .AnyAsync(x => x.Id == movieId);
         }
 
         public async Task UploadImages(string movieId, IEnumerable<string> imageUrls)
@@ -204,29 +239,47 @@
             return tvshow.Id;
         }
 
-        public IEnumerable<T> GetTop<T>(int count)
+        public async Task<IEnumerable<T>> GetTop<T>(int count)
         {
-            return this.moviesRepository
+            return await this.moviesRepository
                 .AllAsNoTracking()
                 .OrderByDescending(x => x.Votes.Average(y => y.Rating))
                 .ThenByDescending(x => x.Votes.Count())
                 .Take(count)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
 
         // TODO: Test
-        public IEnumerable<T> GetByGenreId<T>(int genreId)
+        public async Task<IEnumerable<T>> GetByGenreId<T>(int genreId)
         {
-            return this.moviesRepository
+            return await this.moviesRepository
                 .AllAsNoTracking()
                 .Where(x => x.Genres.Any(y => y.GenreId == genreId))
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task DeleteByIdAsync(string movieId)
         {
+            var movieActors = await this.movieActorsRepository.All().Where(x => x.MovieId == movieId).ToListAsync();
+
+            foreach (var movieActor in movieActors)
+            {
+                this.movieActorsRepository.Delete(movieActor);
+            }
+
+            await this.movieActorsRepository.SaveChangesAsync();
+
+            var movieImages = await this.movieImagesRepository.All().Where(x => x.MovieId == movieId).ToListAsync();
+
+            foreach (var movieImage in movieImages)
+            {
+                this.movieImagesRepository.Delete(movieImage);
+            }
+
+            await this.movieImagesRepository.SaveChangesAsync();
+
             var movie = this.moviesRepository
                 .All()
                 .FirstOrDefault(x => x.Id == movieId);
@@ -235,13 +288,13 @@
             await this.moviesRepository.SaveChangesAsync();
         }
 
-        public T GetMovieToEdit<T>(string movieId)
+        public async Task<T> GetMovieToEdit<T>(string movieId)
         {
-            return this.moviesRepository
+            return await this.moviesRepository
                 .All()
                 .Where(x => x.Id == movieId)
                 .To<T>()
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
         public async Task EditMovieAsync(

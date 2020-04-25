@@ -1,6 +1,7 @@
 ﻿namespace Imdb.Web.Controllers
 {
     using System.Security.Claims;
+    using System.Threading.Tasks;
 
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.ViewModels.Movies;
@@ -19,9 +20,9 @@
             this.genresService = genresService;
         }
 
-        public IActionResult All(string sorting, int page = 1)
+        public async Task<IActionResult> AllAsync(string sorting, int page = 1)
         {
-            var count = this.moviesService.GetTotalCount();
+            var count = await this.moviesService.GetTotalCount();
             if (page <= 0 || page > (((count - 1) / ItemsPerPage) + 1))
             {
                 page = 1;
@@ -29,7 +30,7 @@
 
             var allMovies = new ListAllMoviesViewModel
             {
-                Movies = this.moviesService
+                Movies = await this.moviesService
                        .GetAll<ListMovieViewModel>((page - 1) * ItemsPerPage, ItemsPerPage, sorting),
             };
 
@@ -45,9 +46,9 @@
             return this.View(allMovies);
         }
 
-        public IActionResult ById(string id)
+        public async Task<IActionResult> ByIdAsync(string id)
         {
-            var movie = this.moviesService.GetById<MovieInfoViewModel>(id);
+            var movie = await this.moviesService.GetById<MovieInfoViewModel>(id);
 
             if (movie == null)
             {
@@ -58,7 +59,7 @@
             if (this.User.Identity.IsAuthenticated)
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                movie.UserVote = this.votesService.GetUserRatingForMovie(userId, id);
+                movie.UserVote = await this.votesService.GetUserRatingForMovie(userId, id);
             }
             else
             {
@@ -71,9 +72,9 @@
             return this.View(movie);
         }
 
-        public IActionResult ByGenre(int genreId)
+        public async Task<IActionResult> ByGenre(int genreId)
         {
-            var genreName = this.genresService.GetGenreName(genreId);
+            var genreName = await this.genresService.GetGenreName(genreId);
 
             if (genreName == null)
             {
@@ -83,13 +84,13 @@
             var movies = new ListMoviesViewModel()
             {
                 GenreName = genreName,
-                Movies = this.moviesService.GetByGenreId<MovieByGenreViewModel>(genreId),
+                Movies = await this.moviesService.GetByGenreId<MovieByGenreViewModel>(genreId),
             };
 
             return this.View(movies);
         }
 
-        public IActionResult Results(string movieTitle)
+        public async Task<IActionResult> ResultsAsync(string movieTitle)
         {
             if (string.IsNullOrWhiteSpace(movieTitle))
             {
@@ -98,7 +99,7 @@
 
             var movies = new SearchListViewModel()
             {
-                Results = this.moviesService.Find<SearchMovieViewModel>(movieTitle),
+                Results = await this.moviesService.Find<SearchMovieViewModel>(movieTitle),
             };
 
             return this.View(movies);

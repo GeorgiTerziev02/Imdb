@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Imdb.Data.Common.Repositories;
     using Imdb.Data.Models;
@@ -26,7 +27,7 @@
         [InlineData("a")]
         [InlineData(null)]
         [InlineData("")]
-        public void GetAllShouldWorkCorrectly(string sorting)
+        public async Task GetAllShouldWorkCorrectlyAsync(string sorting)
         {
             var expectedTitle = "a";
             var expectedSecondTitle = "b";
@@ -41,7 +42,7 @@
                 }.AsQueryable<Movie>());
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
-            var tvshows = tvshowsService.GetAll<AllTvShowTestModel>(0, 2, sorting).ToList();
+            var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, sorting)).ToList();
             var actualCount = tvshows.Count();
 
             Assert.Equal(expectedCount, actualCount);
@@ -53,7 +54,7 @@
         [InlineData(2)]
         [InlineData(2444)]
         [InlineData(24342)]
-        public void GetAllShouldReturnLessThanWanted(int take)
+        public async Task GetAllShouldReturnLessThanWantedAsync(int take)
         {
             var expectedCount = 1;
             this.tvshowsRepository.Setup(x => x.All())
@@ -65,14 +66,14 @@
                 }.AsQueryable<Movie>());
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
-            var tvshows = tvshowsService.GetAll<AllTvShowTestModel>(1, take, string.Empty).ToList();
+            var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(1, take, string.Empty)).ToList();
             var actualCount = tvshows.Count();
 
             Assert.Equal(expectedCount, actualCount);
         }
 
         [Fact]
-        public void GetAllShouldOrderByTitleDesc()
+        public async Task GetAllShouldOrderByTitleDescAsync()
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "a";
@@ -85,14 +86,14 @@
                 }.AsQueryable<Movie>());
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
-            var tvshows = tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "name_desc").ToList();
+            var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "name_desc")).ToList();
 
             Assert.Equal(expectedTitle, tvshows[0].Title);
             Assert.Equal(expectedSecondTitle, tvshows[1].Title);
         }
 
         [Fact]
-        public void GetAllShouldOrderByDate()
+        public async Task GetAllShouldOrderByDateAsync()
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "a";
@@ -105,14 +106,14 @@
                 }.AsQueryable<Movie>());
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
-            var tvshows = tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "Date").ToList();
+            var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "Date")).ToList();
 
             Assert.Equal(expectedTitle, tvshows[0].Title);
             Assert.Equal(expectedSecondTitle, tvshows[1].Title);
         }
 
         [Fact]
-        public void GetAllShouldOrderByDateDesc()
+        public async Task GetAllShouldOrderByDateDescAsync()
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "a";
@@ -125,14 +126,14 @@
                 }.AsQueryable<Movie>());
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
-            var tvshows = tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "date_desc").ToList();
+            var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "date_desc")).ToList();
 
             Assert.Equal(expectedTitle, tvshows[0].Title);
             Assert.Equal(expectedSecondTitle, tvshows[1].Title);
         }
 
         [Fact]
-        public void GetAllShouldOrderByRating()
+        public async Task GetAllShouldOrderByRatingAsync()
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "a";
@@ -144,14 +145,14 @@
                 }.AsQueryable<Movie>());
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
-            var tvshows = tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "Rating").ToList();
+            var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "Rating")).ToList();
 
             Assert.Equal(expectedTitle, tvshows[0].Title);
             Assert.Equal(expectedSecondTitle, tvshows[1].Title);
         }
 
         [Fact]
-        public void GetAllShouldOrderByRatingDesc()
+        public async Task GetAllShouldOrderByRatingDescAsync()
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "a";
@@ -163,14 +164,14 @@
                 }.AsQueryable<Movie>());
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
-            var tvshows = tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "rating_desc").ToList();
+            var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "rating_desc")).ToList();
 
             Assert.Equal(expectedTitle, tvshows[0].Title);
             Assert.Equal(expectedSecondTitle, tvshows[1].Title);
         }
 
         [Fact]
-        public void GetCountShouldWorkCorrectly()
+        public async Task GetCountShouldWorkCorrectlyAsync()
         {
             var expectedCount = 2;
             this.tvshowsRepository.Setup(x => x.AllAsNoTracking())
@@ -183,13 +184,13 @@
 
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
-            var actualCount = tvshowsService.GetCount();
+            var actualCount = await tvshowsService.GetCount();
 
             Assert.Equal(expectedCount, actualCount);
         }
 
         [Fact]
-        public void GetCountShouldReturnZero()
+        public async Task GetCountShouldReturnZeroAsync()
         {
             var expectedCount = 0;
             this.tvshowsRepository.Setup(x => x.AllAsNoTracking())
@@ -202,7 +203,7 @@
 
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
-            var actualCount = tvshowsService.GetCount();
+            var actualCount = await tvshowsService.GetCount();
 
             Assert.Equal(expectedCount, actualCount);
         }

@@ -22,7 +22,7 @@
         [Authorize]
         public async Task<ActionResult<GenreMovieResponseModel>> Post(GenreMovieInputModel input)
         {
-            if (this.genresService.MovieContainsGenre(input.GenreId, input.MovieId))
+            if (await this.genresService.MovieContainsGenre(input.GenreId, input.MovieId))
             {
                 return this.BadRequest();
             }
@@ -30,7 +30,7 @@
             await this.genresService.AddGenreToMovie(input.GenreId, input.MovieId);
             var response = new GenreMovieResponseModel()
             {
-                GenreName = this.genresService.GetGenreName(input.GenreId),
+                GenreName = await this.genresService.GetGenreName(input.GenreId),
             };
 
             return response;

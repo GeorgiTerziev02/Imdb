@@ -50,17 +50,17 @@
                 await this.service.AddAsync("Random", "Random", Gender.Male, DateTime.UtcNow, "Random", "Random");
             }
 
-            var actual = this.service.GetTotalCount();
+            var actual = await this.service.GetTotalCount();
 
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void GetTotalCountShouldReturnZero()
+        public async Task GetTotalCountShouldReturnZero()
         {
             var expected = 0;
 
-            var actual = this.service.GetTotalCount();
+            var actual = await this.service.GetTotalCount();
 
             Assert.Equal(expected, actual);
         }
@@ -71,15 +71,15 @@
             var expected = "Adam Adams";
 
             var actorId = await this.service.AddAsync("Adam", "Adams", Gender.Male, DateTime.UtcNow, "Random", "Random");
-            var actual = this.service.GetName(actorId);
+            var actual = await this.service.GetName(actorId);
 
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void GetNameShouldReturnNull()
+        public async Task GetNameShouldReturnNull()
         {
-            var result = this.service.GetName("1");
+            var result = await this.service.GetName("1");
 
             Assert.Null(result);
         }
@@ -100,7 +100,7 @@
                 }
             }
 
-            var result = this.service.IsActorIdValid(id);
+            var result = await this.service.IsActorIdValid(id);
             Assert.True(result);
         }
 
@@ -115,7 +115,7 @@
                 await this.service.AddAsync("Adam", "Adams", Gender.Male, DateTime.UtcNow, "Random", "Random");
             }
 
-            var result = this.service.IsActorIdValid(id);
+            var result = await this.service.IsActorIdValid(id);
 
             Assert.False(result);
         }
@@ -127,7 +127,7 @@
             string expectedLastName = "Adams";
 
             var id = await this.service.AddAsync("Adam", "Adams", Gender.Male, DateTime.UtcNow, "Random", "Random");
-            var result = this.service.GetById<ActorByIdTestModel>(id);
+            var result = await this.service.GetById<ActorByIdTestModel>(id);
 
             Assert.Equal(id, result.Id);
             Assert.Equal(expectedFirstName, result.FirstName);
@@ -138,9 +138,9 @@
         [InlineData("")]
         [InlineData("1")]
         [InlineData(null)]
-        public void GetActorByIdShouldReturnNull(string id)
+        public async Task GetActorByIdShouldReturnNull(string id)
         {
-            var result = this.service.GetById<ActorByIdTestModel>(id);
+            var result = await this.service.GetById<ActorByIdTestModel>(id);
 
             Assert.Null(result);
         }
@@ -152,15 +152,15 @@
             await this.service.AddAsync("1", "1", Gender.Male, DateTime.UtcNow, "f", "fff");
             await this.service.AddAsync("1", "1", Gender.Male, DateTime.UtcNow, "f", "fff");
             await this.service.AddAsync("1", "1", Gender.Male, DateTime.UtcNow, "f", "fff");
-            var actors = this.service.GetAll<AllActorViewModel>().ToList();
+            var actors = await this.service.GetAll<AllActorViewModel>();
 
-            Assert.Equal(expected, actors.Count);
+            Assert.Equal(expected, actors.Count());
         }
 
         [Fact]
-        public void GetAllShouldReturnNull()
+        public async Task GetAllShouldReturnNull()
         {
-            var actors = this.service.GetAll<AllActorViewModel>();
+            var actors = await this.service.GetAll<AllActorViewModel>();
 
             Assert.Empty(actors);
         }
@@ -174,7 +174,7 @@
             await this.service.AddAsync("a", "c", Gender.Male, DateTime.UtcNow, "f", "fff");
             await this.service.AddAsync("a", "b", Gender.Male, DateTime.UtcNow, "f", "fff");
 
-            var actors = this.service.GetAll<AllActorViewModel>().ToList();
+            var actors = (await this.service.GetAll<AllActorViewModel>()).ToList();
 
             Assert.Equal(expectedFirstName, actors[0].FirstName);
             Assert.Equal(expectedOtherFirstName, actors[0].LastName);
@@ -192,7 +192,7 @@
                 await this.service.AddAsync($"a", $"a", Gender.Male, DateTime.UtcNow, "f", "fff");
             }
 
-            var actors = this.service.GetAll<AllActorViewModel>(5, 5).ToList();
+            var actors = await this.service.GetAll<AllActorViewModel>(5, 5);
 
             Assert.Equal(expectedCount, actors.Count());
         }
@@ -207,7 +207,7 @@
                 await this.service.AddAsync($"a", $"a", Gender.Male, DateTime.UtcNow, "f", "fff");
             }
 
-            var actors = this.service.GetAll<AllActorViewModel>(10, 5).ToList();
+            var actors = await this.service.GetAll<AllActorViewModel>(10, 5);
 
             Assert.Equal(expectedCount, actors.Count());
         }
@@ -218,7 +218,7 @@
             var expectedCount = 1;
 
             await this.service.AddAsync("b", "b", Gender.Male, DateTime.UtcNow, "f", "fff");
-            var result = this.service.GetBornToday<BornTodayTestModel>(1);
+            var result = await this.service.GetBornToday<BornTodayTestModel>(1);
             var actualCount = result.Count();
 
             Assert.Equal(expectedCount, actualCount);
@@ -229,7 +229,7 @@
         public async Task BornTodayShouldReturnEmptyList()
         {
             await this.service.AddAsync("b", "b", Gender.Male, DateTime.UtcNow.AddDays(-100), "f", "fff");
-            var result = this.service.GetBornToday<BornTodayTestModel>(1);
+            var result = await this.service.GetBornToday<BornTodayTestModel>(1);
 
             Assert.Empty(result);
         }
@@ -242,7 +242,7 @@
             await this.service.AddAsync("b", "b", Gender.Male, DateTime.UtcNow, "f", "fff");
             await this.service.AddAsync("b", "b", Gender.Male, DateTime.UtcNow, "f", "fff");
             await this.service.AddAsync("b", "b", Gender.Male, DateTime.UtcNow, "f", "fff");
-            var result = this.service.GetBornToday<BornTodayTestModel>(2);
+            var result = await this.service.GetBornToday<BornTodayTestModel>(2);
             var actualCount = result.Count();
 
             Assert.Equal(expectedCount, actualCount);

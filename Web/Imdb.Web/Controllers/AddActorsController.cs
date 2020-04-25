@@ -24,23 +24,23 @@
         [HttpPost]
         public async Task<ActionResult<ActorResponseModel>> Post(ActorInputModel input)
         {
-            if (!this.moviesService.IsMovieIdValid(input.MovieId))
+            if (!(await this.moviesService.IsMovieIdValid(input.MovieId)))
             {
                 return this.BadRequest();
             }
 
-            if (!this.actorsService.IsActorIdValid(input.ActorId))
+            if (!(await this.actorsService.IsActorIdValid(input.ActorId)))
             {
                 return this.BadRequest();
             }
 
-            if (this.moviesService.ContainsActor(input.MovieId, input.ActorId))
+            if (await this.moviesService.ContainsActor(input.MovieId, input.ActorId))
             {
                 return this.BadRequest();
             }
 
             await this.moviesService.AddActorAsync(input.MovieId, input.ActorId);
-            var actorName = this.actorsService.GetName(input.ActorId);
+            var actorName = await this.actorsService.GetName(input.ActorId);
 
             var response = new ActorResponseModel()
             {

@@ -7,18 +7,18 @@
     {
         Task AddToWatchlistAsync(string userId, string movieId);
 
-        bool WatchlistMovieExists(string userId, string movieId);
+        Task<bool> WatchlistMovieExists(string userId, string movieId);
 
         Task RemoveFromWatchlistAsync(string userId, string movieId);
 
-        IEnumerable<T> GetAll<T>(string userId, int skip, int take, string sorting);
+        Task<IEnumerable<T>> GetAll<T>(string userId, int skip, int take, string sorting);
 
-        int GetCount(string userId);
+        Task<int> GetCount(string userId);
 
-        int MostWatchedGenreId(string userId);
+        Task<int> MostWatchedGenreId(string userId);
 
-        IEnumerable<T> Recommend<T>(string userId, int genreId, int count);
+        Task<IEnumerable<T>> Recommend<T>(string userId, int genreId, int count);
 
-        IEnumerable<T> RandomRecommend<T>(string userId, int count);
+        Task<IEnumerable<T>> RandomRecommend<T>(string userId, int count);
     }
 }

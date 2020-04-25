@@ -5,13 +5,13 @@
 
     public interface IGenresService
     {
-        IEnumerable<T> GetAll<T>();
+        Task<IEnumerable<T>> GetAll<T>();
 
-        bool MovieContainsGenre(int genreId, string movieId);
+        Task<bool> MovieContainsGenre(int genreId, string movieId);
 
         Task AddGenreToMovie(int genreId, string movieId);
 
-        string GetGenreName(int genreId);
+        Task<string> GetGenreName(int genreId);
 
         Task<int?> RemoveGenreFromMovie(int id);
     }

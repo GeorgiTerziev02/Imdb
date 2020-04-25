@@ -8,6 +8,7 @@
     using Imdb.Data.Models;
     using Imdb.Services.Data.Contracts;
     using Imdb.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
 
     public class GenresService : IGenresService
     {
@@ -20,20 +21,20 @@
             this.movieGenreRepository = movieGenreRepository;
         }
 
-        public IEnumerable<T> GetAll<T>()
+        public async Task<IEnumerable<T>> GetAll<T>()
         {
-            return this.genresRepository
+            return await this.genresRepository
                 .AllAsNoTracking()
                 .OrderBy(x => x.Name)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
 
-        public string GetGenreName(int genreId)
+        public async Task<string> GetGenreName(int genreId)
         {
-            return this.genresRepository
+            return (await this.genresRepository
                 .AllAsNoTracking()
-                .FirstOrDefault(x => x.Id == genreId)?.Name;
+                .FirstOrDefaultAsync(x => x.Id == genreId))?.Name;
         }
 
         public async Task AddGenreToMovie(int genreId, string movieId)
@@ -48,11 +49,11 @@
             await this.movieGenreRepository.SaveChangesAsync();
         }
 
-        public bool MovieContainsGenre(int genreId, string movieId)
+        public async Task<bool> MovieContainsGenre(int genreId, string movieId)
         {
-            return this.movieGenreRepository
+            return (await this.movieGenreRepository
                 .AllAsNoTracking()
-                .FirstOrDefault(x => x.GenreId == genreId && x.MovieId == movieId) != null;
+                .FirstOrDefaultAsync(x => x.GenreId == genreId && x.MovieId == movieId)) != null;
         }
 
         public async Task<int?> RemoveGenreFromMovie(int id)

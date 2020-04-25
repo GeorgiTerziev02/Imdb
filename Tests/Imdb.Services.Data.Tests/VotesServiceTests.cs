@@ -31,7 +31,7 @@
                 await this.service.VoteAsync("1", "1", i % 11);
             }
 
-            var votesCount = this.service.MovieVotesCount("1");
+            var votesCount = await this.service.MovieVotesCount("1");
             Assert.Equal(1, votesCount);
         }
 
@@ -41,7 +41,7 @@
             var expected = 5;
 
             await this.service.VoteAsync("1", "1", 5);
-            var actual = this.service.GetUserRatingForMovie("1", "1");
+            var actual = await this.service.GetUserRatingForMovie("1", "1");
 
             Assert.Equal(expected, actual);
         }
@@ -54,7 +54,7 @@
             await this.service.VoteAsync("1", "1", 5);
             await this.service.VoteAsync("1", "1", 8);
 
-            var actualVote = this.service.GetUserRatingForMovie("1", "1");
+            var actualVote = await this.service.GetUserRatingForMovie("1", "1");
             Assert.Equal(expected, actualVote);
         }
 
@@ -73,7 +73,7 @@
             await this.service.VoteAsync("2", "2", secondRating);
             await this.service.VoteAsync("3", "2", thirdRating);
 
-            var actualRating = this.service.MovieRating("2");
+            var actualRating = await this.service.MovieRating("2");
 
             Assert.Equal(expectedRating, actualRating);
         }
@@ -89,7 +89,7 @@
                 await this.service.VoteAsync("2", "1", (i + 5) % 11);
             }
 
-            var actual = this.service.MovieVotesCount("1");
+            var actual = await this.service.MovieVotesCount("1");
 
             Assert.Equal(expected, actual);
         }

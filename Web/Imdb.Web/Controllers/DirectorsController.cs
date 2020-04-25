@@ -1,5 +1,7 @@
 ﻿namespace Imdb.Web.Controllers
 {
+    using System.Threading.Tasks;
+
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.ViewModels.Directors;
     using Microsoft.AspNetCore.Mvc;
@@ -13,9 +15,9 @@
             this.directorsService = directorsService;
         }
 
-        public IActionResult ById(string directorId)
+        public async Task<IActionResult> ById(string directorId)
         {
-            var director = this.directorsService.GetById<DirectorInfoViewModel>(directorId);
+            var director = await this.directorsService.GetById<DirectorInfoViewModel>(directorId);
 
             if (director == null)
             {

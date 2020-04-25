@@ -35,8 +35,8 @@
             await this.votesService.VoteAsync(userId, input.MovieId, input.Rating);
             var response = new MovieVoteResponseModel()
             {
-                Rating = this.votesService.MovieRating(input.MovieId),
-                VotesCount = this.votesService.MovieVotesCount(input.MovieId),
+                Rating = await this.votesService.MovieRating(input.MovieId),
+                VotesCount = await this.votesService.MovieVotesCount(input.MovieId),
                 UserVote = input.Rating,
             };
 
