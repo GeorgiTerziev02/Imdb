@@ -9,6 +9,7 @@
     using Imdb.Data.Models;
     using Imdb.Services.Data.Tests.TestModels.TvShowsService;
     using Imdb.Services.Mapping;
+    using MockQueryable.Moq;
     using Moq;
     using Xunit;
 
@@ -33,13 +34,15 @@
             var expectedSecondTitle = "b";
 
             var expectedCount = 2;
-            this.tvshowsRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+            var tvshowsEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = true, },
                     new Movie() { Id = "2", Title = "b", IsTvShow = true, },
                     new Movie() { Id = "3", Title = "c", IsTvShow = false, },
-                }.AsQueryable<Movie>());
+                };
+            var tvshowsMock = tvshowsEntities.AsQueryable().BuildMock();
+            this.tvshowsRepository.Setup(x => x.All())
+                .Returns(tvshowsMock.Object);
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
             var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, sorting)).ToList();
@@ -57,13 +60,17 @@
         public async Task GetAllShouldReturnLessThanWantedAsync(int take)
         {
             var expectedCount = 1;
-            this.tvshowsRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var tvshowsEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = true, },
                     new Movie() { Id = "2", Title = "b", IsTvShow = true, },
                     new Movie() { Id = "3", Title = "c", IsTvShow = false, },
-                }.AsQueryable<Movie>());
+                };
+            var tvshowsMock = tvshowsEntities.AsQueryable().BuildMock();
+
+            this.tvshowsRepository.Setup(x => x.All())
+                .Returns(tvshowsMock.Object);
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
             var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(1, take, string.Empty)).ToList();
@@ -77,13 +84,16 @@
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "a";
-            this.tvshowsRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var tvshowsEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = true, },
                     new Movie() { Id = "2", Title = "b", IsTvShow = true, },
                     new Movie() { Id = "3", Title = "c", IsTvShow = false, },
-                }.AsQueryable<Movie>());
+                };
+            var tvshowsMock = tvshowsEntities.AsQueryable().BuildMock();
+            this.tvshowsRepository.Setup(x => x.All())
+                .Returns(tvshowsMock.Object);
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
             var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "name_desc")).ToList();
@@ -97,13 +107,17 @@
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "a";
-            this.tvshowsRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var tvshowsEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = true, ReleaseDate = DateTime.UtcNow.AddDays(-1), },
                     new Movie() { Id = "2", Title = "b", IsTvShow = true, ReleaseDate = DateTime.UtcNow.AddDays(-4), },
                     new Movie() { Id = "3", Title = "c", IsTvShow = false, },
-                }.AsQueryable<Movie>());
+                };
+
+            var tvshowsMock = tvshowsEntities.AsQueryable().BuildMock();
+            this.tvshowsRepository.Setup(x => x.All())
+                .Returns(tvshowsMock.Object);
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
             var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "Date")).ToList();
@@ -117,13 +131,16 @@
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "a";
-            this.tvshowsRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var tvshowEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = true, ReleaseDate = DateTime.UtcNow.AddDays(-4), },
                     new Movie() { Id = "2", Title = "b", IsTvShow = true, ReleaseDate = DateTime.UtcNow.AddDays(-1), },
                     new Movie() { Id = "3", Title = "c", IsTvShow = false, },
-                }.AsQueryable<Movie>());
+                };
+            var tvshowsMock = tvshowEntities.AsQueryable().BuildMock();
+            this.tvshowsRepository.Setup(x => x.All())
+                .Returns(tvshowsMock.Object);
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
             var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "date_desc")).ToList();
@@ -137,12 +154,16 @@
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "a";
-            this.tvshowsRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var tvshowsEntities = new List<Movie>()
                 {
                     new Movie() { Title = "a", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 4, } } },
                     new Movie() { Title = "b", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 3, } } },
-                }.AsQueryable<Movie>());
+                };
+
+            var tvshowsMock = tvshowsEntities.AsQueryable().BuildMock();
+            this.tvshowsRepository.Setup(x => x.All())
+                .Returns(tvshowsMock.Object);
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
             var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "Rating")).ToList();
@@ -156,12 +177,15 @@
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "a";
-            this.tvshowsRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var tvshowsEntities = new List<Movie>()
                 {
                     new Movie() { Title = "a", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 4, } } },
                     new Movie() { Title = "b", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 6, } } },
-                }.AsQueryable<Movie>());
+                };
+            var tvshowsMock = tvshowsEntities.AsQueryable().BuildMock();
+            this.tvshowsRepository.Setup(x => x.All())
+                .Returns(tvshowsMock.Object);
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
             var tvshows = (await tvshowsService.GetAll<AllTvShowTestModel>(0, 2, "rating_desc")).ToList();
@@ -174,13 +198,17 @@
         public async Task GetCountShouldWorkCorrectlyAsync()
         {
             var expectedCount = 2;
-            this.tvshowsRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+
+            var tvshowsEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", IsTvShow = true, },
                     new Movie() { Id = "2", IsTvShow = true, },
                     new Movie() { Id = "3", IsTvShow = false, },
-                }.AsQueryable<Movie>());
+                };
+
+            var tvshowsMock = tvshowsEntities.AsQueryable().BuildMock();
+            this.tvshowsRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(tvshowsMock.Object);
 
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 
@@ -193,13 +221,17 @@
         public async Task GetCountShouldReturnZeroAsync()
         {
             var expectedCount = 0;
-            this.tvshowsRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+
+            var tvshowsEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", IsTvShow = false, },
                     new Movie() { Id = "2", IsTvShow = false, },
                     new Movie() { Id = "3", IsTvShow = false, },
-                }.AsQueryable<Movie>());
+                };
+
+            var tvshowsMock = tvshowsEntities.AsQueryable().BuildMock();
+            this.tvshowsRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(tvshowsMock.Object);
 
             var tvshowsService = new TvShowsService(this.tvshowsRepository.Object);
 

@@ -13,6 +13,7 @@
     using Imdb.Services.Mapping;
 
     using Microsoft.EntityFrameworkCore;
+    using MockQueryable.Moq;
     using Moq;
     using Xunit;
 
@@ -87,12 +88,15 @@
         [InlineData("1", "2")]
         public async Task MovieContainsActorShouldReturnTrueAsync(string movieId, string actorId)
         {
-            this.movieActorRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<MovieActor>()
+            var movieActors = new List<MovieActor>()
                     {
                             new MovieActor() { MovieId = "pop", ActorId = "fff", },
                             new MovieActor() { MovieId = "1", ActorId = "2", },
-                    }.AsQueryable<MovieActor>());
+                    }.AsQueryable<MovieActor>();
+
+            var movieActorsMock = movieActors.AsQueryable().BuildMock();
+            this.movieActorRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(movieActorsMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -110,12 +114,15 @@
         [InlineData("", "dfs")]
         public async Task MovieContainsActorShouldReturnFalseAsync(string movieId, string actorId)
         {
-            this.movieActorRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<MovieActor>()
+            var movieActors = new List<MovieActor>()
                     {
                             new MovieActor() { MovieId = "pop", ActorId = "fff", },
                             new MovieActor() { MovieId = "1", ActorId = "2", },
-                    }.AsQueryable<MovieActor>());
+                    }.AsQueryable<MovieActor>();
+
+            var movieActorsMock = movieActors.AsQueryable().BuildMock();
+            this.movieActorRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(movieActorsMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -135,13 +142,17 @@
         public async Task FindShouldWorkCorrectlyAsync(string word)
         {
             int expectedCount = 1;
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+
+            var movies = new List<Movie>()
                     {
                             new Movie() { Id = "1", Title = "abc", },
                             new Movie() { Id = "2", Title = "bca", },
                             new Movie() { Id = "3", Title = "momo", },
-                    }.AsQueryable<Movie>());
+                    };
+
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -158,13 +169,16 @@
         [InlineData("rewrgegege")]
         public async Task FindShouldReturnEmptyAsync(string word)
         {
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+            var movies = new List<Movie>()
                     {
                             new Movie() { Id = "1", Title = "abc", },
                             new Movie() { Id = "2", Title = "bca", },
                             new Movie() { Id = "3", Title = "momo", },
-                    }.AsQueryable<Movie>());
+                    };
+
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -187,13 +201,17 @@
         public async Task NameSuggestionShouldWorkCorrectlyAsync(string word)
         {
             int expectedCount = 1;
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+
+            var movies = new List<Movie>()
                     {
                             new Movie() { Id = "1", Title = "abc", },
                             new Movie() { Id = "2", Title = "bca", },
                             new Movie() { Id = "3", Title = "momo", },
-                    }.AsQueryable<Movie>());
+                    };
+
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -210,13 +228,16 @@
         [InlineData("rewergergergegege")]
         public async Task NameSuggestionShouldReturnEmptyAsync(string word)
         {
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+            var movies = new List<Movie>()
                     {
                             new Movie() { Id = "1", Title = "abc", },
                             new Movie() { Id = "2", Title = "bca", },
                             new Movie() { Id = "3", Title = "momo", },
-                    }.AsQueryable<Movie>());
+                    };
+
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -235,14 +256,18 @@
             var expectedTitle = "a";
             var expectedSecondTitle = "c";
             var expectedCount = 2;
-            this.movieRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = false, },
                     new Movie() { Id = "2", Title = "b", IsTvShow = true, },
                     new Movie() { Id = "4", Title = "d", IsTvShow = false, },
                     new Movie() { Id = "3", Title = "c", IsTvShow = false, },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.All())
+                .Returns(moviesMock.Object);
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -258,14 +283,18 @@
         public async Task GetAllShouldReturnOnlyMoviesAsync()
         {
             var expectedCount = 1;
-            this.movieRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = true, },
                     new Movie() { Id = "2", Title = "b", IsTvShow = true, },
                     new Movie() { Id = "4", Title = "d", IsTvShow = true, },
                     new Movie() { Id = "3", Title = "c", IsTvShow = false, },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.All())
+                .Returns(moviesMock.Object);
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -281,13 +310,17 @@
         public async Task GetAllShouldReturnLessThanWantedAsync(int take)
         {
             var expectedCount = 2;
-            this.movieRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = false, },
                     new Movie() { Id = "2", Title = "b", IsTvShow = false, },
                     new Movie() { Id = "3", Title = "c", IsTvShow = true, },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.All())
+                .Returns(moviesMock.Object);
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -304,14 +337,18 @@
         {
             var expectedTitle = "d";
             var expectedSecondTitle = "c";
-            this.movieRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = false, },
                     new Movie() { Id = "2", Title = "b", IsTvShow = true, },
                     new Movie() { Id = "4", Title = "d", IsTvShow = false, },
                     new Movie() { Id = "3", Title = "c", IsTvShow = false, },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.All())
+                .Returns(moviesMock.Object);
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -326,14 +363,18 @@
         {
             var expectedTitle = "d";
             var expectedSecondTitle = "c";
-            this.movieRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = false, ReleaseDate = DateTime.UtcNow.AddDays(100), },
                     new Movie() { Id = "2", Title = "b", IsTvShow = true, ReleaseDate = DateTime.UtcNow, },
                     new Movie() { Id = "3", Title = "c", IsTvShow = false, ReleaseDate = DateTime.UtcNow.AddDays(-100), },
                     new Movie() { Id = "4", Title = "d", IsTvShow = false, ReleaseDate = DateTime.UtcNow.AddDays(-200), },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.All())
+                .Returns(moviesMock.Object);
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -348,14 +389,18 @@
         {
             var expectedTitle = "d";
             var expectedSecondTitle = "c";
-            this.movieRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Id = "1", Title = "a", IsTvShow = false, ReleaseDate = DateTime.UtcNow.AddDays(-100), },
                     new Movie() { Id = "2", Title = "b", IsTvShow = true, ReleaseDate = DateTime.UtcNow, },
                     new Movie() { Id = "3", Title = "c", IsTvShow = false, ReleaseDate = DateTime.UtcNow.AddDays(100), },
                     new Movie() { Id = "4", Title = "d", IsTvShow = false, ReleaseDate = DateTime.UtcNow.AddDays(200), },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.All())
+                .Returns(moviesMock.Object);
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -370,14 +415,18 @@
         {
             var expectedTitle = "d";
             var expectedSecondTitle = "c";
-            this.movieRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Title = "a", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 4, }, } },
                     new Movie() { Title = "b", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 3, }, } },
                     new Movie() { Title = "c", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 2, }, } },
                     new Movie() { Title = "d", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 1, }, } },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.All())
+                .Returns(moviesMock.Object);
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -392,14 +441,18 @@
         {
             var expectedTitle = "d";
             var expectedSecondTitle = "c";
-            this.movieRepository.Setup(x => x.All())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Title = "a", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 7, }, } },
                     new Movie() { Title = "b", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 8, }, } },
                     new Movie() { Title = "c", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 9, }, } },
                     new Movie() { Title = "d", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 10, }, } },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.All())
+                .Returns(moviesMock.Object);
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -416,13 +469,17 @@
         public async Task GetByIdShouldWorkCorrectlyAsync(string id)
         {
             AutoMapperConfig.RegisterMappings(typeof(MovieByIdTestModel).Assembly);
-            this.movieRepository.Setup(x => x.All())
-                    .Returns(new List<Movie>()
+
+            var movies = new List<Movie>()
                     {
                             new Movie() { Id = "4" },
                             new Movie() { Id = "5" },
                             new Movie() { Id = "6" },
-                    }.AsQueryable<Movie>());
+                    };
+
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.All())
+                    .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -435,40 +492,47 @@
         [InlineData(null)]
         [InlineData("fasdgadgaergseg")]
         [InlineData("11")]
-        public void GetByIdShouldReturnNull(string id)
+        public async Task GetByIdShouldReturnNullAsync(string id)
         {
-            this.movieRepository.Setup(x => x.All())
-                    .Returns(new List<Movie>()
+            var movies = new List<Movie>()
                     {
-                            new Movie() { Id = "1" },
-                            new Movie() { Id = "2" },
-                            new Movie() { Id = "3" },
-                    }.AsQueryable<Movie>());
+                            new Movie() { Id = "4" },
+                            new Movie() { Id = "5" },
+                            new Movie() { Id = "6" },
+                    };
+
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.All())
+                    .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var result = movieService.GetById<MovieByIdTestModel>(id);
+            var result = await movieService.GetById<MovieByIdTestModel>(id);
             Assert.Null(result);
         }
 
         [Fact]
-        public void GetTopMoviesShouldWorkCorrectly()
+        public async Task GetTopMoviesShouldWorkCorrectlyAsync()
         {
             var expectedCount = 2;
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Title = "a", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 4, } } },
                     new Movie() { Title = "c", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 6, } } },
                     new Movie() { Title = "d", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 3, } } },
                     new Movie() { Title = "b", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 7, } } },
                     new Movie() { Title = "f", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 9, } } },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
-            var movies = movieService.GetTopMovies<TopMovieTestModel>(2);
-            var actualCount = 2;
+            var movies = await movieService.GetTopMovies<TopMovieTestModel>(2);
+            var actualCount = movies.Count();
             Assert.Equal(expectedCount, actualCount);
         }
 
@@ -478,15 +542,18 @@
         [InlineData(10)]
         public async Task GetTopMoviesShouldReturnEmptyAsync(int count)
         {
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Title = "a", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 4, } } },
                     new Movie() { Title = "c", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 6, } } },
                     new Movie() { Title = "d", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 3, } } },
                     new Movie() { Title = "b", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 7, } } },
                     new Movie() { Title = "f", IsTvShow = true, Votes = new List<Vote>() { new Vote() { Rating = 9, } } },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -500,15 +567,19 @@
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "d";
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie() { Title = "a", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 4, } } },
                     new Movie() { Title = "c", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 6, } } },
                     new Movie() { Title = "d", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 9, } } },
                     new Movie() { Title = "b", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 10, } } },
                     new Movie() { Title = "f", IsTvShow = false, Votes = new List<Vote>() { new Vote() { Rating = 7, } } },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -522,8 +593,8 @@
         public async Task GetTopMovieShouldOrderByVotesCountAsync()
         {
             var expectedTitle = "a";
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie()
                     {
@@ -537,7 +608,11 @@
                         IsTvShow = false,
                         Votes = new List<Vote>() { new Vote() { Rating = 9, } },
                     },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -550,13 +625,17 @@
         public async Task GetTotalCountShouldWorkCorrectlyAsync()
         {
             int expectedCount = 3;
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                     {
                             new Movie() { Id = "1", IsTvShow = false, },
                             new Movie() { Id = "2", IsTvShow = false, },
                             new Movie() { Id = "3", IsTvShow = false, },
-                    }.AsQueryable<Movie>());
+                    };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -568,13 +647,17 @@
         public async Task GetTotalCountShouldReturnZeroAsync()
         {
             int expectedCount = 0;
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                     {
                             new Movie() { Id = "1", IsTvShow = true, },
                             new Movie() { Id = "2", IsTvShow = true, },
                             new Movie() { Id = "3", IsTvShow = true, },
-                    }.AsQueryable<Movie>());
+                    };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -588,13 +671,16 @@
         [InlineData("3")]
         public async Task IsMovieValidShouldReturnTrueAsync(string id)
         {
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+            var movies = new List<Movie>()
                     {
                             new Movie() { Id = "1" },
                             new Movie() { Id = "2" },
                             new Movie() { Id = "3" },
-                    }.AsQueryable<Movie>());
+                    };
+
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -608,13 +694,16 @@
         [InlineData(null)]
         public async Task IsMovieValidShouldReturnFalseAsync(string id)
         {
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+            var movies = new List<Movie>()
                     {
                             new Movie() { Id = "1" },
                             new Movie() { Id = "2" },
                             new Movie() { Id = "3" },
-                    }.AsQueryable<Movie>());
+                    };
+
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -720,8 +809,8 @@
             var expectedCount = 2;
             var expectedTitle = "a";
             var expectedSecondTitle = "c";
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie()
                     {
@@ -741,7 +830,11 @@
                         IsTvShow = true,
                         Votes = new List<Vote>() { new Vote() { Rating = 4, } },
                     },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -757,8 +850,8 @@
         public async Task GetTopShouldReturnTvShowsAsync()
         {
             var expectedCount = 2;
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie()
                     {
@@ -772,7 +865,11 @@
                         IsTvShow = true,
                         Votes = new List<Vote>() { new Vote() { Rating = 9, } },
                     },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -787,8 +884,8 @@
         {
             var expectedTitle = "c";
             var expectedSecondTitle = "a";
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie()
                     {
@@ -808,7 +905,11 @@
                         IsTvShow = true,
                         Votes = new List<Vote>() { new Vote() { Rating = 4, } },
                     },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -823,8 +924,8 @@
         {
             var expectedTitle = "c";
             var expectedSecondTitle = "a";
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+
+            var moviesEntities = new List<Movie>()
                 {
                     new Movie()
                     {
@@ -844,7 +945,11 @@
                         IsTvShow = true,
                         Votes = new List<Vote>() { new Vote() { Rating = 4, } },
                     },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = moviesEntities.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(moviesMock.Object);
             var movieService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -858,14 +963,18 @@
         public async Task GetByGenreIdShouldWorkCorrectlyAsync()
         {
             var expectedCount = 3;
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+
+            var movies = new List<Movie>()
                 {
                     new Movie() { Id = "1", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 1, } } },
                     new Movie() { Id = "2", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 2, }, new MovieGenre() { GenreId = 1, } } },
                     new Movie() { Id = "4", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 2, } } },
                     new Movie() { Id = "3", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 1, } } },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(moviesMock.Object);
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 
@@ -881,14 +990,17 @@
         [InlineData(33330)]
         public async Task GetByGenreIdShouldReturnEmptyAsync(int id)
         {
-            this.movieRepository.Setup(x => x.AllAsNoTracking())
-                .Returns(new List<Movie>()
+            var movies = new List<Movie>()
                 {
                     new Movie() { Id = "1", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 1, } } },
                     new Movie() { Id = "2", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 1, } } },
                     new Movie() { Id = "4", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 2, } } },
                     new Movie() { Id = "3", Genres = new List<MovieGenre>() { new MovieGenre() { GenreId = 1, } } },
-                }.AsQueryable<Movie>());
+                };
+
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.movieRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(moviesMock.Object);
             var moviesService = new MoviesService(
                 this.movieRepository.Object, this.movieActorRepository.Object, this.movieImageRepository.Object);
 

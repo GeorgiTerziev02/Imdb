@@ -101,7 +101,7 @@
         public async Task GetUserVoteShouldReturnNull(string userId)
         {
             await this.service.VoteAsync("1", "1", 10);
-            var actual = this.service.GetUserRatingForMovie(userId, "1");
+            var actual = await this.service.GetUserRatingForMovie(userId, "1");
 
             Assert.Null(actual);
         }

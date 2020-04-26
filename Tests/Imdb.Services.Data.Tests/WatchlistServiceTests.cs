@@ -12,6 +12,7 @@
     using Imdb.Services.Data.Tests.TestModels.WatchlistService;
     using Imdb.Services.Mapping;
     using Microsoft.EntityFrameworkCore;
+    using MockQueryable.Moq;
     using Moq;
     using Xunit;
 
@@ -69,14 +70,14 @@
         public async Task GetAllShouldWorkCorrectlyAsync()
         {
             var expectedCount = 2;
-            this.watchlistsRepository.Setup(x => x.All())
-                    .Returns(new List<UserMovie>()
-                    {
-                            new UserMovie() { UserId = "1", MovieId = "a" },
-                            new UserMovie() { UserId = "2", MovieId = "b", Movie = new Movie() { Title = "p", } },
-                            new UserMovie() { UserId = "2", MovieId = "c", Movie = new Movie() { Title = "d", } },
-                    }.AsQueryable<UserMovie>());
-            var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var repository = new EfRepository<UserMovie>(new ApplicationDbContext(options.Options));
+            var service = new WatchlistService(repository, this.moviesRepository.Object);
+            await repository.AddAsync(new UserMovie() { UserId = "1", MovieId = "a" });
+            await repository.AddAsync(new UserMovie() { UserId = "2", MovieId = "b", Movie = new Movie() { Title = "p", } });
+            await repository.AddAsync(new UserMovie() { UserId = "2", MovieId = "c", Movie = new Movie() { Title = "d", } });
+            await repository.SaveChangesAsync();
 
             var result = await service.GetAll<GetAllMovieTestModel>("2", 0, 2, "Name");
             var actualCount = result.Count();
@@ -90,14 +91,14 @@
         [InlineData(null)]
         public async Task GetAllShouldWorkReturnEmptyAsync(string userId)
         {
-            this.watchlistsRepository.Setup(x => x.All())
-                    .Returns(new List<UserMovie>()
-                    {
-                            new UserMovie() { UserId = "1", MovieId = "a" },
-                            new UserMovie() { UserId = "2", MovieId = "b" },
-                            new UserMovie() { UserId = "2", MovieId = "c" },
-                    }.AsQueryable<UserMovie>());
-            var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var repository = new EfRepository<UserMovie>(new ApplicationDbContext(options.Options));
+            var service = new WatchlistService(repository, this.moviesRepository.Object);
+            await repository.AddAsync(new UserMovie() { UserId = "1", MovieId = "a" });
+            await repository.AddAsync(new UserMovie() { UserId = "2", MovieId = "b", Movie = new Movie() { Title = "p", } });
+            await repository.AddAsync(new UserMovie() { UserId = "2", MovieId = "c", Movie = new Movie() { Title = "d", } });
+            await repository.SaveChangesAsync();
 
             var result = await service.GetAll<GetAllMovieTestModel>(userId, 0, 2, "Name");
 
@@ -109,15 +110,15 @@
         {
             var expectedTitle = "p";
             var expectedSecondTitle = "d";
-            this.watchlistsRepository.Setup(x => x.All())
-                    .Returns(new List<UserMovie>()
-                    {
-                            new UserMovie() { UserId = "1", MovieId = "a" },
-                            new UserMovie() { UserId = "2", MovieId = "b", Movie = new Movie() { Title = "p", } },
-                            new UserMovie() { UserId = "2", MovieId = "c", Movie = new Movie() { Title = "d", } },
-                            new UserMovie() { UserId = "2", MovieId = "r", Movie = new Movie() { Title = "a", } },
-                    }.AsQueryable<UserMovie>());
-            var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+    .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var repository = new EfRepository<UserMovie>(new ApplicationDbContext(options.Options));
+            var service = new WatchlistService(repository, this.moviesRepository.Object);
+            await repository.AddAsync(new UserMovie() { UserId = "1", MovieId = "a" });
+            await repository.AddAsync(new UserMovie() { UserId = "2", MovieId = "b", Movie = new Movie() { Title = "p", } });
+            await repository.AddAsync(new UserMovie() { UserId = "2", MovieId = "c", Movie = new Movie() { Title = "d", } });
+            await repository.AddAsync(new UserMovie() { UserId = "2", MovieId = "r", Movie = new Movie() { Title = "a", } });
+            await repository.SaveChangesAsync();
 
             var result = (await service.GetAll<GetAllMovieTestModel>("2", 0, 3, "name_desc")).ToList();
 
@@ -130,8 +131,8 @@
         {
             var expectedTitle = "c";
             var expectedSecondTitle = "b";
-            this.watchlistsRepository.Setup(x => x.All())
-                    .Returns(new List<UserMovie>()
+
+            var userMovies = new List<UserMovie>()
                     {
                             new UserMovie()
                             {
@@ -168,7 +169,10 @@
                                     ReleaseDate = DateTime.UtcNow.AddDays(-300),
                                 },
                             },
-                    }.AsQueryable<UserMovie>());
+                    };
+            var userMoviesMoq = userMovies.AsQueryable().BuildMock();
+            this.watchlistsRepository.Setup(x => x.All())
+                    .Returns(userMoviesMoq.Object);
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var result = (await service.GetAll<GetAllMovieTestModel>("2", 0, 3, "Date")).ToList();
@@ -182,8 +186,8 @@
         {
             var expectedTitle = "a";
             var expectedSecondTitle = "b";
-            this.watchlistsRepository.Setup(x => x.All())
-                    .Returns(new List<UserMovie>()
+
+            var userMovies = new List<UserMovie>()
                     {
                             new UserMovie()
                             {
@@ -220,7 +224,10 @@
                                     ReleaseDate = DateTime.UtcNow.AddDays(-300),
                                 },
                             },
-                    }.AsQueryable<UserMovie>());
+                    };
+            var userMoviesMock = userMovies.AsQueryable().BuildMock();
+            this.watchlistsRepository.Setup(x => x.All())
+                    .Returns(userMoviesMock.Object);
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var result = (await service.GetAll<GetAllMovieTestModel>("2", 0, 3, "date_desc")).ToList();
@@ -234,8 +241,8 @@
         {
             var expectedTitle = "a";
             var expectedSecondTitle = "c";
-            this.watchlistsRepository.Setup(x => x.All())
-                    .Returns(new List<UserMovie>()
+
+            var userMovies = new List<UserMovie>()
                     {
                             new UserMovie()
                             {
@@ -281,7 +288,10 @@
                                     },
                                 },
                             },
-                    }.AsQueryable<UserMovie>());
+                    };
+            var userMoviesMock = userMovies.AsQueryable().BuildMock();
+            this.watchlistsRepository.Setup(x => x.All())
+                    .Returns(userMoviesMock.Object);
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var result = (await service.GetAll<GetAllMovieTestModel>("2", 0, 3, "Rating")).ToList();
@@ -295,8 +305,8 @@
         {
             var expectedTitle = "b";
             var expectedSecondTitle = "c";
-            this.watchlistsRepository.Setup(x => x.All())
-                    .Returns(new List<UserMovie>()
+
+            var userMovies = new List<UserMovie>()
                     {
                             new UserMovie()
                             {
@@ -342,7 +352,10 @@
                                     },
                                 },
                             },
-                    }.AsQueryable<UserMovie>());
+                    };
+            var userMoviesMock = userMovies.AsQueryable().BuildMock();
+            this.watchlistsRepository.Setup(x => x.All())
+                    .Returns(userMoviesMock.Object);
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var result = (await service.GetAll<GetAllMovieTestModel>("2", 0, 3, "rating_desc")).ToList();
@@ -376,13 +389,15 @@
         [InlineData("3", "c")]
         public async Task WatchlistMovieExistsShouldReturnTrueAsync(string userId, string movieId)
         {
-            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<UserMovie>()
+            var userMovies = new List<UserMovie>()
                     {
                             new UserMovie() { UserId = "1", MovieId = "a" },
                             new UserMovie() { UserId = "2", MovieId = "b" },
                             new UserMovie() { UserId = "3", MovieId = "c" },
-                    }.AsQueryable<UserMovie>());
+                    };
+            var userMoviesMock = userMovies.AsQueryable().BuildMock();
+            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(userMoviesMock.Object);
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var result = await service.WatchlistMovieExists(userId, movieId);
@@ -398,13 +413,15 @@
         [InlineData("", null)]
         public async Task WatchlistMovieExistsShouldReturnFalseAsync(string userId, string movieId)
         {
-            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<UserMovie>()
+            var userMovies = new List<UserMovie>()
                     {
                             new UserMovie() { UserId = "1", MovieId = "a" },
                             new UserMovie() { UserId = "2", MovieId = "b" },
                             new UserMovie() { UserId = "3", MovieId = "c" },
-                    }.AsQueryable<UserMovie>());
+                    };
+            var userMoviesMock = userMovies.AsQueryable().BuildMock();
+            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(userMoviesMock.Object);
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var result = await service.WatchlistMovieExists(userId, movieId);
@@ -416,14 +433,14 @@
         public async Task GetCountShouldWorkCorrectlyAsync()
         {
             var expectedCount = 2;
-            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<UserMovie>()
-                    {
-                            new UserMovie() { UserId = "1", MovieId = "a" },
-                            new UserMovie() { UserId = "2", MovieId = "b" },
-                            new UserMovie() { UserId = "2", MovieId = "c" },
-                    }.AsQueryable<UserMovie>());
-            var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var repository = new EfRepository<UserMovie>(new ApplicationDbContext(options.Options));
+            var service = new WatchlistService(repository, this.moviesRepository.Object);
+            await repository.AddAsync(new UserMovie() { UserId = "1", MovieId = "a" });
+            await repository.AddAsync(new UserMovie() { UserId = "2", MovieId = "b", Movie = new Movie() { Title = "p", } });
+            await repository.AddAsync(new UserMovie() { UserId = "2", MovieId = "c", Movie = new Movie() { Title = "d", } });
+            await repository.SaveChangesAsync();
 
             var actualCount = await service.GetCount("2");
 
@@ -433,15 +450,15 @@
         [Fact]
         public async Task GetCountShouldReturnZeroAsync()
         {
-            var expectedCount = 0;
-            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<UserMovie>()
-                    {
-                            new UserMovie() { UserId = "1", MovieId = "a" },
-                            new UserMovie() { UserId = "3", MovieId = "b" },
-                            new UserMovie() { UserId = "3", MovieId = "c" },
-                    }.AsQueryable<UserMovie>());
-            var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
+            var expectedCount = 0; 
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+         .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var repository = new EfRepository<UserMovie>(new ApplicationDbContext(options.Options));
+            var service = new WatchlistService(repository, this.moviesRepository.Object);
+            await repository.AddAsync(new UserMovie() { UserId = "1", MovieId = "a" });
+            await repository.AddAsync(new UserMovie() { UserId = "3", MovieId = "b" });
+            await repository.AddAsync(new UserMovie() { UserId = "3", MovieId = "c" });
+            await repository.SaveChangesAsync();
 
             var actualCount = await service.GetCount("2");
 
@@ -452,8 +469,8 @@
         public async Task GetMostWatchGenreIdShouldWorkCorrectlyAsync()
         {
             var expected = 1;
-            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<UserMovie>()
+
+            var userMovies = new List<UserMovie>()
                     {
                             new UserMovie() { UserId = "1", MovieId = "a" },
                             new UserMovie()
@@ -481,7 +498,10 @@
                                     },
                                 },
                             },
-                    }.AsQueryable<UserMovie>());
+                    };
+            var mock = userMovies.AsQueryable().BuildMock();
+            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
+                .Returns(mock.Object);
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var actual = await service.MostWatchedGenreId("3");
@@ -493,14 +513,14 @@
         public async Task GetMostWatchGenreIdShouldReturnMinusOneAsync()
         {
             var expected = -1;
-            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<UserMovie>()
-                    {
-                            new UserMovie() { UserId = "1", MovieId = "a" },
-                            new UserMovie() { UserId = "3", MovieId = "b" },
-                            new UserMovie() { UserId = "3", MovieId = "c" },
-                    }.AsQueryable<UserMovie>());
-            var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+          .UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var repository = new EfRepository<UserMovie>(new ApplicationDbContext(options.Options));
+            var service = new WatchlistService(repository, this.moviesRepository.Object);
+            await repository.AddAsync(new UserMovie() { UserId = "1", MovieId = "a" });
+            await repository.AddAsync(new UserMovie() { UserId = "3", MovieId = "b" });
+            await repository.AddAsync(new UserMovie() { UserId = "3", MovieId = "c" });
+            await repository.SaveChangesAsync();
 
             var actual = await service.MostWatchedGenreId("2");
 
@@ -511,8 +531,8 @@
         public async Task RecommendShouldWorkCorrectlyAsync()
         {
             var expectedCount = 2;
-            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<UserMovie>()
+
+            var userMovies = new List<UserMovie>()
                     {
                             new UserMovie()
                             {
@@ -553,9 +573,12 @@
                                     },
                                 },
                             },
-                    }.AsQueryable<UserMovie>());
-            this.moviesRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+                    };
+            var userMoviesMock = userMovies.AsQueryable().BuildMock();
+            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(userMoviesMock.Object);
+
+            var movies = new List<Movie>()
                     {
                             new Movie()
                             {
@@ -581,7 +604,10 @@
                                     new Vote() { Rating = 10, },
                                 },
                             },
-                    }.AsQueryable<Movie>());
+                    };
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.moviesRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var result = (await service.Recommend<RecommendMovieTestModel>("2", 1, 2)).ToList();
@@ -594,8 +620,7 @@
         [Fact]
         public async Task RecommendShouldNotRecommendSameMoviesAndReturnEmptyListAsync()
         {
-            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<UserMovie>()
+            var userMovies = new List<UserMovie>()
                     {
                             new UserMovie()
                             {
@@ -636,9 +661,12 @@
                                     },
                                 },
                             },
-                    }.AsQueryable<UserMovie>());
-            this.moviesRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+                    };
+            var userMoviesMock = userMovies.AsQueryable().BuildMock();
+            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(userMoviesMock.Object);
+
+            var movies = new List<Movie>()
                     {
                             new Movie()
                             {
@@ -666,7 +694,10 @@
                                     new Vote() { Rating = 10, },
                                 },
                             },
-                    }.AsQueryable<Movie>());
+                    };
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.moviesRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var result = (await service.Recommend<RecommendMovieTestModel>("2", 1, 2)).ToList();
@@ -678,8 +709,8 @@
         public async Task RandomRecommendShouldWorkCorrectlyAsync()
         {
             var expectedCount = 1;
-            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<UserMovie>()
+
+            var userMovies = new List<UserMovie>()
                     {
                             new UserMovie()
                             {
@@ -694,9 +725,12 @@
                                     },
                                 },
                             },
-                    }.AsQueryable<UserMovie>());
-            this.moviesRepository.Setup(x => x.AllAsNoTracking())
-                    .Returns(new List<Movie>()
+                    };
+            var userMoviesMock = userMovies.AsQueryable().BuildMock();
+            this.watchlistsRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(userMoviesMock.Object);
+
+            var movies = new List<Movie>()
                     {
                             new Movie()
                             {
@@ -723,7 +757,10 @@
                                     new Vote() { Rating = 10, },
                                 },
                             },
-                    }.AsQueryable<Movie>());
+                    };
+            var moviesMock = movies.AsQueryable().BuildMock();
+            this.moviesRepository.Setup(x => x.AllAsNoTracking())
+                    .Returns(moviesMock.Object);
             var service = new WatchlistService(this.watchlistsRepository.Object, this.moviesRepository.Object);
 
             var result = (await service.RandomRecommend<RecommendMovieTestModel>("2", 2)).ToList();
