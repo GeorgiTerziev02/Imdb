@@ -8,7 +8,8 @@
     {
         Task<IEnumerable<T>> GetTopMovies<T>(int count);
 
-        // Task AddMovie(string title, string description, TimeSpan duration, long gross, decimal budget, int languageId, DateTime releaseDate)
+        Task<string> AddMovieFromOmdb(string title, string description, string type, TimeSpan? duration, int languageId, DateTime? releaseDate, string imgUrl);
+
         Task<string> AddMovie<T>(T model);
 
         Task<T> GetById<T>(string id);
@@ -22,6 +23,8 @@
         Task<IEnumerable<T>> Find<T>(string name);
 
         Task<bool> ContainsActor(string movieId, string actorId);
+
+        Task<bool> ContainsTitle(string title);
 
         Task AddActorAsync(string movieId, string actorId);
 

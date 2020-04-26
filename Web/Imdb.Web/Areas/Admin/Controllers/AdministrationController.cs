@@ -1,5 +1,6 @@
 ﻿namespace Imdb.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@
     using Imdb.Web.ViewModels.Admin.Administration;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using OMDbApiNet.Model;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     [Area("Admin")]
@@ -20,6 +22,7 @@
         private readonly ICloudinaryService cloudinaryService;
         private readonly ILanguageService languageService;
         private readonly IGenresService genresService;
+        private readonly IMovieDataProviderService movieDataProviderService;
 
         public AdministrationController(
             IMoviesService moviesService,
@@ -27,7 +30,8 @@
             IActorsService actorsService,
             ICloudinaryService cloudinaryService,
             ILanguageService languageService,
-            IGenresService genresService)
+            IGenresService genresService,
+            IMovieDataProviderService movieDataProviderService)
         {
             this.moviesService = moviesService;
             this.directorsService = directorsService;
@@ -35,6 +39,7 @@
             this.cloudinaryService = cloudinaryService;
             this.languageService = languageService;
             this.genresService = genresService;
+            this.movieDataProviderService = movieDataProviderService;
         }
 
         public IActionResult Index()
@@ -247,6 +252,50 @@
             await this.moviesService.DeleteByIdAsync(movieId);
 
             return this.Redirect("/Movies/All");
+        }
+
+        public IActionResult AddWithOmdb()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddWithOmdb(OmdbSearchViewModel input)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(input);
+            }
+
+            OmdbDataProviderModel data =
+                await this.movieDataProviderService.GetByTitleAsync<OmdbDataProviderModel>(input.Title, input.Year);
+
+            if (data == null)
+            {
+                this.TempData["ErrorMessage"] = GlobalConstants.OmdbMovieNotFound;
+                return this.RedirectToAction("AddWithOmdb");
+            }
+
+            bool titleExists = await this.moviesService.ContainsTitle(data.Title);
+            if (titleExists)
+            {
+                this.TempData["ErrorMessage"] = GlobalConstants.MovieAlreadyExists;
+                return this.RedirectToAction("AddWithOmdb");
+            }
+
+            var languageId = await this.languageService.GetId(data.Language.Split(", ")[0]);
+
+            var movieId = await this.moviesService.AddMovieFromOmdb(
+                data.Title,
+                data.Plot,
+                data.Type,
+                // TimeSpan.Parse(data.Runtime),
+                null,
+                languageId.Value,
+                DateTime.Parse(data.Released),
+                data.Poster);
+            this.TempData["InfoMessage"] = GlobalConstants.OmdbFoundAndAdded;
+            return this.Redirect($"/Movies/ById/{movieId}");
         }
     }
 }

@@ -30,6 +30,13 @@
             await this.languagesRepository.SaveChangesAsync();
         }
 
+        public async Task<int?> GetId(string name)
+        {
+            return (await this.languagesRepository
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(x => x.Name == name))?.Id;
+        }
+
         public async Task<IEnumerable<T>> GetAll<T>()
         {
             return await this.languagesRepository

@@ -23,5 +23,13 @@
         public const string PostWarning = "You can post only 1 review every hour!";
 
         public const string YoutubeEmbed = "https://www.youtube.com/embed/";
+
+        public const string OmdbMovieNotFound = "Movie not found in the database";
+
+        public const string MovieAlreadyExists = "Movie already exists in the database";
+
+        public const string OmdbFoundAndAdded = "Found and added to the database!";
+
+        public const string AmazonImage = "https://m.media-amazon.com/images/";
     }
 }

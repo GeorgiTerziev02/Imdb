@@ -23,6 +23,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using OMDbApiNet;
     using SendGrid;
 
     public class Startup
@@ -97,6 +98,7 @@
             services.AddTransient<IVotesService, VotesService>();
             services.AddTransient<IReviewsService, ReviewsService>();
             services.AddTransient<IGenresService, GenresService>();
+            services.AddTransient<IMovieDataProviderService, OmdbService>();
 
             // Cloudinary
             Account account = new Account(
@@ -105,6 +107,10 @@
                     this.configuration["Cloudinary:AppSecret"]);
             Cloudinary cloudinary = new Cloudinary(account);
             services.AddSingleton(cloudinary);
+
+            // Omdb
+            AsyncOmdbClient omdb = new AsyncOmdbClient(this.configuration["OmdbApiKey"]);
+            services.AddSingleton(omdb);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

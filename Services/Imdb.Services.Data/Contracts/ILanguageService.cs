@@ -7,6 +7,8 @@
     {
         Task AddLanguage(string name);
 
+        Task<int?> GetId(string name);
+
         Task<IEnumerable<T>> GetAll<T>();
     }
 }

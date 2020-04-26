@@ -25,7 +25,14 @@
         {
             <div class="card">
                 <div class="row align-items-center">
-                    <div class="col-12 col-md-4"><img width="100%" height="191" src="@(GlobalConstants.ReducedBaseDeliveryImageUrl + tvShow.GeneralImageUrl)" sizes="(max-width: 660px) 100vw, 660px"></div>
+                    @if (tvShow.GeneralImageUrl.Contains(GlobalConstants.AmazonImage))
+                    {
+                        <div class="col-12 col-md-4"><img width="100%" height="191" src="@(tvShow.GeneralImageUrl)" sizes="(max-width: 660px) 100vw, 660px"></div>
+                    }
+                    else
+                    {
+                        <div class="col-12 col-md-4"><img width="100%" height="191" src="@(GlobalConstants.ReducedBaseDeliveryImageUrl + tvShow.GeneralImageUrl)" sizes="(max-width: 660px) 100vw, 660px"></div>
+                    }
                     <div class="col-12 col-md-8">
                         <h3>@tvShow.Title</h3>
                         @if (tvShow.Rating == null)
