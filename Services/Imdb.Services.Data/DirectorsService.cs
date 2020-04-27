@@ -56,5 +56,12 @@
                 .To<T>()
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<string> GetId(string name)
+        {
+            return (await this.directorsRepository
+                .All()
+                .FirstOrDefaultAsync(x => (x.FirstName + " " + x.LastName) == name))?.Id;
+        }
     }
 }

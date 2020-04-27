@@ -23,6 +23,7 @@
         private readonly ILanguageService languageService;
         private readonly IGenresService genresService;
         private readonly IMovieDataProviderService movieDataProviderService;
+        private readonly IOmdbMovieService omdbMovieService;
 
         public AdministrationController(
             IMoviesService moviesService,
@@ -31,7 +32,8 @@
             ICloudinaryService cloudinaryService,
             ILanguageService languageService,
             IGenresService genresService,
-            IMovieDataProviderService movieDataProviderService)
+            IMovieDataProviderService movieDataProviderService,
+            IOmdbMovieService omdbMovieService)
         {
             this.moviesService = moviesService;
             this.directorsService = directorsService;
@@ -40,6 +42,7 @@
             this.languageService = languageService;
             this.genresService = genresService;
             this.movieDataProviderService = movieDataProviderService;
+            this.omdbMovieService = omdbMovieService;
         }
 
         public IActionResult Index()
@@ -283,17 +286,7 @@
                 return this.RedirectToAction("AddWithOmdb");
             }
 
-            var languageId = await this.languageService.GetId(data.Language.Split(", ")[0]);
-
-            var movieId = await this.moviesService.AddMovieFromOmdb(
-                data.Title,
-                data.Plot,
-                data.Type,
-                // TimeSpan.Parse(data.Runtime),
-                null,
-                languageId.Value,
-                DateTime.Parse(data.Released),
-                data.Poster);
+            var movieId = await this.omdbMovieService.AddMovieFromOmdb(data);
             this.TempData["InfoMessage"] = GlobalConstants.OmdbFoundAndAdded;
             return this.Redirect($"/Movies/ById/{movieId}");
         }

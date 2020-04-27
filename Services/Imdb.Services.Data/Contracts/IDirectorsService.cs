@@ -13,5 +13,7 @@
         Task<IEnumerable<T>> GetAll<T>();
 
         Task<T> GetById<T>(string directorId);
+
+        Task<string> GetId(string name);
     }
 }

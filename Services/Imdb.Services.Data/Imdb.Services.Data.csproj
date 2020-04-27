@@ -25,6 +25,7 @@
     <ProjectReference Include="..\..\Data\Imdb.Data.Common\Imdb.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\Imdb.Data.Models\Imdb.Data.Models.csproj" />
     <ProjectReference Include="..\..\Imdb.Common\Imdb.Common.csproj" />
+    <ProjectReference Include="..\..\Web\Imdb.Web.ViewModels\Imdb.Web.ViewModels.csproj" />
     <ProjectReference Include="..\Imdb.Services.Mapping\Imdb.Services.Mapping.csproj" />
   </ItemGroup>
 

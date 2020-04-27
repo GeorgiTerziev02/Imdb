@@ -99,6 +99,7 @@
             services.AddTransient<IReviewsService, ReviewsService>();
             services.AddTransient<IGenresService, GenresService>();
             services.AddTransient<IMovieDataProviderService, OmdbService>();
+            services.AddTransient<IOmdbMovieService, OmdbMovieService>();
 
             // Cloudinary
             Account account = new Account(

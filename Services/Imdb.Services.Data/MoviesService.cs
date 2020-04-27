@@ -338,35 +338,5 @@
             this.moviesRepository.Update(movie);
             await this.moviesRepository.SaveChangesAsync();
         }
-
-        public async Task<string> AddMovieFromOmdb(
-            string title,
-            string description,
-            string type,
-            TimeSpan? duration,
-            int languageId,
-            DateTime? releaseDate,
-            string imgUrl)
-        {
-            bool isTvShow = type == "series" ? true : false;
-
-            // random directors id from the db : huge mistake
-            var movie = new Movie()
-            {
-                Title = title,
-                Description = description,
-                IsTvShow = isTvShow,
-                Duration = duration,
-                LanguageId = languageId,
-                DirectorId = "11e06790-7996-445a-b79d-05b807a8e10c",
-                ReleaseDate = releaseDate,
-                GeneralImageUrl = imgUrl,
-            };
-
-            await this.moviesRepository.AddAsync(movie);
-            await this.moviesRepository.SaveChangesAsync();
-
-            return movie.Id;
-        }
     }
 }

@@ -8,8 +8,6 @@
     {
         Task<IEnumerable<T>> GetTopMovies<T>(int count);
 
-        Task<string> AddMovieFromOmdb(string title, string description, string type, TimeSpan? duration, int languageId, DateTime? releaseDate, string imgUrl);
-
         Task<string> AddMovie<T>(T model);
 
         Task<T> GetById<T>(string id);
