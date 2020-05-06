@@ -2,7 +2,7 @@
 @model Imdb.Web.ViewModels.Home.IndexViewModel
 @{
     this.ViewData["Title"] = "Home Page";
-    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var userId = this.User.GetId();
 }
 
 <div class="text-center">

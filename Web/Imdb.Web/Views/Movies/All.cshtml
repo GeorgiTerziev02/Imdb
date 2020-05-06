@@ -1,7 +1,7 @@
 ﻿@model Imdb.Web.ViewModels.Movies.ListAllMoviesViewModel
 @{
     ViewData["Title"] = "Movies";
-    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var userId = this.User.GetId();
 }
 
 <h1 class="text-center">@ViewData["Title"]</h1>

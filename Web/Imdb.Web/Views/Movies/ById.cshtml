@@ -16,7 +16,7 @@
         Model.Rating = "0";
     }
     var votes = Model.PossibleVotes.Select(x => new SelectListItem(x.ToString(), x.ToString()));
-    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var userId = this.User.GetId();
     var isAuthenticated = this.User.Identity.IsAuthenticated;
     var isAdmin = this.User.IsInRole(GlobalConstants.AdministratorRoleName);
     var isFromImdb = Model.GeneralImageUrl.Contains(GlobalConstants.AmazonImage);

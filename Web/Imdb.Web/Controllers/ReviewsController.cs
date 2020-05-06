@@ -1,10 +1,10 @@
 ﻿namespace Imdb.Web.Controllers
 {
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using Imdb.Common;
     using Imdb.Services.Data.Contracts;
+    using Imdb.Web.Infrastructure.Extensions;
     using Imdb.Web.ViewModels.Review;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -32,7 +32,7 @@
                 return this.BadRequest();
             }
 
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = this.User.GetId();
 
             if (!(await this.reviewsService.HasPermissionToPost(userId)))
             {

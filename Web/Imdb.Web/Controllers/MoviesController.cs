@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Imdb.Services.Data.Contracts;
+    using Imdb.Web.Infrastructure.Extensions;
     using Imdb.Web.ViewModels.Movies;
     using Microsoft.AspNetCore.Mvc;
 
@@ -58,7 +59,7 @@
 
             if (this.User.Identity.IsAuthenticated)
             {
-                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = this.User.GetId();
                 movie.UserVote = await this.votesService.GetUserRatingForMovie(userId, id);
             }
             else

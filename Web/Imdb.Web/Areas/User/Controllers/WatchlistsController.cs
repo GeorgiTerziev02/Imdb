@@ -5,6 +5,7 @@
 
     using Imdb.Services.Data.Contracts;
     using Imdb.Web.Controllers;
+    using Imdb.Web.Infrastructure.Extensions;
     using Imdb.Web.ViewModels.Watchlists;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@
 
         public async Task<IActionResult> Add(string userId, string movieId)
         {
-            if (this.User.FindFirstValue(ClaimTypes.NameIdentifier) != userId)
+            if (this.User.GetId() != userId)
             {
                 return this.BadRequest();
             }
@@ -46,7 +47,7 @@
 
         public async Task<IActionResult> Remove(string userId, string movieId)
         {
-            if (this.User.FindFirstValue(ClaimTypes.NameIdentifier) != userId)
+            if (this.User.GetId() != userId)
             {
                 return this.BadRequest();
             }
@@ -74,7 +75,7 @@
                 page = 1;
             }
 
-            if (this.User.FindFirstValue(ClaimTypes.NameIdentifier) != userId)
+            if (this.User.GetId() != userId)
             {
                 return this.BadRequest();
             }
