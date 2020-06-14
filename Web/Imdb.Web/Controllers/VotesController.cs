@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class VotesController : ControllerBase
@@ -23,7 +24,6 @@
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<MovieVoteResponseModel>> Post(MovieVoteInputModel input)
         {
             if (input == null)

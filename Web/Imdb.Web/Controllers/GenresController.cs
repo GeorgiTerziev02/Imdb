@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class GenresController : ControllerBase
@@ -19,7 +20,6 @@
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult<GenreMovieResponseModel>> Post(GenreMovieInputModel input)
         {
             if (await this.genresService.MovieContainsGenre(input.GenreId, input.MovieId))
@@ -37,7 +37,6 @@
         }
 
         [HttpDelete]
-        [Authorize]
         public async Task<ActionResult<RemoveMovieGenreResponseModel>> Delete(RemoveGenreViewModel model)
         {
             var id = await this.genresService.RemoveGenreFromMovie(model.Id);

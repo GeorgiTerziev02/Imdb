@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AddActorsController : ControllerBase
@@ -20,7 +21,6 @@
             this.actorsService = actorsService;
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ActorResponseModel>> Post(ActorInputModel input)
         {
@@ -50,7 +50,6 @@
             return response;
         }
 
-        [Authorize]
         [HttpDelete]
         public async Task<ActionResult<DeleteActorResponseModel>> Delete(DeleteByIdActorMovieInputMovdel input)
         {
