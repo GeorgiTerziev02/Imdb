@@ -6,7 +6,14 @@
     @foreach (var entity in Model.Entities)
     {
     <a asp-area="" asp-controller="Movies" asp-action="ById" asp-route-id="@entity.Id" class="list-group-item list-group-item-action flex-column align-items-start">
-        <img width="100" height="100" src="@(GlobalConstants.ReducedBaseDeliveryImageUrl + entity.GeneralImageUrl)" sizes="(max-width: 660px) 100vw, 660px">
+        @if (entity.GeneralImageUrl.Contains(GlobalConstants.AmazonImage))
+        {
+            <img width="100" height="100" src="@(entity.GeneralImageUrl)" sizes="(max-width: 660px) 100vw, 660px">
+        }
+        else
+        {
+            <img width="100" height="100" src="@(GlobalConstants.ReducedBaseDeliveryImageUrl + entity.GeneralImageUrl)" sizes="(max-width: 660px) 100vw, 660px">
+        }
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">@entity.Title</h5>
             @if (entity.ReleaseDate != null)

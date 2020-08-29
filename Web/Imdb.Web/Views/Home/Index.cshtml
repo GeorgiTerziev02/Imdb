@@ -17,7 +17,14 @@
     {
         <div class="col-md-4">
             <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="@(GlobalConstants.ReducedBaseDeliveryImageUrl+movie.GeneralImageUrl)" width="300" height="200" alt="Card image cap">
+                @if (movie.GeneralImageUrl.Contains(GlobalConstants.AmazonImage))
+                {
+                    <img class="card-img-top" src="@(movie.GeneralImageUrl)" width="300" height="200" alt="Card image cap">
+                }
+                else
+                {
+                    <img class="card-img-top" src="@(GlobalConstants.ReducedBaseDeliveryImageUrl+movie.GeneralImageUrl)" width="300" height="200" alt="Card image cap">
+                }
                 <div class="card-body">
                     <h5 class="card-title">@movie.Title</h5>
                     <p>Rated : @movie.Rating/10<i class="fas fa-star"></i></p>
